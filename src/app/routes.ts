@@ -10,20 +10,38 @@ import QuestionHourPage from "./pages/QuestionHourPage";
 import { ZeroHourPage } from "./pages/ZeroHourPage";
 import { LegislativeBusinessPage } from "./pages/LegislativeBusinessPage";
 import { RedirectToStudentHome } from "./components/RedirectToStudentHome";
+import SpeakerHomePage from "./pages/SpeakerHomePage";
+import MentorHomePage from "./pages/MentorHomePage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: LoginPage,
   },
+
+  // ── Admin routes ───────────────────────────────────────────────────────────
   {
-    path: "/home",
+    path: "/admin/home",
     Component: HomePage,
   },
   {
-    path: "/dashboard",
+    path: "/admin/dashboard",
     Component: HomePage,
   },
+  {
+    path: "/admin/psps",
+    Component: PSPsPage,
+  },
+  {
+    path: "/admin/partners",
+    Component: PartnersPage,
+  },
+  {
+    path: "/admin/global-lists",
+    Component: GlobalListsPage,
+  },
+
+  // ── Student routes ─────────────────────────────────────────────────────────
   {
     path: "/student/home",
     Component: StudentDashboardPage,
@@ -48,16 +66,24 @@ export const router = createBrowserRouter([
     path: "/student/psp/legislative-business",
     Component: LegislativeBusinessPage,
   },
+
+  // ── Speaker routes ─────────────────────────────────────────────────────────
   {
-    path: "/psps",
-    Component: PSPsPage,
+    path: "/speaker/home",
+    Component: SpeakerHomePage,
+  },
+
+  // ── Mentor routes ──────────────────────────────────────────────────────────
+  {
+    path: "/mentor/home",
+    Component: MentorHomePage,
   },
   {
-    path: "/partners",
-    Component: PartnersPage,
+    path: "/mentor/question-hour",
+    Component: QuestionHourPage,
   },
   {
-    path: "/global-lists",
-    Component: GlobalListsPage,
+    path: "/mentor/legislative-business",
+    Component: LegislativeBusinessPage,
   },
 ]);

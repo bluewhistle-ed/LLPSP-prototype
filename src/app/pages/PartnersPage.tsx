@@ -6,6 +6,8 @@ import { PageHeader } from '../components/PageHeader';
 import { motion, AnimatePresence } from 'motion/react';
 import { NewPartnerForm } from '../components/NewPartnerForm';
 import { PartnerDetailsView } from '../components/PartnerDetailsView';
+import { Navigate } from 'react-router';
+import { useUser } from '../context/UserContext';
 import svgPaths from "../../imports/svg-gq87p0ikdv";
 import imgUnsplash0HjWobhGhJs1 from "figma:asset/570dfe1e78ba73cce493c4895be93ab0d92bdaaa.png";
 import imgUnsplash0HjWobhGhJs2 from "figma:asset/4fb1f9850130e69d652ab1618e13e68969e60d8f.png";
@@ -325,12 +327,26 @@ function Frame2() {
   );
 }
 
+interface Partner {
+  imgSrc: string;
+  name: string;
+  status: 'active' | 'inactive';
+  email: string;
+  phone: string;
+}
+
 export default function PartnersPage() {
+  const { adminRole } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [selectedPartner, setSelectedPartner] = useState<typeof partners[0] | null>(null);
+  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
 
-  const partners = [
+  // School admins cannot access Partners page
+  if (adminRole === 'school-admin') {
+    return <Navigate to="/admin/home" replace />;
+  }
+
+  const partners: Partner[] = [
     {
       imgSrc: imgUnsplash0HjWobhGhJs1,
       name: "Oliver High School",

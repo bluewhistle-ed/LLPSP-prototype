@@ -133,7 +133,7 @@ function Group() {
 function Frame4() {
   return (
     <div className="content-stretch flex flex-col gap-[2px] items-start not-italic relative shrink-0 w-full whitespace-pre-wrap">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[48px] relative shrink-0 text-[#041a5e] text-[32px] w-full">Welcome to Let's Legislative!</p>
+      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[48px] relative shrink-0 text-[#041a5e] text-[32px] w-full">Welcome to Let's Legislate!</p>
       <p className="font-['Inter:Regular',sans-serif] font-normal leading-[24px] relative shrink-0 text-[#4b5b8a] text-[16px] w-full">{`Let's make democracy accessible, intuitive, and engaging together. Your seat at the legislative table awaits`}</p>
     </div>
   );
@@ -330,7 +330,7 @@ export default function LoginWithNavigation() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate('/home');
+    navigate('/admin/home');
   };
 
   return (

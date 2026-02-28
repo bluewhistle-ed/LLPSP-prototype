@@ -61,22 +61,10 @@ function RoleBadge({ role }: { role: string }) {
 }
 
 function StatusChip({ status }: { status: string }) {
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, { bg: string; border: string; text: string }> = {
-      'Submitted': { bg: '#e0f2fe', border: '#0369a1', text: '#0369a1' },
-      'Under Review': { bg: '#fef3c7', border: '#b45309', text: '#b45309' },
-      'Accepted': { bg: '#d1fae5', border: '#059669', text: '#059669' },
-      'Rejected': { bg: '#fee2e2', border: '#dc2626', text: '#dc2626' }
-    };
-    return colors[status] || colors['Submitted'];
-  };
-
-  const color = getStatusColor(status);
-
   return (
-    <div className="content-stretch flex gap-[4px] items-center px-[8px] py-[4px] relative rounded-[6px] shrink-0" style={{ backgroundColor: color.bg }}>
-      <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[6px]" style={{ borderColor: color.border }} />
-      <p className="leading-[14px] not-italic text-[12px]" style={{ color: color.text }}>{status}</p>
+    <div className="bg-white content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
+      <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis">{status}</p>
     </div>
   );
 }
@@ -119,7 +107,7 @@ interface Reply {
 
 export function ZeroHourPage() {
   const [showForm, setShowForm] = useState(false);
-  const tabs = ['Submitted', 'Under Review', 'Accepted', 'Rejected'];
+  const tabs = ['Submitted', 'Approved', 'Rejected'];
   const [activeTab, setActiveTab] = useState(0);
   const [notices, setNotices] = useState<Notice[]>([
     {
@@ -128,7 +116,7 @@ export function ZeroHourPage() {
       author: 'Rajesh Kumar',
       party: 'UPP',
       date: 'Feb 20, 2026',
-      status: 'Accepted',
+      status: 'Approved',
       content: 'I would like to bring to the attention of this House the urgent need for improved railway safety measures following recent incidents in the eastern region. Multiple derailments have occurred in the past month, causing significant disruption and raising serious concerns about passenger safety.',
       expanded: false,
       replies: [
@@ -312,10 +300,26 @@ export function ZeroHourPage() {
                             <circle cx="2" cy="2" fill="#C8CEE2" r="2" />
                           </svg>
                         </div>
-                        <div className="bg-white content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                          <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                          <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis">{notice.status === 'Accepted' ? 'Approved' : notice.status === 'Under Review' ? 'Waiting for approval' : notice.status}</p>
-                        </div>
+                        {(() => {
+                          // Map status to display text and colors
+                          const statusDisplay = notice.status === 'Under Review' ? 'Waiting for approval' : notice.status;
+                          const getStatusColors = (displayStatus: string) => {
+                            const statusColors: Record<string, { bg: string; border: string; text: string }> = {
+                              'Approved': { bg: '#e8ffeb', border: '#42a22a', text: '#42a22a' },
+                              'Waiting for approval': { bg: '#fef3e8', border: '#ed7d31', text: '#ed7d31' },
+                              'Rejected': { bg: '#ffe8e8', border: '#d32f2f', text: '#d32f2f' },
+                              'Submitted': { bg: '#f1f2f8', border: '#98a3c5', text: '#6e7ca8' }
+                            };
+                            return statusColors[displayStatus] || { bg: '#f1f2f8', border: '#98a3c5', text: '#6e7ca8' };
+                          };
+                          const colors = getStatusColors(statusDisplay);
+                          return (
+                            <div className="content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" style={{ backgroundColor: colors.bg }}>
+                              <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: colors.border }} />
+                              <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: colors.text }}>{statusDisplay}</p>
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -324,61 +328,17 @@ export function ZeroHourPage() {
                       <p className="leading-[20px] text-[#3c4c7c] text-[14px] whitespace-pre-wrap">{notice.content}</p>
                     </div>
 
-                    {/* Feedback Section */}
-                    {notice.replies && notice.replies.length > 0 && (
-                      <div className="mt-[12px] w-full">
-                        <p className="font-semibold leading-[16px] not-italic overflow-hidden relative shrink-0 text-[#2f3e6d] text-[12px] text-ellipsis mb-[12px]">Feedback</p>
-                        
-                        <div className="bg-[#f8f9fb] relative rounded-[8px] shrink-0 w-full">
-                          <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
-                          <div className="content-stretch flex flex-col gap-[12px] items-start p-[12px] relative w-full">
-                            {notice.replies.map((reply, replyIndex) => (
-                              <div key={reply.id}>
-                                {replyIndex > 0 && (
-                                  <div className="h-0 relative shrink-0 w-full mb-[12px]">
-                                    <div className="absolute inset-[-1px_0_0_0]">
-                                      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 776 1">
-                                        <line stroke="#E3E6F0" x2="776" y1="0.5" y2="0.5" />
-                                      </svg>
-                                    </div>
-                                  </div>
-                                )}
-                                <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-                                  <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
-                                    <div aria-hidden="true" className="absolute border border-[#c8cee2] border-solid inset-0 pointer-events-none rounded-[8px]" />
-                                    <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-                                      <div className="relative shrink-0 size-[16px]">
-                                        <img alt="" className="block max-w-none size-full" height="16" src={imgEllipse8} width="16" />
-                                      </div>
-                                      <p className="leading-[16px] text-[#3c4c7c] text-[14px]">{reply.author}</p>
-                                    </div>
-                                    {reply.role && <RoleBadge role={reply.role} />}
-                                  </div>
-                                  <p className="leading-[20px] text-[#3c4c7c] text-[14px] whitespace-pre-wrap">{reply.content}</p>
-                                </div>
-                              </div>
-                            ))}
-                            
-                            {/* Reply Button */}
-                            <div className="content-stretch flex items-center relative shrink-0 w-full">
-                              <button className="content-stretch flex gap-[4px] items-center relative shrink-0 hover:opacity-80 transition-opacity">
-                                <div className="relative shrink-0 size-[16px]">
-                                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
-                                    <mask height="16" id={`mask_reply_${notice.id}`} maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
-                                      <rect fill="#D9D9D9" height="16" width="16" />
-                                    </mask>
-                                    <g mask={`url(#mask_reply_${notice.id})`}>
-                                      <path d={svgPathsNotice.p20ea8380} fill="#1850C5" />
-                                    </g>
-                                  </svg>
-                                </div>
-                                <p className="leading-[16px] text-[#1850c5] text-[14px]">Reply</p>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                    {/* Divider */}
+                    <div className="border-t border-[#e3e6f0] w-full mt-[16px]" />
+
+                    {/* Author Footer */}
+                    <div className="content-stretch flex gap-[8px] items-center relative shrink-0 w-full mt-[12px]">
+                      <div className="relative shrink-0 size-[24px]">
+                        <img alt="" className="block max-w-none size-full rounded-full" src={imgEllipse8} />
                       </div>
-                    )}
+                      <p className="leading-[16px] text-[#2f3e6d] text-[12px]">{notice.author}</p>
+                      <PartyBadge party={notice.party} />
+                    </div>
                   </div>
                 </div>
               ))}

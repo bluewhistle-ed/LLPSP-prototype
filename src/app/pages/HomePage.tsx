@@ -5,6 +5,7 @@ import { SearchField } from '../components/SearchField';
 import { PrimaryActionButton } from '../components/PrimaryActionButton';
 import { PageHeader } from '../components/PageHeader';
 import svgPaths from "../../imports/svg-hkh4t53hh4";
+import { useUser } from '../context/UserContext';
 
 function Group() {
   return (
@@ -43,12 +44,17 @@ function NavActive({ label }: { label: string }) {
 }
 
 function Tabs({ onNavigate }: { onNavigate: (path: string) => void }) {
+  const { adminRole } = useUser();
+  const isBluewhistleAdmin = adminRole === 'bluewhistle-admin';
+
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0" data-name="Tabs">
       <NavActive label="Dashboard" />
-      <Nav label="PSPs" onClick={() => onNavigate('/psps')} />
-      <Nav label="Partners" onClick={() => onNavigate('/partners')} />
-      <Nav label="Global Lists" onClick={() => onNavigate('/global-lists')} />
+      <Nav label="PSPs" onClick={() => onNavigate('/admin/psps')} />
+      {isBluewhistleAdmin && (
+        <Nav label="Partners" onClick={() => onNavigate('/admin/partners')} />
+      )}
+      <Nav label="Global Lists" onClick={() => onNavigate('/admin/global-lists')} />
     </div>
   );
 }
@@ -84,7 +90,7 @@ function Buttons() {
     <div className="bg-white h-[32px] relative rounded-[6px] shrink-0" data-name="Buttons">
       <div className="content-stretch flex gap-[4px] h-full items-center justify-center overflow-clip p-[8px] relative rounded-[inherit]">
         <div className="flex flex-col justify-center leading-[0] not-italic relative shrink-0 text-[#2f3e6d] text-[12px] whitespace-nowrap">
-          <p className="leading-[14px]">Let's Legislative</p>
+          <p className="leading-[14px]">Let's Legislate</p>
         </div>
         <IconsExpandMore />
       </div>
@@ -291,8 +297,8 @@ function Group1() {
         <defs>
           <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_1_1005" x1="213.547" x2="156.269" y1="94.9536" y2="202.731">
             <stop offset="0.02" stopOpacity="0" />
-            <stop offset="0.32" stopColor="#161F18" stopOpacity="0.36" />
-            <stop offset="0.76" stopColor="#324738" stopOpacity="0.82" />
+            <stop offset="0.32" stopOpacity="0.36" stopColor="#161F18" />
+            <stop offset="0.76" stopOpacity="0.82" stopColor="#324738" />
             <stop offset="0.99" stopColor="#3D5644" />
           </linearGradient>
           <linearGradient gradientUnits="userSpaceOnUse" id="paint1_linear_1_1005" x1="135.943" x2="129.565" y1="-23.2504" y2="64.3306">
@@ -307,7 +313,7 @@ function Group1() {
           </linearGradient>
           <linearGradient gradientUnits="userSpaceOnUse" id="paint3_linear_1_1005" x1="102.866" x2="-88.4429" y1="114.557" y2="115.119">
             <stop offset="0.03" stopOpacity="0" />
-            <stop offset="0.62" stopColor="#28382C" stopOpacity="0.66" />
+            <stop offset="0.62" stopOpacity="0.66" stopColor="#28382C" />
             <stop offset="0.99" stopColor="#3D5644" />
           </linearGradient>
           <linearGradient gradientUnits="userSpaceOnUse" id="paint4_linear_1_1005" x1="212.722" x2="160.747" y1="105.307" y2="106.001">

@@ -5,6 +5,7 @@ import 'react-day-picker/dist/style.css';
 import svgPaths from "../../imports/svg-dv2wdhz28y";
 import searchSvgPaths from "../../imports/svg-hkh4t53hh4";
 import stepSvgPaths from "../../imports/svg-sclhcs6pf";
+import { useUser } from '../context/UserContext';
 
 // Mock data
 const availablePartners = [
@@ -271,10 +272,14 @@ function StepperBlock({ number, label, isActive }: { number: string; label: stri
 }
 
 export function NewEventForm({ onClose }: { onClose: () => void }) {
+  const { adminRole } = useUser();
+  const isBluewhistleAdmin = adminRole === 'bluewhistle-admin';
+  const isSchoolAdmin = adminRole === 'school-admin';
   const [currentStep, setCurrentStep] = useState(1); // Start at step 1
   
   // Step 1 fields - Only essential event information
-  const [host, setHost] = useState(''); // 'Partner' or 'Bluewhistle'
+  // For School Admins, automatically set host to 'partner' (their school)
+  const [host, setHost] = useState(isSchoolAdmin ? 'partner' : ''); // 'Partner' or 'Bluewhistle'
   const [partnerName, setPartnerName] = useState(''); // Only shown when host is 'Partner'
   const [aboutEvent, setAboutEvent] = useState('');
   const [eventStartDate, setEventStartDate] = useState<Date | undefined>();
@@ -715,27 +720,31 @@ export function NewEventForm({ onClose }: { onClose: () => void }) {
         {/* Step 1: Info */}
         {currentStep === 1 && (
           <>
-            {/* Host */}
-            <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-              <p className="leading-[16px] not-italic relative shrink-0 text-[#2f3e6d] text-[14px] w-full">Host</p>
-              <div className="bg-[#f8f9fb] relative rounded-[8px] shrink-0 w-full">
-                <div aria-hidden="true" className="absolute border-[#c8cee2] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
-                <div className="flex flex-row items-center size-full">
-                  <div className="content-stretch flex gap-[4px] items-center px-[12px] py-[8px] relative w-full">
-                    <select
-                      value={host}
-                      onChange={(e) => setHost(e.target.value)}
-                      className="bg-transparent flex-1 leading-[20px] min-h-px min-w-px not-italic outline-none relative text-[#2f3e6d] text-[14px] appearance-none cursor-pointer"
-                    >
-                      <option value="">Select Host</option>
-                      <option value="partner">Partner</option>
-                      <option value="bluewhistle">Bluewhistle</option>
-                    </select>
-                    <IconsExpandMore />
+            {/* Host - Only shown for Bluewhistle Admin */}
+            {!isSchoolAdmin && (
+              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+                <p className="leading-[16px] not-italic relative shrink-0 text-[#2f3e6d] text-[14px] w-full">Host</p>
+                <div className="bg-[#f8f9fb] relative rounded-[8px] shrink-0 w-full">
+                  <div aria-hidden="true" className="absolute border-[#c8cee2] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
+                  <div className="flex flex-row items-center size-full">
+                    <div className="content-stretch flex gap-[4px] items-center px-[12px] py-[8px] relative w-full">
+                      <select
+                        value={host}
+                        onChange={(e) => setHost(e.target.value)}
+                        className="bg-transparent flex-1 leading-[20px] min-h-px min-w-px not-italic outline-none relative text-[#2f3e6d] text-[14px] appearance-none cursor-pointer"
+                      >
+                        <option value="">Select Host</option>
+                        <option value="partner">Partner</option>
+                        {isBluewhistleAdmin && (
+                          <option value="bluewhistle">Bluewhistle</option>
+                        )}
+                      </select>
+                      <IconsExpandMore />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Partner Name (only shown when host is 'Partner') */}
             {host === 'partner' && (

@@ -15,6 +15,27 @@ import { Search, Send, ArrowDown } from "lucide-react";
 import { Link } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
+// Shared party members data
+const ALL_PARTY_MEMBERS = [
+  { id: 1, name: "Sheilah T. Sayasane", role: "President", avatar: imgUnsplash0HjWobhGhJs1 },
+  { id: 2, name: "Roy X. Hinde", role: "V.President", avatar: imgUnsplash0HjWobhGhJs2 },
+  { id: 3, name: "Aleta H. Starcher", role: "Member", avatar: imgUnsplash0HjWobhGhJs3 },
+  { id: 4, name: "Mai G. Sollom", role: "Member", avatar: imgUnsplash0HjWobhGhJs4 },
+  { id: 5, name: "Latricia W. Silletti", role: "Minister", avatar: imgUnsplash0HjWobhGhJs5 },
+  { id: 6, name: "Adrianne P. Tillis", role: "Member", avatar: imgUnsplash0HjWobhGhJs6 },
+  { id: 7, name: "Elvira E. Aus", role: "Member", avatar: imgUnsplash0HjWobhGhJs7 },
+  { id: 8, name: "Marcus T. Reynolds", role: "Member", avatar: "https://images.unsplash.com/photo-1554765345-6ad6a5417cde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzE5Njk3MTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+  { id: 9, name: "Isabella M. Chen", role: "Member", avatar: "https://images.unsplash.com/photo-1701096351544-7de3c7fa0272?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB3b21hbiUyMGhlYWRzaG90fGVufDF8fHx8MTc3MTk5NDA4N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+  { id: 10, name: "David R. Patterson", role: "Minister", avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTkzMTQ0OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+  { id: 11, name: "Sophia L. Martinez", role: "Member", avatar: "https://images.unsplash.com/photo-1752650735547-990f918bd028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcGhvdG98ZW58MXx8fHwxNzcyMDI2MjcwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+  { id: 12, name: "James K. Anderson", role: "Member", avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+  { id: 13, name: "Emily R. Thompson", role: "Member", avatar: "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFufGVufDF8fHx8MTc3MjAxMjIyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+  { id: 14, name: "Nathan S. Wright", role: "Minister", avatar: "https://images.unsplash.com/photo-1769636929261-e913ed023c83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBtYW4lMjBoZWFkc2hvdHxlbnwxfHx8fDE3NzE5MTUzMjh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+  { id: 15, name: "Olivia H. Bennett", role: "Member", avatar: "https://images.unsplash.com/photo-1613473350016-1fe047d6d360?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjB3b21hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTk4NjM3Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+];
+
+const PREVIEW_MEMBER_COUNT = 5;
+
 // Party Ideology Card
 function PartyIdeologyCard() {
   const allianceParties = [
@@ -75,25 +96,7 @@ function PartyMembersModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
   if (!isOpen) return null;
 
-  const members = [
-    { id: 1, name: "Sheilah T. Sayasane", role: "President", avatar: imgUnsplash0HjWobhGhJs1 },
-    { id: 2, name: "Roy X. Hinde", role: "V.President", avatar: imgUnsplash0HjWobhGhJs2 },
-    { id: 3, name: "Aleta H. Starcher", role: "Member", avatar: imgUnsplash0HjWobhGhJs3 },
-    { id: 4, name: "Mai G. Sollom", role: "Member", avatar: imgUnsplash0HjWobhGhJs4 },
-    { id: 5, name: "Latricia W. Silletti", role: "Minister", avatar: imgUnsplash0HjWobhGhJs5 },
-    { id: 6, name: "Adrianne P. Tillis", role: "Member", avatar: imgUnsplash0HjWobhGhJs6 },
-    { id: 7, name: "Elvira E. Aus", role: "Member", avatar: imgUnsplash0HjWobhGhJs7 },
-    { id: 8, name: "Marcus T. Reynolds", role: "Member", avatar: "https://images.unsplash.com/photo-1554765345-6ad6a5417cde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzE5Njk3MTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-    { id: 9, name: "Isabella M. Chen", role: "Member", avatar: "https://images.unsplash.com/photo-1701096351544-7de3c7fa0272?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB3b21hbiUyMGhlYWRzaG90fGVufDF8fHx8MTc3MTk5NDA4N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-    { id: 10, name: "David R. Patterson", role: "Minister", avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTkzMTQ0OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-    { id: 11, name: "Sophia L. Martinez", role: "Member", avatar: "https://images.unsplash.com/photo-1752650735547-990f918bd028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcGhvdG98ZW58MXx8fHwxNzcyMDI2MjcwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-    { id: 12, name: "James K. Anderson", role: "Member", avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-    { id: 13, name: "Emily R. Thompson", role: "Member", avatar: "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFufGVufDF8fHx8MTc3MjAxMjIyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-    { id: 14, name: "Nathan S. Wright", role: "Minister", avatar: "https://images.unsplash.com/photo-1769636929261-e913ed023c83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBtYW4lMjBoZWFkc2hvdHxlbnwxfHx8fDE3NzE5MTUzMjh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-    { id: 15, name: "Olivia H. Bennett", role: "Member", avatar: "https://images.unsplash.com/photo-1613473350016-1fe047d6d360?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjB3b21hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTk4NjM3Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  ];
-
-  const filteredMembers = members.filter(member =>
+  const filteredMembers = ALL_PARTY_MEMBERS.filter(member =>
     member.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -254,13 +257,9 @@ function MemberRow({ member }: { member: { id: number; name: string; role: strin
 function PartyMembersCard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const allPreviewMembers = [
-    { id: 1, name: "Sheilah T. Sayasane", role: "President", avatar: imgUnsplash0HjWobhGhJs1 },
-    { id: 2, name: "Roy X. Hinde", role: "V.President", avatar: imgUnsplash0HjWobhGhJs2 },
-    { id: 3, name: "Aleta H. Starcher", role: "Member", avatar: imgUnsplash0HjWobhGhJs3 },
-    { id: 4, name: "Mai G. Sollom", role: "Member", avatar: imgUnsplash0HjWobhGhJs4 },
-    { id: 5, name: "Latricia W. Silletti", role: "Minister", avatar: imgUnsplash0HjWobhGhJs5 },
-  ];
+  // Show only the first few members as preview
+  const allPreviewMembers = ALL_PARTY_MEMBERS.slice(0, PREVIEW_MEMBER_COUNT);
+  const remainingMemberCount = ALL_PARTY_MEMBERS.length - PREVIEW_MEMBER_COUNT;
 
   return (
     <>
@@ -279,7 +278,9 @@ function PartyMembersCard() {
 
           {/* See More Link */}
           <div className="content-stretch flex gap-[6px] items-center justify-start relative shrink-0 w-full">
-            <p className="leading-[14px] not-italic relative shrink-0 text-[#6e7ca8] text-[12px]">View all members</p>
+            <p className="leading-[14px] not-italic relative shrink-0 text-[#6e7ca8] text-[12px]">
+              View {remainingMemberCount} more {remainingMemberCount === 1 ? 'member' : 'members'}
+            </p>
             <div className="relative shrink-0 size-[16px]">
               <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
                 <mask height="20" id="mask_arrow_members" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="20" x="0" y="0">

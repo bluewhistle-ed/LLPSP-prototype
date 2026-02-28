@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import svgPaths from "../../imports/svg-hkh4t53hh4";
 import imgEllipse1 from "figma:asset/aea56f3263ece92dd93d47abce807ee8df611744.png";
+import { useUser, HOME_ROUTES } from '../context/UserContext';
 
 function Group() {
   return (
@@ -16,10 +17,11 @@ function Group() {
 
 function Logo() {
   const navigate = useNavigate();
+  const { userType } = useUser();
   
   return (
     <button 
-      onClick={() => navigate('/student/home')} 
+      onClick={() => navigate(HOME_ROUTES[userType])} 
       className="content-stretch flex items-center justify-center relative shrink-0 size-[32px] cursor-pointer hover:opacity-80 transition-opacity" 
       data-name="Logo"
     >
@@ -44,16 +46,43 @@ function NavActive({ label }: { label: string }) {
   );
 }
 
-function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' }) {
+function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' | 'mentor-dashboard' }) {
   const navigate = useNavigate();
-
+  const { userType, adminRole } = useUser();
+  
   // Determine if we're in student or admin mode
   const isStudentMode = activePage === 'home';
-  const isPSPMode = ['psp-dashboard', 'question-hour', 'zero-hour', 'legislative-business'].includes(activePage);
+  const isPSPMode = ['psp-dashboard', 'question-hour', 'zero-hour', 'legislative-business'].includes(activePage) && userType === 'student';
+  const isMentorMode = userType === 'mentor';
 
   if (isStudentMode) {
     // Student navigation - no tabs, just the logo
     return null;
+  }
+
+  if (isMentorMode) {
+    // Mentor navigation - Dashboard, Question Hour, Legislative Business
+    return (
+      <div className="content-stretch flex gap-[16px] items-center relative shrink-0" data-name="Tabs">
+        {activePage === 'mentor-dashboard' ? (
+          <NavActive label="Dashboard" />
+        ) : (
+          <Nav label="Dashboard" onClick={() => navigate('/mentor/home')} />
+        )}
+        
+        {activePage === 'question-hour' ? (
+          <NavActive label="Question Hour" />
+        ) : (
+          <Nav label="Question Hour" onClick={() => navigate('/mentor/question-hour')} />
+        )}
+        
+        {activePage === 'legislative-business' ? (
+          <NavActive label="Legislative Business" />
+        ) : (
+          <Nav label="Legislative Business" onClick={() => navigate('/mentor/legislative-business')} />
+        )}
+      </div>
+    );
   }
 
   if (isPSPMode) {
@@ -88,36 +117,40 @@ function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 
   }
 
   // Admin navigation
+  const isBluewhistleAdmin = adminRole === 'bluewhistle-admin';
+
   return (
     <div className="content-stretch flex gap-[16px] items-center relative shrink-0" data-name="Tabs">
       {activePage === 'dashboard' ? (
         <NavActive label="Dashboard" />
       ) : (
-        <Nav label="Dashboard" onClick={() => navigate('/home')} />
+        <Nav label="Dashboard" onClick={() => navigate('/admin/home')} />
       )}
       
       {activePage === 'psps' ? (
         <NavActive label="PSPs" />
       ) : (
-        <Nav label="PSPs" onClick={() => navigate('/psps')} />
+        <Nav label="PSPs" onClick={() => navigate('/admin/psps')} />
       )}
       
-      {activePage === 'partners' ? (
-        <NavActive label="Partners" />
-      ) : (
-        <Nav label="Partners" onClick={() => navigate('/partners')} />
+      {isBluewhistleAdmin && (
+        activePage === 'partners' ? (
+          <NavActive label="Partners" />
+        ) : (
+          <Nav label="Partners" onClick={() => navigate('/admin/partners')} />
+        )
       )}
       
       {activePage === 'global-lists' ? (
         <NavActive label="Global Lists" />
       ) : (
-        <Nav label="Global Lists" onClick={() => navigate('/global-lists')} />
+        <Nav label="Global Lists" onClick={() => navigate('/admin/global-lists')} />
       )}
     </div>
   );
 }
 
-function NavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' }) {
+function NavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' | 'mentor-dashboard' }) {
   return (
     <div className="bg-white content-stretch flex gap-[16px] items-center p-[8px] relative rounded-[12px] shadow-[0px_8px_10px_0px_rgba(0,0,0,0.05)] shrink-0" data-name="Nav bar">
       <Logo />
@@ -163,7 +196,7 @@ function TopSideBar() {
   );
 }
 
-export function SharedNavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' }) {
+export function SharedNavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' | 'mentor-dashboard' }) {
   return (
     <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
       <NavBar activePage={activePage} />

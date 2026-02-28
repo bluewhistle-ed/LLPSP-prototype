@@ -326,6 +326,7 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
   const [focusClauseId, setFocusClauseId] = useState<string | null>(null);
   const [openActionCardId, setOpenActionCardId] = useState<string | null>(null);
   const [hoveredElementId, setHoveredElementId] = useState<string | null>(null);
+  const [isPublished, setIsPublished] = useState(false);
   const titleRef = useRef<HTMLTextAreaElement>(null);
   const preambleRef = useRef<HTMLTextAreaElement>(null);
   const subClauseRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
@@ -402,6 +403,27 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
 
   const handleBillPreambleChange = (value: string) => {
     setBillPreamble(value.toLowerCase());
+  };
+
+  const handlePublish = () => {
+    // Validate that bill has required content
+    if (!billTitle.trim()) {
+      alert('Please add a bill title before publishing.');
+      return;
+    }
+    if (chapters.length === 0) {
+      alert('Please add at least one chapter before publishing.');
+      return;
+    }
+    
+    // TODO: Add API call to publish the bill
+    setIsPublished(true);
+    
+    // Show success message and close after a brief delay
+    setTimeout(() => {
+      alert('Bill published successfully!');
+      onClose();
+    }, 300);
   };
 
   const handleAddChapter = () => {
@@ -960,9 +982,27 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
         {/* Left Panel */}
         <div className="w-[40%] border-r border-[#e3e6f0] flex flex-col bg-[#f8f9fb] overflow-y-auto scrollbar-hide">
           <div className="bg-white flex flex-col gap-[12px] px-[16px] py-[16px] border-b border-[#e3e6f0]">
-            <div className="bg-white content-stretch flex gap-[4px] items-center px-[4px] py-[2px] rounded-[4px] shrink-0 relative w-fit">
-              <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-              <p className="leading-[14px] text-[#6e7ca8] text-[12px]">Unpublished</p>
+            <div 
+              className="content-stretch flex gap-[4px] items-center px-[4px] py-[2px] rounded-[4px] shrink-0 relative w-fit"
+              style={{ 
+                backgroundColor: isPublished ? '#e8ffeb' : '#ffffff' 
+              }}
+            >
+              <div 
+                aria-hidden="true" 
+                className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" 
+                style={{ 
+                  borderColor: isPublished ? '#42a22a' : '#98a3c5' 
+                }}
+              />
+              <p 
+                className="leading-[14px] text-[12px]" 
+                style={{ 
+                  color: isPublished ? '#42a22a' : '#6e7ca8' 
+                }}
+              >
+                {isPublished ? 'Published' : 'Unpublished'}
+              </p>
             </div>
             
             <AutoResizeTextarea
@@ -991,12 +1031,11 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
                 <p className="leading-[14px] text-[#2f3e6d] text-[12px]">Add Chapter</p>
               </button>
               
-              <button className="bg-primary cursor-pointer relative rounded-[var(--radius-button-small)] shrink-0 hover:bg-primary/90 transition-colors">
+              <button className="bg-white cursor-pointer relative rounded-[6px] shrink-0 hover:bg-[#f1f2f8] transition-colors">
                 <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip p-[8px] relative">
-                  <div className="flex flex-col justify-center leading-[0] relative shrink-0 text-[12px] text-left text-primary-foreground whitespace-nowrap">
-                    <p className="leading-[14px]">View Draft</p>
-                  </div>
+                  <p className="leading-[14px] not-italic relative shrink-0 text-[#2f3e6d] text-[12px] text-left whitespace-nowrap">View Draft</p>
                 </div>
+                <div aria-hidden="true" className="absolute border-[#2f3e6d] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[6px]" />
               </button>
             </div>
           </div>
@@ -1018,7 +1057,19 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
 
         {/* Right Content */}
         <div className="flex-1 overflow-y-auto scrollbar-hide px-[16px] py-[16px] relative">
-          <div className="absolute top-[16px] right-[16px] flex items-center gap-[8px] z-10">
+          <div className="absolute top-[16px] right-[16px] flex items-center gap-[8px]">
+            {!isPublished && (
+              <button
+                onClick={handlePublish}
+                className="bg-primary cursor-pointer h-[32px] relative rounded-[var(--radius-button-small)] shrink-0 hover:bg-primary/90 transition-colors"
+              >
+                <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[12px] py-[8px] relative">
+                  <div className="flex flex-col justify-center leading-[0] relative shrink-0 text-[12px] text-left text-primary-foreground whitespace-nowrap">
+                    <p className="leading-[14px]">Publish Bill</p>
+                  </div>
+                </div>
+              </button>
+            )}
             <button
               onClick={onClose}
               className="bg-white h-[32px] relative rounded-[6px] shrink-0 cursor-pointer hover:bg-gray-50"
@@ -1033,7 +1084,7 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
           {selectedChapterData ? (
             <div className="flex flex-col gap-[16px]">
               <div className="flex flex-col gap-[8px]">
-                <div className="bg-white flex gap-[4px] items-center justify-center px-[4px] py-[2px] rounded-[4px] shrink-0 relative w-fit">
+                <div className="bg-white flex gap-[4px] items-center justify-center px-[4px] py-[2px] rounded-[4px] shrink-0 relative w-fit mt-[14px]">
                   <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
                   <p className="leading-[14px] text-[#6e7ca8] text-[12px]">CHAPTER {selectedChapterData.number}</p>
                 </div>

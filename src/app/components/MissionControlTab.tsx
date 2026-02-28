@@ -944,7 +944,7 @@ export function WelcomeTab() {
         <div className="flex flex-col gap-[18px] flex-1">
           {/* Next Actions Card */}
           <div className="bg-white relative rounded-[12px] shrink-0 w-full">
-            <div aria-hidden="true" className="absolute border border-[#3c7ce8] border-solid inset-0 pointer-events-none rounded-[12px] opacity-[0.37]" />
+            <div aria-hidden="true" className="absolute border border-[#3c7ce8] border-solid inset-0 pointer-events-none rounded-[12px] opacity-[0.46]" />
             <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
               <p className="font-semibold leading-[20px] text-[#2f3e6d] text-[16px]">Next Actions</p>
               <div className="flex flex-col w-full divide-y divide-[#f1f2f8]">
@@ -954,7 +954,7 @@ export function WelcomeTab() {
                     onClick={() => handleActionClick(action.title)}
                     className={`flex flex-col gap-[4px] w-full text-left hover:bg-[#f8f9fb] p-[8px] rounded-[8px] transition-colors cursor-pointer ${index === 0 ? 'pb-[12px] -m-[8px] mb-0' : 'py-[12px] -m-[8px]'}`}
                   >
-                    <p className="leading-[16px] text-[#3c4c7c] text-[14px]">{action.title}</p>
+                    <p className="flex items-center gap-[6px] leading-[16px] text-[#3c4c7c] text-[14px]">{action.title}<svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-30"><path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="#3c4c7c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></p>
                     <p className="leading-[16px] text-[#6e7ca8] text-[12px]">{action.description}</p>
                   </button>
                 ))}
