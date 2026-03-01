@@ -14,6 +14,7 @@ import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
 import { Search, Send, ArrowDown } from "lucide-react";
 import { Link } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { StatusChip } from './StatusChip';
 
 // Shared party members data
 const ALL_PARTY_MEMBERS = [
@@ -59,21 +60,16 @@ function PartyIdeologyCard() {
             
             {/* Treasury Chip and Alliance Chips */}
             <div className="flex items-center gap-[6px] flex-wrap">
-              <div className="bg-[#e6f7ee] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                <div aria-hidden="true" className="absolute border-[#42a22a] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#2d7a1e] text-[12px] text-ellipsis whitespace-nowrap">Treasury</p>
-              </div>
+              <StatusChip label="Treasury" />
               
               {/* Alliance Chips */}
               {allianceParties.map((party) => (
-                <div key={party.id} className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                  <Link className="size-[12px] text-[#6e7ca8] shrink-0" />
+                <StatusChip key={party.id} label={party.name} variant="alliance">
+                  <Link className="size-[12px] text-[var(--status-alliance-text)] shrink-0" />
                   <div className="relative shrink-0 size-[12px]">
                     <img alt="" className="block max-w-none size-full rounded-full object-cover" height="12" src={party.avatar} width="12" />
                   </div>
-                  <p className="leading-[14px] text-[#3c4c7c] text-[12px]">{party.name}</p>
-                </div>
+                </StatusChip>
               ))}
             </div>
           </div>
@@ -193,8 +189,7 @@ function MemberRow({ member }: { member: { id: number; name: string; role: strin
   const getRoleTag = () => {
     if (member.role === "President") {
       return (
-        <div className="bg-[#e7f2fe] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-          <div aria-hidden="true" className="absolute border-[#3c7ce8] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+        <StatusChip label="President">
           <div className="relative shrink-0 size-[12px]">
             <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 12">
               <mask height="12" id="mask_president_party" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="12" x="0" y="0">
@@ -205,13 +200,11 @@ function MemberRow({ member }: { member: { id: number; name: string; role: strin
               </g>
             </svg>
           </div>
-          <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#1850c5] text-[12px] text-ellipsis">President</p>
-        </div>
+        </StatusChip>
       );
     } else if (member.role === "V.President") {
       return (
-        <div className="bg-[#f5f0ff] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-          <div aria-hidden="true" className="absolute border-[#6820ff] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+        <StatusChip label="V. President">
           <div className="relative shrink-0 size-[12px]">
             <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 12">
               <mask height="12" id="mask_vpresident_party" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="12" x="0" y="0">
@@ -222,16 +215,10 @@ function MemberRow({ member }: { member: { id: number; name: string; role: strin
               </g>
             </svg>
           </div>
-          <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6820ff] text-[12px] text-ellipsis">V. President</p>
-        </div>
+        </StatusChip>
       );
     } else if (member.role === "Minister") {
-      return (
-        <div className="bg-[#fef3e0] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-          <div aria-hidden="true" className="absolute border-[#f59e0b] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-          <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#d97706] text-[12px] text-ellipsis">Minister</p>
-        </div>
-      );
+      return <StatusChip label="Minister" />;
     }
     return null;
   };
@@ -333,10 +320,7 @@ function DiscussionSpeakersModal({ isOpen, onClose }: { isOpen: boolean; onClose
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-[8px]">
                 <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Day 1</p>
-                <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                  <p className="leading-[14px] text-[#3c4c7c] text-[12px]">30 min</p>
-                </div>
+                <StatusChip label="30 min" variant="alliance" />
               </div>
             </div>
 
@@ -352,10 +336,7 @@ function DiscussionSpeakersModal({ isOpen, onClose }: { isOpen: boolean; onClose
                   <div className="flex items-center gap-[6px] flex-1">
                     <p className="leading-[16px] text-[#2f3e6d] text-[14px]">{speaker.name}</p>
                   </div>
-                  <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] text-[#6e7ca8] text-[12px]">{speaker.time}</p>
-                  </div>
+                  <StatusChip label={speaker.time} variant="alliance" />
                 </div>
               ))}
             </div>
@@ -369,10 +350,7 @@ function DiscussionSpeakersModal({ isOpen, onClose }: { isOpen: boolean; onClose
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-[8px]">
                 <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Day 2</p>
-                <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                  <p className="leading-[14px] text-[#3c4c7c] text-[12px]">16 min</p>
-                </div>
+                <StatusChip label="16 min" variant="alliance" />
               </div>
             </div>
 
@@ -388,10 +366,7 @@ function DiscussionSpeakersModal({ isOpen, onClose }: { isOpen: boolean; onClose
                   <div className="flex items-center gap-[6px] flex-1">
                     <p className="leading-[16px] text-[#2f3e6d] text-[14px]">{speaker.name}</p>
                   </div>
-                  <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] text-[#6e7ca8] text-[12px]">{speaker.time}</p>
-                  </div>
+                  <StatusChip label={speaker.time} variant="alliance" />
                 </div>
               ))}
             </div>
@@ -443,10 +418,7 @@ function DiscussionSpeakersCard() {
           <div className="flex flex-col gap-[12px] w-full">
             <div className="flex items-center gap-[8px]">
               <p className="leading-[16px] text-[#6e7ca8] text-[12px]">{formatDate(day1Date)}</p>
-              <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                <p className="leading-[14px] text-[#3c4c7c] text-[12px]">30 min</p>
-              </div>
+              <StatusChip label="30 min" variant="alliance" />
             </div>
             
             {day1PreviewSpeakers.map((speaker) => (
@@ -459,10 +431,7 @@ function DiscussionSpeakersCard() {
                 <div className="flex items-center gap-[6px] flex-1">
                   <p className="leading-[16px] text-[#2f3e6d] text-[14px]">{speaker.name}</p>
                 </div>
-                <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                  <p className="leading-[14px] text-[#6e7ca8] text-[12px]">{speaker.time}</p>
-                </div>
+                <StatusChip label={speaker.time} variant="alliance" />
               </div>
             ))}
             
@@ -476,10 +445,7 @@ function DiscussionSpeakersCard() {
           <div className="flex flex-col gap-[12px] w-full">
             <div className="flex items-center gap-[8px]">
               <p className="leading-[16px] text-[#6e7ca8] text-[12px]">{formatDate(day2Date)}</p>
-              <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                <p className="leading-[14px] text-[#3c4c7c] text-[12px]">16 min</p>
-              </div>
+              <StatusChip label="16 min" variant="alliance" />
             </div>
             
             {day2PreviewSpeakers.map((speaker) => (
@@ -492,10 +458,7 @@ function DiscussionSpeakersCard() {
                 <div className="flex items-center gap-[6px] flex-1">
                   <p className="leading-[16px] text-[#2f3e6d] text-[14px]">{speaker.name}</p>
                 </div>
-                <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                  <p className="leading-[14px] text-[#6e7ca8] text-[12px]">{speaker.time}</p>
-                </div>
+                <StatusChip label={speaker.time} variant="alliance" />
               </div>
             ))}
           </div>
@@ -534,14 +497,8 @@ function PartyStatisticsCard() {
         {/* Questions */}
         <div className="flex gap-[8px] items-center w-full">
           <p className="leading-[16px] text-[#3c4c7c] text-[14px]">Questions</p>
-          <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-            <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-            <p className="leading-[14px] text-[#3c4c7c] text-[12px]">25 Submitted</p>
-          </div>
-          <div className="bg-[#e6f7ee] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-            <div aria-hidden="true" className="absolute border-[#42a22a] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-            <p className="leading-[14px] text-[#2d7a1e] text-[12px]">6 Approved</p>
-          </div>
+          <StatusChip label="25 Submitted" variant="alliance" />
+          <StatusChip label="6 Approved" variant="treasury" />
         </div>
         
         {/* Divider */}
@@ -550,14 +507,8 @@ function PartyStatisticsCard() {
         {/* Notices */}
         <div className="flex gap-[8px] items-center w-full">
           <p className="leading-[16px] text-[#3c4c7c] text-[14px]">Notices</p>
-          <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-            <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-            <p className="leading-[14px] text-[#3c4c7c] text-[12px]">8 Submitted</p>
-          </div>
-          <div className="bg-[#e6f7ee] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-            <div aria-hidden="true" className="absolute border-[#42a22a] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-            <p className="leading-[14px] text-[#2d7a1e] text-[12px]">6 Approved</p>
-          </div>
+          <StatusChip label="8 Submitted" variant="alliance" />
+          <StatusChip label="6 Approved" variant="treasury" />
         </div>
         
         {/* Divider */}
@@ -566,10 +517,7 @@ function PartyStatisticsCard() {
         {/* Amendments */}
         <div className="flex gap-[8px] items-center w-full">
           <p className="leading-[16px] text-[#3c4c7c] text-[14px]">Amendments</p>
-          <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-            <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-            <p className="leading-[14px] text-[#3c4c7c] text-[12px]">5 Submitted</p>
-          </div>
+          <StatusChip label="5 Submitted" variant="alliance" />
         </div>
       </div>
     </div>

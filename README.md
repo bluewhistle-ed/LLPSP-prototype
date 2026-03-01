@@ -1,7 +1,7 @@
 
-  # LL PSP 2
+  # LLPSP (prototype)
 
-  This is a code bundle for LL PSP 2. The original project is available at https://www.figma.com/design/5SFblM7HB6gbcTgm2BozJ3/LL-PSP-2.
+  This is a code bundle for LLPSP (prototype). The original project is available at https://www.figma.com/design/5SFblM7HB6gbcTgm2BozJ3/LLPSP--prototype-.
 
   ## Running the code
 

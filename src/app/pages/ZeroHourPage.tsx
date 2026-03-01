@@ -8,6 +8,7 @@ import { PrimaryActionButton } from "../components/PrimaryActionButton";
 import { NoticeForm } from "../components/NoticeForm";
 import { useState } from "react";
 import { motion, AnimatePresence } from 'motion/react';
+import { StatusChip } from "../components/StatusChip";
 
 function PartyBadge({ party }: { party: string }) {
   const colors: Record<string, { bg: string; border: string; text: string }> = {
@@ -56,15 +57,6 @@ function RoleBadge({ role }: { role: string }) {
       <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: config.border }} />
       {config.icon}
       <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: config.text }}>{role}</p>
-    </div>
-  );
-}
-
-function StatusChip({ status }: { status: string }) {
-  return (
-    <div className="bg-white content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-      <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis">{status}</p>
     </div>
   );
 }
@@ -191,7 +183,7 @@ export function ZeroHourPage() {
   return (
     <div className="bg-[#f8f9fb] relative size-full">
       {/* Navbar - positioned absolutely at the top */}
-      <div className="absolute left-[calc(16.67%+56px)] top-[32px]">
+      <div className="absolute page-inset-left top-[32px]">
         <SharedNavBar activePage="zero-hour" />
       </div>
 
@@ -199,7 +191,7 @@ export function ZeroHourPage() {
       <PageHeader />
       
       {/* Main Container - Fixed margins on left and right */}
-      <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[calc(16.67%+56px)] right-[calc(16.67%+56px)] top-[100px]">
+      <div className="absolute content-stretch flex flex-col gap-[16px] items-start page-inset-x top-[100px]">
         {/* Action Bar - Filter Buttons and New Notice Button */}
         <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
           {/* Filter Buttons */}
@@ -300,26 +292,7 @@ export function ZeroHourPage() {
                             <circle cx="2" cy="2" fill="#C8CEE2" r="2" />
                           </svg>
                         </div>
-                        {(() => {
-                          // Map status to display text and colors
-                          const statusDisplay = notice.status === 'Under Review' ? 'Waiting for approval' : notice.status;
-                          const getStatusColors = (displayStatus: string) => {
-                            const statusColors: Record<string, { bg: string; border: string; text: string }> = {
-                              'Approved': { bg: '#e8ffeb', border: '#42a22a', text: '#42a22a' },
-                              'Waiting for approval': { bg: '#fef3e8', border: '#ed7d31', text: '#ed7d31' },
-                              'Rejected': { bg: '#ffe8e8', border: '#d32f2f', text: '#d32f2f' },
-                              'Submitted': { bg: '#f1f2f8', border: '#98a3c5', text: '#6e7ca8' }
-                            };
-                            return statusColors[displayStatus] || { bg: '#f1f2f8', border: '#98a3c5', text: '#6e7ca8' };
-                          };
-                          const colors = getStatusColors(statusDisplay);
-                          return (
-                            <div className="content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" style={{ backgroundColor: colors.bg }}>
-                              <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: colors.border }} />
-                              <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: colors.text }}>{statusDisplay}</p>
-                            </div>
-                          );
-                        })()}
+                        <StatusChip label={notice.status === 'Under Review' ? 'Waiting for approval' : notice.status} />
                       </div>
                     </div>
 

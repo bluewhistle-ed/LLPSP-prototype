@@ -13,6 +13,7 @@ import imgEllipse9 from "figma:asset/7d537f4f1b05e605b168f4447189c4a1b187cdb6.pn
 import imgFlag1 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
 import { imgUnsplash0HjWobhGhJs } from "../../imports/svg-9n6vy";
 import { Bell } from "lucide-react";
+import { StatusChip } from './StatusChip';
 import { JoinPartyModal } from "./JoinPartyModal";
 import { useState } from "react";
 
@@ -290,12 +291,7 @@ function AvatarName1() {
 }
 
 function Tag() {
-  return (
-    <div className="bg-[#f5f0ff] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" data-name="Tag">
-      <div aria-hidden="true" className="absolute border-[#6820ff] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6820ff] text-[12px] text-ellipsis">Mentor</p>
-    </div>
-  );
+  return <StatusChip label="Mentor" />;
 }
 
 function AvatarTag1() {
@@ -340,11 +336,9 @@ function IconsEmojiFlags() {
 
 function Tag1() {
   return (
-    <div className="bg-[#e7f2fe] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" data-name="Tag">
-      <div aria-hidden="true" className="absolute border-[#3c7ce8] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+    <StatusChip label="President">
       <IconsEmojiFlags />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#1850c5] text-[12px] text-ellipsis">President</p>
-    </div>
+    </StatusChip>
   );
 }
 
@@ -571,11 +565,9 @@ function IconsPresident() {
 
 function Tag2() {
   return (
-    <div className="bg-[#e7f2fe] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" data-name="Tag">
-      <div aria-hidden="true" className="absolute border-[#3c7ce8] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+    <StatusChip label="President">
       <IconsPresident />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#1850c5] text-[12px] text-ellipsis">President</p>
-    </div>
+    </StatusChip>
   );
 }
 
@@ -616,11 +608,9 @@ function IconsPresident1() {
 
 function Tag3() {
   return (
-    <div className="bg-[#f5f0ff] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" data-name="Tag">
-      <div aria-hidden="true" className="absolute border-[#6820ff] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+    <StatusChip label="Vice President">
       <IconsPresident1 />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6820ff] text-[12px] text-ellipsis">Vice President</p>
-    </div>
+    </StatusChip>
   );
 }
 
@@ -982,16 +972,10 @@ export function WelcomeTab() {
                 {/* Party Tag and Treasury Chip */}
                 <div className="flex items-center gap-[6px]">
                   {/* Private Member Chip */}
-                  <div className="bg-white content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Private Member</p>
-                  </div>
+                  <StatusChip label="Private Member" />
                   
                   {/* Treasury Chip */}
-                  <div className="bg-[#e6f7ee] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#42a22a] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#2d7a1e] text-[12px] text-ellipsis whitespace-nowrap">Treasury</p>
-                  </div>
+                  <StatusChip label="Treasury" />
                 </div>
               </div>
             </div>
@@ -1015,8 +999,7 @@ export function WelcomeTab() {
                 </div>
                 <p className="leading-[16px] text-[#3c4c7c] text-[12px]">Sheilah T. Sayasane</p>
                 {/* President Badge */}
-                <div className="bg-[#e7f2fe] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#3c7ce8] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+                <StatusChip label="President">
                   <div className="relative shrink-0 size-[12px]">
                     <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 12">
                       <mask height="12" id="mask_president_mc" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="12" x="0" y="0">
@@ -1027,8 +1010,7 @@ export function WelcomeTab() {
                       </g>
                     </svg>
                   </div>
-                  <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#1850c5] text-[12px] text-ellipsis whitespace-nowrap">President</p>
-                </div>
+                </StatusChip>
               </div>
             </div>
 
@@ -1048,10 +1030,7 @@ export function WelcomeTab() {
                 <div className="flex flex-col gap-[8px] relative z-10">
                   <p className="font-semibold leading-[16px] text-[#6e7ca8] text-[14px]">Submission of questions by Private Members</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">Only Private Members can submit questions, from both the Opposition and Treasury benches.</p>
-                  <div className="bg-[#f3f4f6] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0 w-fit">
-                    <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">24 Feb, Tue</p>
-                  </div>
+                  <StatusChip label="24 Feb, Tue" variant="info" />
                 </div>
               </div>
 
@@ -1060,10 +1039,7 @@ export function WelcomeTab() {
                 <div className="flex flex-col gap-[8px]">
                   <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Submission of Draft Bill by Select Committee</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">Only the Select Committee can submit a Draft Bill, which will be circulated among all Members of the House.</p>
-                  <div className="bg-[#fee2e2] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0 w-fit">
-                    <div aria-hidden="true" className="absolute border-[#ef4444] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#b91c1c] text-[12px] text-ellipsis whitespace-nowrap">26 Feb, Thu</p>
-                  </div>
+                  <StatusChip label="26 Feb, Thu" variant="urgent" />
                 </div>
               </div>
 
@@ -1072,10 +1048,7 @@ export function WelcomeTab() {
                 <div className="flex flex-col gap-[8px]">
                   <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Submission of Notices</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">Each Member of the House can submit one notice.</p>
-                  <div className="bg-[#fee2e2] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0 w-fit">
-                    <div aria-hidden="true" className="absolute border-[#ef4444] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#b91c1c] text-[12px] text-ellipsis whitespace-nowrap">27 Feb, Fri</p>
-                  </div>
+                  <StatusChip label="27 Feb, Fri" variant="urgent" />
                 </div>
               </div>
 
@@ -1084,10 +1057,7 @@ export function WelcomeTab() {
                 <div className="flex flex-col gap-[8px]">
                   <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Submission of Amendments to the Bill</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">All Members of the House can submit amendments to the Bill that has been circulated.</p>
-                  <div className="bg-[#fee2e2] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0 w-fit">
-                    <div aria-hidden="true" className="absolute border-[#ef4444] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#b91c1c] text-[12px] text-ellipsis whitespace-nowrap">28 Feb, Sat</p>
-                  </div>
+                  <StatusChip label="28 Feb, Sat" variant="urgent" />
                 </div>
               </div>
             </div>
@@ -1103,11 +1073,9 @@ export function WelcomeTab() {
           <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
             <div className="flex items-center justify-between w-full">
               <p className="font-semibold leading-[20px] text-[#2f3e6d] text-[16px]">Announcements</p>
-              <div className="content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" style={{ backgroundColor: '#fef3c7' }}>
-                <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: '#f59e0b' }} />
-                <Bell className="size-[12px] shrink-0" style={{ color: '#d97706' }} />
-                <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: '#d97706' }}>1 New</p>
-              </div>
+              <StatusChip label="1 New" variant="warning">
+                <Bell className="size-[12px] shrink-0" style={{ color: 'var(--status-warning-text)' }} />
+              </StatusChip>
             </div>
 
             <div className="flex flex-col gap-[12px] w-full">
@@ -1144,8 +1112,7 @@ export function WelcomeTab() {
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">Progress</p>
                   <div className="flex gap-[8px] items-center">
                     {/* Day Progress Badge */}
-                    <div className="content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" style={{ backgroundColor: '#d1fae5' }}>
-                      <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: '#10b981' }} />
+                    <StatusChip label={`Day ${currentPSP.currentDay} of ${currentPSP.totalDays}`} variant="progress">
                       <div className="relative shrink-0 size-[12px]">
                         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 12">
                           <mask height="12" id="mask_calendar_chip" maskUnits="userSpaceOnUse" style={{ maskType: 'alpha' }} width="12" x="0" y="0">
@@ -1156,8 +1123,7 @@ export function WelcomeTab() {
                           </g>
                         </svg>
                       </div>
-                      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: '#047857' }}>Day {currentPSP.currentDay} of {currentPSP.totalDays}</p>
-                    </div>
+                    </StatusChip>
                     
                     {/* Current Phase Badge - dynamically renders based on currentPhase */}
                     <PhaseBadge phase={currentPSP.currentPhase} />
@@ -1418,10 +1384,7 @@ export function PartyManagementTab() {
                     </div>
                     <p className="leading-[16px] text-[#3c4c7c] text-[14px]">{selectedParty.mentor.name}</p>
                   </div>
-                  <div className="bg-[#f5f0ff] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#6820ff] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6820ff] text-[12px] text-ellipsis">Mentor</p>
-                  </div>
+                  <StatusChip label="Mentor" />
                 </div>
                 <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
                   <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
@@ -1431,11 +1394,9 @@ export function PartyManagementTab() {
                     </div>
                     <p className="leading-[16px] text-[#3c4c7c] text-[14px]">{selectedParty.president.name}</p>
                   </div>
-                  <div className="bg-[#e7f2fe] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#3c7ce8] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+                  <StatusChip label="President">
                     <IconsEmojiFlags />
-                    <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#1850c5] text-[12px] text-ellipsis">President</p>
-                  </div>
+                  </StatusChip>
                 </div>
               </div>
             </div>

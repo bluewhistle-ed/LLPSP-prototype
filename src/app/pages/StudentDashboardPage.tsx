@@ -539,7 +539,7 @@ export default function StudentDashboardPage() {
   return (
     <div className="bg-[#f8f9fb] relative size-full">
       {/* Navbar - positioned absolutely at the top */}
-      <div className="absolute left-[calc(16.67%+56px)] top-[32px]">
+      <div className="absolute page-inset-left top-[32px]">
         <SharedNavBar activePage="home" />
       </div>
 
@@ -547,7 +547,7 @@ export default function StudentDashboardPage() {
       <PageHeader />
       
       {/* Main Content - Scrollable container below navbar */}
-      <div className="absolute content-stretch flex flex-col gap-[24px] items-start left-[calc(16.67%+56px)] right-[calc(16.67%+56px)] top-[100px] max-h-[calc(100vh-132px)] overflow-y-auto pb-[32px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="absolute content-stretch flex flex-col gap-[24px] items-start page-inset-x top-[100px] max-h-[calc(100vh-132px)] overflow-y-auto pb-[32px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {/* Two Column Layout - Left and Right columns flow independently */}
         <div className="flex gap-[24px] w-full items-start">
           {/* Left Column */}

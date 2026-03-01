@@ -167,7 +167,7 @@ export function PageHeader() {
   const hasRoles = userType === 'admin' || userType === 'student';
 
   return (
-    <div className="absolute bg-white content-stretch flex gap-[16px] items-center p-[8px] right-[calc(16.67%+56px)] rounded-[var(--radius-card)] top-[32px]" data-name="Top Side bar">
+    <div className="absolute bg-white content-stretch flex gap-[16px] items-center p-[8px] page-inset-right rounded-[var(--radius-card)] top-[32px]" data-name="Top Side bar">
       <div aria-hidden="true" className="absolute border border-[#f1f2f8] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
       <Buttons />
       <div className="relative" ref={dropdownRef}>

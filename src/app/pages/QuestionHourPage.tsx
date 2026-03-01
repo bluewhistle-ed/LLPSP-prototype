@@ -14,6 +14,8 @@ import { QuestionForm } from "../components/QuestionForm";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from 'motion/react';
 import { useUser } from "../context/UserContext";
+import { StatusChip } from "../components/StatusChip";
+import { FeedbackDisplay, FeedbackForm, MentorFeedbackSection, GiveFeedbackButton } from "../components/FeedbackModule";
 
 function IconsMoreVert() {
   return (
@@ -60,20 +62,7 @@ function IconsCalendar() {
   );
 }
 
-function IconsReply() {
-  return (
-    <div className="relative shrink-0 size-[16px]">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
-        <mask height="16" id="mask_reply" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
-          <rect fill="#D9D9D9" height="16" width="16" />
-        </mask>
-        <g mask="url(#mask_reply)">
-          <path d="M6.66667 11.3333V8.66667H12.6667V7.33333H6.66667V4.66667L2.66667 8L6.66667 11.3333Z" fill="#1850C5"/>
-        </g>
-      </svg>
-    </div>
-  );
-}
+
 
 function AnswerButton({ onClick }: { onClick?: () => void }) {
   return (
@@ -194,23 +183,6 @@ function RoleBadge({ role }: { role: string }) {
 }
 
 function QuestionCard() {
-  const [showReplyInput, setShowReplyInput] = useState(false);
-  const [replyText, setReplyText] = useState("");
-  const [replies, setReplies] = useState<string[]>([]);
-
-  const handleSubmitReply = () => {
-    if (replyText.trim()) {
-      setReplies([...replies, replyText]);
-      setReplyText("");
-      setShowReplyInput(false);
-    }
-  };
-
-  const handleCancelReply = () => {
-    setReplyText("");
-    setShowReplyInput(false);
-  };
-
   return (
     <div className="bg-white content-stretch flex flex-col gap-[12px] items-start p-[16px] relative rounded-[12px] w-full">
       <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
@@ -228,10 +200,7 @@ function QuestionCard() {
                   <circle cx="2" cy="2" fill="#C8CEE2" r="2" />
                 </svg>
               </div>
-              <div className="bg-white content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis">Waiting for approval</p>
-              </div>
+              <StatusChip label="Waiting for approval" />
             </div>
           </div>
         </div>
@@ -282,107 +251,19 @@ function QuestionCard() {
         </div>
       </div>
 
-      {/* Feedback Section */}
-      <div className="bg-[#f8f9fb] content-stretch flex flex-col gap-[12px] items-start p-[12px] relative rounded-[8px] w-full">
-        <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
-        
-        {/* Mentor Feedback Comment */}
-        <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-          <p className="font-semibold leading-[16px] text-[#2f3e6d] text-[12px]">Feedback</p>
-          <p className="leading-[20px] text-[#3c4c7c] text-[14px]">
-            This question can be paraphrased differently focusing on the inflicting actions performed by our Alliance,
-          </p>
-        </div>
-
-        {/* Avatar Tag + Reply */}
-        <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
-          {/* Avatar + Name + Tag Wrapper */}
-          <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
-            <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
-            {/* Avatar + Name */}
-            <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-              <div className="relative shrink-0 size-[16px]">
-                <img alt="" className="block max-w-none size-full rounded-full" src={imgEllipse5} />
-              </div>
-              <p className="leading-[16px] overflow-hidden text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">Regina</p>
-            </div>
-            <RoleBadge role="Mentor" />
-          </div>
-
-          {/* Reply Button */}
-          <button 
-            className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer"
-            onClick={() => setShowReplyInput(!showReplyInput)}
-          >
-            <IconsReply />
-            <p className="leading-[16px] text-[#1850c5] text-[14px] whitespace-nowrap">Reply</p>
-          </button>
-        </div>
-
-        {/* Reply Input (shown when reply button is clicked) */}
-        <AnimatePresence>
-          {showReplyInput && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full overflow-hidden"
-            >
-              {/* Text Input */}
-              <textarea
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Type your reply..."
-                className="w-full bg-white border border-[#e3e6f0] rounded-[6px] p-[8px] leading-[20px] text-[#3c4c7c] text-[14px] min-h-[80px] resize-none focus:outline-none focus:border-[#2766da]"
-              />
-              
-              {/* Action Buttons */}
-              <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full">
-                <button
-                  onClick={handleCancelReply}
-                  className="bg-[#f1f2f8] hover:bg-[#e3e6f0] content-stretch flex items-center justify-center px-[12px] py-[6px] relative rounded-[6px] cursor-pointer transition-colors"
-                >
-                  <p className="leading-[16px] text-[#3c4c7c] text-[14px]">Cancel</p>
-                </button>
-                <button
-                  onClick={handleSubmitReply}
-                  className="bg-[#2766da] hover:bg-[#1850c5] content-stretch flex items-center justify-center px-[12px] py-[6px] relative rounded-[6px] cursor-pointer transition-colors"
-                >
-                  <p className="leading-[16px] text-white text-[14px]">Submit</p>
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* User Replies (shown below input) */}
-        {replies.length > 0 && (
-          <>
-            {/* Divider between mentor feedback and user replies */}
-            <div className="border-t border-[#e3e6f0] w-full" />
-            
-            {replies.map((reply, index) => (
-              <div key={index} className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-                {/* Reply Text First */}
-                <p className="leading-[20px] text-[#3c4c7c] text-[14px]">{reply}</p>
-                
-                {/* Avatar + Name Tag Below */}
-                <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
-                  {/* Avatar + Name */}
-                  <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-                    <div className="relative shrink-0 size-[16px]">
-                      <img alt="" className="block max-w-none size-full rounded-full" src={imgEllipse8} />
-                    </div>
-                    <p className="leading-[16px] overflow-hidden text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">You</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </>
-        )}
-      </div>
+      {/* Feedback Section — uses shared FeedbackDisplay */}
+      <FeedbackDisplay
+        feedback={{
+          text: "This question can be paraphrased differently focusing on the inflicting actions performed by our Alliance,",
+          authorName: "Regina",
+          authorAvatar: imgEllipse5,
+          authorRole: "Mentor",
+        }}
+        showHeading
+        allowReply
+        replyAvatar={imgEllipse8}
+        replyName="You"
+      />
     </div>
   );
 }
@@ -497,32 +378,10 @@ interface QuestionCardWithDataProps {
 }
 
 function QuestionCardWithData({ id, ministry, theme, timestamp, status, questions, askedBy, askedTo, feedback, hideFeedback, assignedTo, onAssign, isMoS, isMentorView, onStatusChange }: QuestionCardWithDataProps) {
-  const [showReplyInput, setShowReplyInput] = useState(false);
-  const [replyText, setReplyText] = useState("");
-  const [replies, setReplies] = useState<string[]>([]);
   const [showAnswerForm, setShowAnswerForm] = useState(false);
   const [answerText, setAnswerText] = useState("");
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
   const answerRef = useRef<HTMLTextAreaElement>(null);
-  
-  // Mentor feedback state
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
-  const [feedbackText, setFeedbackText] = useState("");
-  const [mentorFeedback, setMentorFeedback] = useState<{ text: string } | null>(null);
-  const feedbackRef = useRef<HTMLTextAreaElement>(null);
-
-  const handleSubmitReply = () => {
-    if (replyText.trim()) {
-      setReplies([...replies, replyText]);
-      setReplyText("");
-      setShowReplyInput(false);
-    }
-  };
-
-  const handleCancelReply = () => {
-    setReplyText("");
-    setShowReplyInput(false);
-  };
 
   const handleSubmitAnswer = () => {
     if (answerText.trim()) {
@@ -536,31 +395,6 @@ function QuestionCardWithData({ id, ministry, theme, timestamp, status, question
     setAnswerText("");
     setShowAnswerForm(false);
   };
-
-  const handleSubmitFeedback = () => {
-    if (feedbackText.trim()) {
-      setMentorFeedback({ text: feedbackText });
-      setFeedbackText("");
-      setShowFeedbackForm(false);
-    }
-  };
-
-  const handleCancelFeedback = () => {
-    setFeedbackText("");
-    setShowFeedbackForm(false);
-  };
-
-  // Status color mapping
-  const getStatusColors = (status: string) => {
-    const statusColors: Record<string, { bg: string; border: string; text: string }> = {
-      'Approved': { bg: '#e8ffeb', border: '#42a22a', text: '#42a22a' },
-      'Waiting for approval': { bg: '#fef3e8', border: '#ed7d31', text: '#ed7d31' },
-      'Rejected': { bg: '#ffe8e8', border: '#d32f2f', text: '#d32f2f' }
-    };
-    return statusColors[status] || { bg: '#f1f2f8', border: '#98a3c5', text: '#6e7ca8' };
-  };
-
-  const statusColors = getStatusColors(status);
 
   return (
     <div className="bg-white content-stretch flex flex-col gap-[12px] items-start p-[16px] relative rounded-[12px] w-full">
@@ -582,10 +416,7 @@ function QuestionCardWithData({ id, ministry, theme, timestamp, status, question
                   <circle cx="2" cy="2" fill="#C8CEE2" r="2" />
                 </svg>
               </div>
-              <div className="content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" style={{ backgroundColor: statusColors.bg }}>
-                <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: statusColors.border }} />
-                <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: statusColors.text }}>{status}</p>
-              </div>
+              <StatusChip label={status} />
             </div>
           </div>
         </div>
@@ -669,188 +500,28 @@ function QuestionCardWithData({ id, ministry, theme, timestamp, status, question
 
       {/* Feedback Section — Student view: show existing feedback from mentor */}
       {feedback && !hideFeedback && !isMentorView && (
-        <div className="bg-[#f8f9fb] content-stretch flex flex-col gap-[12px] items-start p-[12px] relative rounded-[8px] w-full">
-          <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
-          
-          {/* Mentor Feedback Comment */}
-          <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-            <p className="font-semibold leading-[16px] text-[#2f3e6d] text-[12px]">Feedback</p>
-            <p className="leading-[20px] text-[#3c4c7c] text-[14px]">{feedback.text}</p>
-          </div>
-
-          {/* Avatar Tag + Reply */}
-          <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
-            {/* Avatar + Name + Tag Wrapper */}
-            <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
-              <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
-              {/* Avatar + Name */}
-              <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-                <div className="relative shrink-0 size-[16px]">
-                  <img alt="" className="block max-w-none size-full rounded-full" src={feedback.mentorAvatar} />
-                </div>
-                <p className="leading-[16px] overflow-hidden text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">{feedback.mentorName}</p>
-              </div>
-              <RoleBadge role="Mentor" />
-            </div>
-
-            {/* Reply Button */}
-            <button 
-              className="content-stretch flex gap-[4px] items-center relative shrink-0 cursor-pointer"
-              onClick={() => setShowReplyInput(!showReplyInput)}
-            >
-              <IconsReply />
-              <p className="leading-[16px] text-[#1850c5] text-[14px] whitespace-nowrap">Reply</p>
-            </button>
-          </div>
-
-          {/* Reply Input (shown when reply button is clicked) */}
-          <AnimatePresence>
-            {showReplyInput && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full overflow-hidden"
-              >
-                {/* Text Input */}
-                <textarea
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="Type your reply..."
-                  className="w-full bg-white border border-[#e3e6f0] rounded-[6px] p-[8px] leading-[20px] text-[#3c4c7c] text-[14px] min-h-[80px] resize-none focus:outline-none focus:border-[#2766da]"
-                />
-                
-                {/* Action Buttons */}
-                <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full">
-                  <button
-                    onClick={handleCancelReply}
-                    className="bg-[#f1f2f8] hover:bg-[#e3e6f0] content-stretch flex items-center justify-center px-[12px] py-[6px] relative rounded-[6px] cursor-pointer transition-colors"
-                  >
-                    <p className="leading-[16px] text-[#3c4c7c] text-[14px]">Cancel</p>
-                  </button>
-                  <button
-                    onClick={handleSubmitReply}
-                    className="bg-[#2766da] hover:bg-[#1850c5] content-stretch flex items-center justify-center px-[12px] py-[6px] relative rounded-[6px] cursor-pointer transition-colors"
-                  >
-                    <p className="leading-[16px] text-white text-[14px]">Submit</p>
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* User Replies (shown below input) */}
-          {replies.length > 0 && (
-            <>
-              {/* Divider between mentor feedback and user replies */}
-              <div className="border-t border-[#e3e6f0] w-full" />
-              
-              {replies.map((reply, index) => (
-                <div key={index} className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-                  {/* Reply Text First */}
-                  <p className="leading-[20px] text-[#3c4c7c] text-[14px]">{reply}</p>
-                  
-                  {/* Avatar + Name Tag Below */}
-                  <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
-                    {/* Avatar + Name */}
-                    <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-                      <div className="relative shrink-0 size-[16px]">
-                        <img alt="" className="block max-w-none size-full rounded-full" src={imgEllipse8} />
-                      </div>
-                      <p className="leading-[16px] overflow-hidden text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">You</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
-        </div>
+        <FeedbackDisplay
+          feedback={{
+            text: feedback.text,
+            authorName: feedback.mentorName,
+            authorAvatar: feedback.mentorAvatar,
+            authorRole: "Mentor",
+          }}
+          showHeading
+          allowReply
+          replyAvatar={imgEllipse8}
+          replyName="You"
+        />
       )}
 
       {/* Mentor Feedback Section — Give Feedback or show submitted feedback */}
       {isMentorView && (
-        <>
-          {/* Already submitted feedback (by this mentor in this session) */}
-          {mentorFeedback && (
-            <div className="bg-[#f8f9fb] content-stretch flex flex-col gap-[12px] items-start p-[12px] relative rounded-[8px] w-full">
-              <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
-              
-              <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-                <p className="leading-[20px] text-[#3c4c7c] text-[14px]">{mentorFeedback.text}</p>
-              </div>
-
-              {/* Mentor avatar tag */}
-              <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
-                <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
-                <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-                  <div className="relative shrink-0 size-[16px]">
-                    <img alt="" className="block max-w-none size-full rounded-full" src={imgEllipse5} />
-                  </div>
-                  <p className="leading-[16px] overflow-hidden text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">You</p>
-                </div>
-                <RoleBadge role="Mentor" />
-              </div>
-            </div>
-          )}
-
-          {/* Give Feedback button — shown when no feedback has been submitted yet */}
-          {!mentorFeedback && !showFeedbackForm && (
-            <button
-              onClick={() => setShowFeedbackForm(true)}
-              className="content-stretch flex gap-[6px] items-center relative shrink-0 cursor-pointer group"
-            >
-              <div className="relative shrink-0 size-[16px]">
-                <svg className="block size-full" fill="none" viewBox="0 0 16 16">
-                  <path d="M14 1H2C1.45 1 1 1.45 1 2V11C1 11.55 1.45 12 2 12H5L8 15L11 12H14C14.55 12 15 11.55 15 11V2C15 1.45 14.55 1 14 1ZM14 11H10.83L8 13.83L5.17 11H2V2H14V11ZM4 5H12V6.5H4V5ZM4 7.5H9V9H4V7.5Z" fill="#1850C5"/>
-                </svg>
-              </div>
-              <p className="leading-[16px] text-[#1850c5] text-[14px] group-hover:underline">Give Feedback</p>
-            </button>
-          )}
-
-          {/* Feedback Form — shown when mentor clicks "Give Feedback" */}
-          <AnimatePresence>
-            {showFeedbackForm && !mentorFeedback && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="w-full overflow-hidden"
-              >
-                <div className="bg-[#f8f9fb] content-stretch flex flex-col gap-[12px] items-start p-[12px] relative rounded-[8px] w-full">
-                  <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[8px]" />
-                  
-                  <textarea
-                    ref={feedbackRef}
-                    value={feedbackText}
-                    onChange={(e) => setFeedbackText(e.target.value)}
-                    placeholder="Write your feedback on this question..."
-                    className="w-full bg-white border border-[#e3e6f0] rounded-[6px] p-[8px] leading-[20px] text-[#3c4c7c] text-[14px] min-h-[100px] resize-none overflow-hidden focus:outline-none focus:border-[#2766da]"
-                  />
-                  
-                  <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full">
-                    <button
-                      onClick={handleCancelFeedback}
-                      className="relative bg-[#f1f2f8] hover:bg-[#e3e6f0] content-stretch flex items-center justify-center px-[12px] py-[6px] rounded-[6px] cursor-pointer transition-colors"
-                    >
-                      <p className="leading-[14px] text-[#3c4c7c] text-[12px]">Cancel</p>
-                      <div aria-hidden="true" className="absolute border-[#c8cee2] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[6px]" />
-                    </button>
-                    <button
-                      onClick={handleSubmitFeedback}
-                      className="bg-[#2766da] hover:bg-[#1850c5] content-stretch flex items-center justify-center px-[12px] py-[6px] rounded-[6px] cursor-pointer transition-colors"
-                    >
-                      <p className="leading-[14px] text-white text-[12px]">Submit Feedback</p>
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </>
+        <MentorFeedbackSection
+          mentorName="Regina"
+          mentorAvatar={imgEllipse5}
+          mentorRole="Mentor"
+          placeholder="Write your feedback on this question..."
+        />
       )}
 
       {/* Answer Section — Minister/MoS view only, when assigned to them */}
@@ -1318,7 +989,7 @@ export default function QuestionHourPage() {
   return (
     <div className="bg-[#f8f9fb] relative size-full">
       {/* Navbar - positioned absolutely at the top */}
-      <div className="absolute left-[calc(16.67%+56px)] top-[32px]">
+      <div className="absolute page-inset-left top-[32px]">
         <SharedNavBar activePage="question-hour" />
       </div>
 
@@ -1326,7 +997,7 @@ export default function QuestionHourPage() {
       <PageHeader />
       
       {/* Main Container - Fixed margins on left and right */}
-      <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[calc(16.67%+56px)] right-[calc(16.67%+56px)] top-[100px]">
+      <div className="absolute content-stretch flex flex-col gap-[16px] items-start page-inset-x top-[100px]">
         {/* Action Bar - Filter Buttons and New Question Button */}
         <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
           {/* Filter Buttons and Unassigned Chip */}
@@ -1361,37 +1032,22 @@ export default function QuestionHourPage() {
             {/* Contextual Count Chips — change based on active tab */}
             {!isMinisterView && (
               <>
-                <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                  <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                  <p className="leading-[14px] text-[#3c4c7c] text-[12px]">All Submissions {allCount}</p>
-                </div>
+                <StatusChip label={`All Submissions ${allCount}`} variant="alliance" />
                 {activeTab === 0 && pendingActionCount > 0 && (
-                  <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] text-[#3c4c7c] text-[12px]">Pending Action {pendingActionCount}</p>
-                  </div>
+                  <StatusChip label={`Waiting for approval ${pendingActionCount}`} variant="pending" />
                 )}
                 {activeTab === 1 && approvedCount > 0 && (
-                  <div className="bg-[#e6f7ee] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#42a22a] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] text-[#2d7a1e] text-[12px]">Approved {approvedCount}</p>
-                  </div>
+                  <StatusChip label={`Approved ${approvedCount}`} variant="treasury" />
                 )}
                 {activeTab === 2 && rejectedCount > 0 && (
-                  <div className="bg-[#fde8e8] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                    <div aria-hidden="true" className="absolute border-[#e53535] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                    <p className="leading-[14px] text-[#c62828] text-[12px]">Rejected {rejectedCount}</p>
-                  </div>
+                  <StatusChip label={`Rejected ${rejectedCount}`} variant="rejected" />
                 )}
               </>
             )}
 
             {/* Unassigned Questions Count Chip — only shown for full Minister (not MoS) */}
             {isFullMinister && unassignedCount > 0 && (
-              <div className="bg-[#f8f9fb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">{unassignedCount} Unassigned</p>
-              </div>
+              <StatusChip label={`${unassignedCount} Unassigned`} variant="default" />
             )}
           </div>
 

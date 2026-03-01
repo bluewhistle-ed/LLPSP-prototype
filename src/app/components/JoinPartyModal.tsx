@@ -3,7 +3,7 @@ import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
 import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
 import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
 import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
-import imgFlag3 from "figma:asset/c024e77b2087b3a6e80b74cfeafba89f1a693953.png";
+import { StatusChip } from './StatusChip';
 import { useState } from "react";
 
 function IconsCheckCircle() {
@@ -74,8 +74,7 @@ function PartyItem({ party, isSelected, onClick }: PartyItemProps) {
               <p className="leading-[16px] text-[#6e7ca8] text-[12px]">
                 {party.president}
               </p>
-              <div className="bg-[#e7f2fe] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0">
-                <div aria-hidden="true" className="absolute border-[#3c7ce8] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
+              <StatusChip label="President">
                 <div className="relative shrink-0 size-[12px]">
                   <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 12">
                     <mask height="12" id={`mask_president_${party.name}`} maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="12" x="0" y="0">
@@ -86,8 +85,7 @@ function PartyItem({ party, isSelected, onClick }: PartyItemProps) {
                     </g>
                   </svg>
                 </div>
-                <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#1850c5] text-[12px] text-ellipsis whitespace-nowrap">President</p>
-              </div>
+              </StatusChip>
             </div>
           </div>
           
@@ -110,7 +108,6 @@ export function JoinPartyModal({ isOpen, onClose }: JoinPartyModalProps) {
     { name: "Unity Progress Party", flag: imgFlag, president: "John Doe" },
     { name: "Techno-Revolution Party", flag: imgFlag1, president: "Jane Smith" },
     { name: "Citizen's Voice Party", flag: imgFlag2, president: "Alice Johnson" },
-    { name: "Progressive Horizon Party", flag: imgFlag3, president: "Bob Brown" },
   ];
 
   const handleJoin = () => {

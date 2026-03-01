@@ -1,8 +1,9 @@
 import svgPaths from "../../imports/svg-0xunaepwpg";
-import svgPathsClose from "../../imports/svg-dv2wdhz28y";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { CloseButton } from "./CloseButton";
+import { StatusChip } from "./StatusChip";
 
 interface BillDraftingFormProps {
   onClose: () => void;
@@ -215,21 +216,6 @@ function IconsDelete() {
   );
 }
 
-function IconsCircleClose() {
-  return (
-    <div className="relative shrink-0 size-[16px]">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
-        <mask height="16" id="mask_close" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
-          <rect fill="#D9D9D9" height="16" width="16" />
-        </mask>
-        <g mask="url(#mask_close)">
-          <path d={svgPathsClose.p1dd38d00} fill="#2F3E6D" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
 const CHAPTER_DND_TYPE = 'CHAPTER';
 
 // Draggable Chapter Item Component
@@ -301,10 +287,7 @@ function DraggableChapterItem({
           ? chapter.name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
           : 'Chapter Name'}
       </p>
-      <div className="bg-white flex gap-[4px] items-center justify-center px-[4px] py-[2px] rounded-[4px] shrink-0 relative">
-        <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-        <p className="leading-[14px] text-[#6e7ca8] text-[12px]">Ch {chapter.number}</p>
-      </div>
+      <StatusChip label={`Ch ${chapter.number}`} variant="inactive" />
       <button
         onClick={(e) => { e.stopPropagation(); onDelete(); }}
         className="shrink-0"
@@ -982,28 +965,7 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
         {/* Left Panel */}
         <div className="w-[40%] border-r border-[#e3e6f0] flex flex-col bg-[#f8f9fb] overflow-y-auto scrollbar-hide">
           <div className="bg-white flex flex-col gap-[12px] px-[16px] py-[16px] border-b border-[#e3e6f0]">
-            <div 
-              className="content-stretch flex gap-[4px] items-center px-[4px] py-[2px] rounded-[4px] shrink-0 relative w-fit"
-              style={{ 
-                backgroundColor: isPublished ? '#e8ffeb' : '#ffffff' 
-              }}
-            >
-              <div 
-                aria-hidden="true" 
-                className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" 
-                style={{ 
-                  borderColor: isPublished ? '#42a22a' : '#98a3c5' 
-                }}
-              />
-              <p 
-                className="leading-[14px] text-[12px]" 
-                style={{ 
-                  color: isPublished ? '#42a22a' : '#6e7ca8' 
-                }}
-              >
-                {isPublished ? 'Published' : 'Unpublished'}
-              </p>
-            </div>
+            <StatusChip label={isPublished ? 'Published' : 'Unpublished'} variant={isPublished ? 'approved' : 'inactive'} />
             
             <AutoResizeTextarea
               value={billTitle}
@@ -1070,23 +1032,14 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
                 </div>
               </button>
             )}
-            <button
-              onClick={onClose}
-              className="bg-white h-[32px] relative rounded-[6px] shrink-0 cursor-pointer hover:bg-gray-50"
-            >
-              <div className="content-stretch flex gap-[4px] h-full items-center justify-center overflow-clip p-[8px] relative rounded-[inherit]">
-                <IconsCircleClose />
-              </div>
-              <div aria-hidden="true" className="absolute border-[#2f3e6d] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[6px]" />
-            </button>
+            <CloseButton onClick={onClose} />
           </div>
 
           {selectedChapterData ? (
             <div className="flex flex-col gap-[16px]">
               <div className="flex flex-col gap-[8px]">
-                <div className="bg-white flex gap-[4px] items-center justify-center px-[4px] py-[2px] rounded-[4px] shrink-0 relative w-fit mt-[14px]">
-                  <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-                  <p className="leading-[14px] text-[#6e7ca8] text-[12px]">CHAPTER {selectedChapterData.number}</p>
+                <div className="mt-[14px]">
+                  <StatusChip label={`CHAPTER ${selectedChapterData.number}`} variant="inactive" />
                 </div>
                 <AutoResizeTextarea
                   value={selectedChapterData.name}

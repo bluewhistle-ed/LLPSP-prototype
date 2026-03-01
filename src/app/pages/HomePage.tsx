@@ -209,7 +209,7 @@ function SearchEventList() {
 
 function Frame2() {
   return (
-    <div className="absolute content-stretch flex flex-col gap-[20px] items-start left-[calc(16.67%+56px)] top-[32px] w-[848px]">
+    <div className="absolute content-stretch flex flex-col gap-[20px] items-start page-inset-left top-[32px] w-[var(--content-max-width)]">
       <SharedNavBar activePage="dashboard" />
       <SearchEventList />
     </div>
@@ -479,7 +479,7 @@ export default function HomePage() {
   return (
     <div className="bg-[#f8f9fb] relative size-full" data-name="Event List">
       {/* Navbar - positioned absolutely at the top */}
-      <div className="absolute left-[calc(16.67%+56px)] top-[32px]">
+      <div className="absolute page-inset-left top-[32px]">
         <SharedNavBar activePage="dashboard" />
       </div>
 
@@ -487,7 +487,7 @@ export default function HomePage() {
       <PageHeader />
       
       {/* Main Container - Fixed margins on left and right */}
-      <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[calc(16.67%+56px)] right-[calc(16.67%+56px)] top-[100px]">
+      <div className="absolute content-stretch flex flex-col gap-[16px] items-start page-inset-x top-[100px]">
         {/* Action Bar - Search and Button */}
         <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
           <div className="w-[320px]">

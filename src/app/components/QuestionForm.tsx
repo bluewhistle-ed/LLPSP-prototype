@@ -2,6 +2,7 @@ import svgPathsForm from "../../imports/svg-bmen1r6wqa";
 import imgEllipse4 from "figma:asset/255027fc50bca580e944d9010026369329af8a73.png";
 import imgEllipse8 from "figma:asset/ba2f16d42d47f4ee59f03debf98e6bdc2a4d8653.png";
 import { useState, useRef, useEffect } from "react";
+import { CloseButton } from "./CloseButton";
 
 function PartyBadge({ party }: { party: string }) {
   const colors: Record<string, { bg: string; border: string; text: string }> = {
@@ -50,21 +51,6 @@ function RoleBadge({ role }: { role: string }) {
       <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: config.border }} />
       {config.icon}
       <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: config.text }}>{role}</p>
-    </div>
-  );
-}
-
-function IconsCircleClose() {
-  return (
-    <div className="relative shrink-0 size-[16px]">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
-        <mask height="16" id="mask_close" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="17" x="-1" y="0">
-          <rect fill="#D9D9D9" height="16" width="16" x="-0.000782013" />
-        </mask>
-        <g mask="url(#mask_close)">
-          <path d={svgPathsForm.p1dd38d00} fill="#2F3E6D" />
-        </g>
-      </svg>
     </div>
   );
 }
@@ -398,15 +384,7 @@ export function QuestionForm({ onClose }: QuestionFormProps) {
               </div>
             </div>
           </div>
-          <button 
-            onClick={onClose}
-            className="bg-white h-[32px] relative rounded-[6px] shrink-0 cursor-pointer hover:bg-gray-50"
-          >
-            <div className="content-stretch flex gap-[4px] h-full items-center justify-center overflow-clip p-[8px] relative rounded-[inherit]">
-              <IconsCircleClose />
-            </div>
-            <div aria-hidden="true" className="absolute border-[#2f3e6d] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[6px]" />
-          </button>
+          <CloseButton onClick={onClose} />
         </div>
 
         {/* Ministry Dropdown */}

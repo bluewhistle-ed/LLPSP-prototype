@@ -69,7 +69,7 @@ export default function GlobalListsPage() {
   return (
     <div className="bg-[#f8f9fb] relative size-full" data-name="Global Lists">
       {/* Navbar - positioned absolutely at the top */}
-      <div className="absolute left-[calc(16.67%+56px)] top-[32px]">
+      <div className="absolute page-inset-left top-[32px]">
         <SharedNavBar activePage="global-lists" />
       </div>
 
@@ -77,7 +77,7 @@ export default function GlobalListsPage() {
       <PageHeader />
 
       {/* Main Container - Fixed margins on left and right */}
-      <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[calc(16.67%+56px)] right-[calc(16.67%+56px)] top-[100px]">
+      <div className="absolute content-stretch flex flex-col gap-[16px] items-start page-inset-x top-[100px]">
         {/* Tabs */}
         <div className="flex gap-[12px] items-start">
           <button

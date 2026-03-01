@@ -8,6 +8,7 @@ import { NewPartnerForm } from '../components/NewPartnerForm';
 import { PartnerDetailsView } from '../components/PartnerDetailsView';
 import { Navigate } from 'react-router';
 import { useUser } from '../context/UserContext';
+import { StatusChip } from '../components/StatusChip';
 import svgPaths from "../../imports/svg-gq87p0ikdv";
 import imgUnsplash0HjWobhGhJs1 from "figma:asset/570dfe1e78ba73cce493c4895be93ab0d92bdaaa.png";
 import imgUnsplash0HjWobhGhJs2 from "figma:asset/4fb1f9850130e69d652ab1618e13e68969e60d8f.png";
@@ -77,24 +78,6 @@ function Avatar({ imgSrc }: { imgSrc: string }) {
   );
 }
 
-function Tag({ status }: { status: 'active' | 'inactive' }) {
-  if (status === 'active') {
-    return (
-      <div className="bg-[#e8ffeb] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" data-name="Tag">
-        <div aria-hidden="true" className="absolute border-[#42a22a] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-        <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#42a22a] text-[12px] text-ellipsis">Active</p>
-      </div>
-    );
-  }
-  
-  return (
-    <div className="bg-[#fff] content-stretch flex gap-[4px] items-center px-[4px] py-[2px] relative rounded-[4px] shrink-0" data-name="Tag">
-      <div aria-hidden="true" className="absolute border-[#98a3c5] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis">Inactive</p>
-    </div>
-  );
-}
-
 function IconsMoreVert() {
   return (
     <div className="relative shrink-0 size-[16px]" data-name="Icons / more_vert">
@@ -126,7 +109,7 @@ function NameTag({ name, status }: { name: string; status: 'active' | 'inactive'
       <div className="flex flex-[1_0_0] flex-col font-semibold justify-center leading-[0] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">
         <p className="leading-[16px] overflow-hidden">{name}</p>
       </div>
-      <Tag status={status} />
+      <StatusChip label={status === 'active' ? 'Active' : 'Inactive'} />
     </div>
   );
 }
@@ -320,7 +303,7 @@ function SearchPartnersList() {
 
 function Frame2() {
   return (
-    <div className="absolute content-stretch flex flex-col gap-[20px] items-start left-[calc(16.67%+56px)] top-[32px] w-[848px]">
+    <div className="absolute content-stretch flex flex-col gap-[20px] items-start page-inset-left top-[32px] w-[var(--content-max-width)]">
       <SharedNavBar activePage="partners" />
       <SearchPartnersList />
     </div>
@@ -414,7 +397,7 @@ export default function PartnersPage() {
   return (
     <div className="bg-[#f8f9fb] relative size-full" data-name="Partners">
       {/* Navbar - positioned absolutely at the top */}
-      <div className="absolute left-[calc(16.67%+56px)] top-[32px]">
+      <div className="absolute page-inset-left top-[32px]">
         <SharedNavBar activePage="partners" />
       </div>
 
@@ -422,7 +405,7 @@ export default function PartnersPage() {
       <PageHeader />
 
       {/* Main Container - Fixed margins on left and right */}
-      <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[calc(16.67%+56px)] right-[calc(16.67%+56px)] top-[100px]">
+      <div className="absolute content-stretch flex flex-col gap-[16px] items-start page-inset-x top-[100px]">
         {/* Action Bar - Search and Button */}
         <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
           <SearchField 

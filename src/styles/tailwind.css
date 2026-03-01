@@ -13,4 +13,16 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Page layout utilities — margins collapse on narrow viewports, content width is preserved */
+  .page-inset-x {
+    left: max(var(--page-gutter), calc(50% - var(--content-max-width) / 2));
+    right: max(var(--page-gutter), calc(50% - var(--content-max-width) / 2));
+  }
+  .page-inset-left {
+    left: max(var(--page-gutter), calc(50% - var(--content-max-width) / 2));
+  }
+  .page-inset-right {
+    right: max(var(--page-gutter), calc(50% - var(--content-max-width) / 2));
+  }
 }
