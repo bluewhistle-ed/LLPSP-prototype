@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { StatusChip } from "./StatusChip";
+import { CompactActionButton } from "./CompactActionButton";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -305,26 +306,17 @@ export function AmendmentForm({ type, originalText, onSubmit, onCancel }: Amendm
 
       {/* Action buttons */}
       <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full">
-        <button
+        <CompactActionButton
+          label="Cancel"
+          variant="secondary"
           onClick={onCancel}
-          className="relative bg-[var(--sidebar-primary)] hover:bg-[var(--border)] content-stretch flex items-center justify-center px-[12px] py-[6px] rounded-[var(--radius-button-small)] cursor-pointer transition-colors"
-        >
-          <p className="leading-[14px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-label)]">Cancel</p>
-          <div aria-hidden="true" className="absolute border-[var(--border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius-button-small)]" />
-        </button>
-        <button
+        />
+        <CompactActionButton
+          label="Submit Amendment"
+          variant="primary"
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className={`content-stretch flex items-center justify-center px-[12px] py-[6px] rounded-[var(--radius-button-small)] transition-colors ${
-            canSubmit
-              ? 'bg-[var(--primary)] hover:bg-[var(--accent)] cursor-pointer'
-              : 'bg-[var(--border)] cursor-not-allowed'
-          }`}
-        >
-          <p className={`leading-[14px] text-[length:var(--text-label)] ${canSubmit ? 'text-[var(--primary-foreground)]' : 'text-[var(--muted-foreground)]'}`}>
-            Submit Amendment
-          </p>
-        </button>
+        />
       </div>
     </div>
   );

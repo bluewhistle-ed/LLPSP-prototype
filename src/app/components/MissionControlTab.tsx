@@ -16,6 +16,8 @@ import { Bell } from "lucide-react";
 import { StatusChip } from './StatusChip';
 import { JoinPartyModal } from "./JoinPartyModal";
 import { CoalitionFormationModal } from "./CoalitionFormationModal";
+import { MinistryAllocationModal } from "./MinistryAllocationModal";
+import { ChooseMinistersModal } from "./ChooseMinistersModal";
 import { useState } from "react";
 import { useUser } from '../context/UserContext';
 
@@ -906,8 +908,22 @@ function AssociatedAllianceCard() {
 export function WelcomeTab() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCoalitionModalOpen, setIsCoalitionModalOpen] = useState(false);
+  const [isMinistryModalOpen, setIsMinistryModalOpen] = useState(false);
+  const [isChooseMinistersModalOpen, setIsChooseMinistersModalOpen] = useState(false);
   const [modalAction, setModalAction] = useState<string>("");
-  const { isPartyPresident } = useUser();
+  const { isPartyPresident, setHouseSide, setStudentRole, studentRole, houseSide } = useUser();
+
+  const handleCoalitionLockComplete = (result: { hasMajority: boolean; finalSeats: number; totalSeats: number }) => {
+    if (result.hasMajority) {
+      // This party's coalition won majority → government side, user becomes PM
+      setHouseSide('government');
+      setStudentRole('prime-minister');
+    } else {
+      // Coalition fell short → opposition side, user becomes LoO
+      setHouseSide('opposition');
+      setStudentRole('leader-of-opposition');
+    }
+  };
 
   const handleActionClick = (actionTitle: string) => {
     setModalAction(actionTitle);
@@ -915,6 +931,10 @@ export function WelcomeTab() {
       setIsModalOpen(true);
     } else if (actionTitle === "Form a Coalition") {
       setIsCoalitionModalOpen(true);
+    } else if (actionTitle === "Allocate Ministry Berths") {
+      setIsMinistryModalOpen(true);
+    } else if (actionTitle === "Choose Ministers") {
+      setIsChooseMinistersModalOpen(true);
     } else {
       // Handle other actions
       console.log("Action clicked:", actionTitle);
@@ -937,7 +957,15 @@ export function WelcomeTab() {
     baseActions.push({ id: 2, title: 'Form a Coalition', description: 'Coordinate with allied parties and lock in your coalition', status: 'pending' });
   }
 
-  baseActions.push({ id: 3, title: 'Complete Profile', description: 'Fill in your complete profile information', status: 'pending' });
+  // "Allocate Ministry Berths" is only shown to the Prime Minister (post-coalition lock)
+  if (studentRole === 'prime-minister') {
+    baseActions.push({ id: 3, title: 'Allocate Ministry Berths', description: 'Assign ministry berths to coalition partner parties', status: 'pending' });
+  }
+
+  // "Choose Ministers" is shown to government-side party presidents AND the PM (who is also their party's leader)
+  if ((studentRole === 'party-president' || studentRole === 'prime-minister') && houseSide === 'government') {
+    baseActions.push({ id: 5, title: 'Choose Ministers', description: 'Nominate party members for the ministry berths allocated by the PM', status: 'pending' });
+  }
 
   const nextActions = baseActions;
 
@@ -993,7 +1021,7 @@ export function WelcomeTab() {
                   <StatusChip label="Private Member" />
                   
                   {/* Treasury Chip */}
-                  <StatusChip label="Treasury" />
+                  <StatusChip label="Government" />
                 </div>
               </div>
             </div>
@@ -1091,8 +1119,8 @@ export function WelcomeTab() {
           <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
             <div className="flex items-center justify-between w-full">
               <p className="font-semibold leading-[20px] text-[#2f3e6d] text-[16px]">Announcements</p>
-              <StatusChip label="1 New" variant="warning">
-                <Bell className="size-[12px] shrink-0" style={{ color: 'var(--status-warning-text)' }} />
+              <StatusChip label="1 New" variant="notification">
+                <Bell className="size-[12px] shrink-0" style={{ color: 'var(--status-notification-text)' }} />
               </StatusChip>
             </div>
 
@@ -1252,7 +1280,23 @@ export function WelcomeTab() {
     <JoinPartyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
     {/* Coalition Formation Modal */}
-    <CoalitionFormationModal isOpen={isCoalitionModalOpen} onClose={() => setIsCoalitionModalOpen(false)} />
+    <CoalitionFormationModal
+      isOpen={isCoalitionModalOpen}
+      onClose={() => setIsCoalitionModalOpen(false)}
+      onLockComplete={handleCoalitionLockComplete}
+    />
+
+    {/* Ministry Allocation Modal */}
+    <MinistryAllocationModal
+      isOpen={isMinistryModalOpen}
+      onClose={() => setIsMinistryModalOpen(false)}
+    />
+
+    {/* Choose Ministers Modal (Party President — Tier 2) */}
+    <ChooseMinistersModal
+      isOpen={isChooseMinistersModalOpen}
+      onClose={() => setIsChooseMinistersModalOpen(false)}
+    />
   </>
 );
 }

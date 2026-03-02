@@ -5,6 +5,7 @@ import { BillDraftingForm } from "../components/BillDraftingForm";
 import { BillReviewView } from "../components/BillReviewView";
 import { BillAmendmentView } from "../components/BillAmendmentView";
 import { StatusChip } from "../components/StatusChip";
+import { CompactActionButton } from "../components/CompactActionButton";
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
 
@@ -132,12 +133,12 @@ export function LegislativeBusinessPage() {
 
             {/* Action */}
             <div className="flex items-center">
-              <button
+              <CompactActionButton
+                label="Review Bill"
+                variant="primary"
                 onClick={() => setShowBillReview(true)}
-                className="bg-[var(--primary)] hover:bg-[var(--accent)] px-[12px] py-[6px] rounded-[var(--radius-button-small)] cursor-pointer transition-colors relative z-10"
-              >
-                <p className="leading-[14px] text-[var(--primary-foreground)] text-[length:var(--text-label)]">Review Bill</p>
-              </button>
+                className="relative z-10"
+              />
             </div>
           </div>
         </div>
@@ -167,12 +168,12 @@ export function LegislativeBusinessPage() {
 
             {/* Action */}
             <div className="flex items-center">
-              <button
+              <CompactActionButton
+                label="Propose Amendments"
+                variant="primary"
                 onClick={() => setShowBillAmendment(true)}
-                className="bg-[var(--primary)] hover:bg-[var(--accent)] px-[12px] py-[6px] rounded-[var(--radius-button-small)] cursor-pointer transition-colors relative z-10"
-              >
-                <p className="leading-[14px] text-[var(--primary-foreground)] text-[length:var(--text-label)]">Propose Amendments</p>
-              </button>
+                className="relative z-10"
+              />
             </div>
           </div>
         </div>

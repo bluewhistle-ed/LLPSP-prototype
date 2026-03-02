@@ -278,7 +278,7 @@ function CoalitionCard() {
         />
         <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
           <div className="flex items-center gap-[8px]">
-            <p className="font-semibold leading-[20px] text-[#2f3e6d] text-[16px]">Treasury</p>
+            <p className="font-semibold leading-[20px] text-[var(--foreground)] text-[length:var(--text-h4)]">Government</p>
             <StatusChip label={`${COALITION_PARTIES.reduce((sum, p) => sum + p.memberCount, 0)}/${TOTAL_HOUSE_STRENGTH} Members`} />
           </div>
 
@@ -308,9 +308,6 @@ function CoalitionCard() {
                   <div className="flex flex-col gap-[4px] flex-1 min-w-0">
                     <p className="flex items-center gap-[6px] leading-[16px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)]">
                       {party.name}
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-30">
-                        <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
                     </p>
                     <p className="leading-[16px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
                       {party.memberCount} members
@@ -586,9 +583,6 @@ function CouncilOfMinistersCard() {
                   {/* Ministry Name */}
                   <p className="flex items-center gap-[6px] font-semibold leading-[16px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)] mb-[10px]">
                     {ministry.name}
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-30">
-                      <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
                   </p>
 
                   {/* Minister & MoS rows */}

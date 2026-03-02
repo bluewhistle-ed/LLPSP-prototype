@@ -17,6 +17,9 @@ export type StudentRole =
   | 'prime-minister'
   | 'leader-of-opposition';
 
+/** Which side of the house the user's party belongs to (set after coalition/majority determination) */
+export type HouseSide = 'government' | 'opposition' | null;
+
 /** Auto-assigned display labels (UI only, no routing impact) */
 export type DisplayLabel = 'Prime Minister' | 'Leader of Opposition' | null;
 
@@ -25,6 +28,7 @@ export interface UserState {
   adminRole: AdminRole;
   studentRole: StudentRole;
   displayLabel: DisplayLabel;
+  houseSide: HouseSide;
 }
 
 export interface UserContextValue extends UserState {
@@ -32,6 +36,7 @@ export interface UserContextValue extends UserState {
   setAdminRole: (role: AdminRole) => void;
   setStudentRole: (role: StudentRole) => void;
   setDisplayLabel: (label: DisplayLabel) => void;
+  setHouseSide: (side: HouseSide) => void;
 
   /** Human-readable label for the current user type */
   userTypeLabel: string;
@@ -85,6 +90,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [adminRole, setAdminRole] = useState<AdminRole>('bluewhistle-admin');
   const [studentRole, setStudentRole] = useState<StudentRole>('private-member');
   const [displayLabel, setDisplayLabel] = useState<DisplayLabel>(null);
+  const [houseSide, setHouseSide] = useState<HouseSide>(null);
 
   const userTypeLabel = USER_TYPE_LABELS[userType];
 
@@ -108,10 +114,20 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const handleSetStudentRole = useCallback((role: StudentRole) => {
     setStudentRole(role);
+    // Auto-derive houseSide for demo purposes when switching roles
+    if (role === 'leader-of-opposition') {
+      setHouseSide('opposition');
+    } else {
+      setHouseSide('government');
+    }
   }, []);
 
   const handleSetDisplayLabel = useCallback((label: DisplayLabel) => {
     setDisplayLabel(label);
+  }, []);
+
+  const handleSetHouseSide = useCallback((side: HouseSide) => {
+    setHouseSide(side);
   }, []);
 
   return (
@@ -121,10 +137,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
         adminRole,
         studentRole,
         displayLabel,
+        houseSide,
         setUserType: handleSetUserType,
         setAdminRole: handleSetAdminRole,
         setStudentRole: handleSetStudentRole,
         setDisplayLabel: handleSetDisplayLabel,
+        setHouseSide: handleSetHouseSide,
         userTypeLabel,
         activeRoleLabel,
         homeRoute,

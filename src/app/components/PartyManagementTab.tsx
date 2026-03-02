@@ -60,7 +60,7 @@ function PartyIdeologyCard() {
             
             {/* Treasury Chip and Alliance Chips */}
             <div className="flex items-center gap-[6px] flex-wrap">
-              <StatusChip label="Treasury" />
+              <StatusChip label="Government" />
               
               {/* Alliance Chips */}
               {allianceParties.map((party) => (

@@ -5,7 +5,7 @@
  *   --status-{variant}-bg, --status-{variant}-border, --status-{variant}-text
  *
  * Supported variants: approved, pending, rejected, default, mentor, role,
- *   treasury, alliance, warning, urgent, progress, info, inactive
+ *   treasury, alliance, warning, urgent, progress, info, inactive, notification
  */
 
 import type { ReactNode } from 'react';
@@ -24,7 +24,8 @@ export type StatusChipVariant =
   | 'progress'
   | 'info'
   | 'inactive'
-  | 'outline';
+  | 'outline'
+  | 'notification';
 
 /** Map human-readable status strings to design-system variants. */
 export const STATUS_VARIANT_MAP: Record<string, StatusChipVariant> = {
@@ -45,6 +46,7 @@ export const STATUS_VARIANT_MAP: Record<string, StatusChipVariant> = {
   'V. President': 'mentor',
   // Category labels
   'Treasury': 'treasury',
+  'Government': 'treasury',
   'Private Member': 'default',
   'Minister': 'warning',
   'MoS': 'outline',

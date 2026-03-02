@@ -4,17 +4,23 @@ import { WelcomeTab } from "../components/MissionControlTab";
 import { PartyManagementTab } from "../components/PartyManagementTab";
 import { GovernmentTab } from "../components/GovernmentTab";
 import { OppositionTab } from "../components/OppositionTab";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from '../context/UserContext';
 
 type TabType = 'welcome' | 'party-management' | 'government' | 'opposition' | 'sitting-of-the-house';
 
 export function PSPDashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>('welcome');
-  const { studentRole } = useUser();
+  const { houseSide } = useUser();
 
-  const showGovernmentTab = studentRole === 'prime-minister';
-  const showOppositionTab = studentRole === 'leader-of-opposition';
+  const showGovernmentTab = houseSide === 'government';
+  const showOppositionTab = houseSide === 'opposition';
+
+  // Reset to Welcome tab if the current tab becomes hidden (e.g., switching from PM to LoO)
+  useEffect(() => {
+    if (activeTab === 'government' && !showGovernmentTab) setActiveTab('welcome');
+    if (activeTab === 'opposition' && !showOppositionTab) setActiveTab('welcome');
+  }, [showGovernmentTab, showOppositionTab, activeTab]);
 
   return (
     <div className="bg-[#f8f9fb] relative size-full">

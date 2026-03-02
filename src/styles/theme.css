@@ -150,6 +150,10 @@
   --status-inactive-bg: rgba(255, 255, 255, 1.00);
   --status-inactive-border: rgba(152, 163, 197, 1.00);
   --status-inactive-text: rgba(110, 124, 168, 1.00);
+  /* Status chip colors — Notification (amber) */
+  --status-notification-bg: rgba(255, 247, 205, 1.00);
+  --status-notification-border: rgba(234, 179, 8, 1.00);
+  --status-notification-text: rgba(161, 122, 0, 1.00);
   /* Status chip border radius */
   --radius-chip: 4px;
 

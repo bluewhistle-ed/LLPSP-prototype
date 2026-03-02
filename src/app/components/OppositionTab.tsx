@@ -31,7 +31,7 @@ interface OppositionParty {
   members: Member[];
 }
 
-// ── Mock opposition coalition data ───────────────────────────────────────────
+// ── Mock opposition data ─────────────────────────────────────────────────────
 
 const TOTAL_HOUSE_STRENGTH = 50;
 
@@ -45,9 +45,9 @@ const OPPOSITION_PARTIES: OppositionParty[] = [
     members: [
       { id: 1, name: "Rajesh K. Malhotra", role: "President", avatar: imgUnsplash6 },
       { id: 2, name: "Priya N. Deshmukh", role: "V.President", avatar: imgUnsplash3 },
-      { id: 3, name: "Carlos D. Mendez", role: "Shadow Minister", avatar: imgUnsplash7 },
+      { id: 3, name: "Carlos D. Mendez", role: "Member", avatar: imgUnsplash7 },
       { id: 4, name: "Fiona A. McCarthy", role: "Member", avatar: imgUnsplash1 },
-      { id: 5, name: "Samuel T. Okonkwo", role: "Shadow Minister", avatar: imgUnsplash4 },
+      { id: 5, name: "Samuel T. Okonkwo", role: "Member", avatar: imgUnsplash4 },
     ],
   },
   {
@@ -111,8 +111,6 @@ function ReadOnlyMemberRow({ member }: { member: Member }) {
           </div>
         </StatusChip>
       );
-    } else if (member.role === "Shadow Minister") {
-      return <StatusChip label="Shadow Minister" variant="warning" />;
     }
     return null;
   };
@@ -196,7 +194,7 @@ function OppositionMembersModal({
           </div>
 
           {/* Member Count */}
-          <div className="bg-[#f8f9fb] content-stretch flex gap-[12px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[var(--radius)] shrink-0">
+          <div className="bg-[var(--input-background)] content-stretch flex gap-[12px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[var(--radius)] shrink-0">
             <div
               aria-hidden="true"
               className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius)]"
@@ -260,9 +258,9 @@ function OppositionMembersModal({
   );
 }
 
-// ── Opposition Coalition Card ────────────────────────────────────────────────
+// ── Opposition Parties Card ──────────────────────────────────────────────────
 
-function OppositionCoalitionCard() {
+function OppositionPartiesCard() {
   const [selectedParty, setSelectedParty] = useState<OppositionParty | null>(null);
 
   return (
@@ -331,298 +329,14 @@ function OppositionCoalitionCard() {
   );
 }
 
-// ── Shadow Cabinet Data ──────────────────────────────────────────────────────
-
-interface ShadowMinistry {
-  id: number;
-  name: string;
-  description: string;
-  shadowMinister: { name: string; avatar: string; partyName: string; partyFlag: string };
-  shadowMos: { name: string; avatar: string; partyName: string; partyFlag: string } | null;
-  questionHourThemes: { id: number; theme: string; questionsReceived: number }[];
-}
-
-const SHADOW_MINISTRIES: ShadowMinistry[] = [
-  {
-    id: 1,
-    name: "Finance",
-    description: "Shadows the Ministry of Finance, scrutinising fiscal policy, budget allocations, taxation reforms, and public expenditure. The shadow minister leads Opposition critique during budget debates and proposes alternative economic strategies.",
-    shadowMinister: { name: "Carlos D. Mendez", avatar: imgUnsplash7, partyName: "PDF", partyFlag: imgFlag2 },
-    shadowMos: { name: "Helena G. Santos", avatar: imgUnsplash4, partyName: "NRA", partyFlag: imgFlag1 },
-    questionHourThemes: [
-      { id: 1, theme: "Union Budget Allocations", questionsReceived: 6 },
-      { id: 2, theme: "GST Implementation", questionsReceived: 4 },
-      { id: 3, theme: "Public Debt Management", questionsReceived: 2 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Home Affairs",
-    description: "Shadows the Ministry of Home Affairs, monitoring internal security operations, border management policy, and policing reforms. Raises questions on civil liberties, disaster preparedness, and law enforcement accountability.",
-    shadowMinister: { name: "Samuel T. Okonkwo", avatar: imgUnsplash4, partyName: "PDF", partyFlag: imgFlag2 },
-    shadowMos: null,
-    questionHourThemes: [
-      { id: 4, theme: "Border Security Operations", questionsReceived: 5 },
-      { id: 5, theme: "Cybercrime Prevention", questionsReceived: 3 },
-    ],
-  },
-  {
-    id: 3,
-    name: "External Affairs",
-    description: "Shadows the Ministry of External Affairs, providing alternative perspectives on foreign policy, trade diplomacy, and international engagement. Scrutinises bilateral agreements and diaspora welfare initiatives.",
-    shadowMinister: { name: "Viktor J. Petrov", avatar: imgUnsplash2, partyName: "NRA", partyFlag: imgFlag1 },
-    shadowMos: { name: "Irene L. Costa", avatar: imgUnsplash3, partyName: "GFP", partyFlag: imgFlag },
-    questionHourThemes: [
-      { id: 6, theme: "Bilateral Trade Agreements", questionsReceived: 4 },
-      { id: 7, theme: "Diaspora Welfare Programmes", questionsReceived: 2 },
-    ],
-  },
-  {
-    id: 4,
-    name: "Education",
-    description: "Shadows the Ministry of Education, challenging government policy on national education standards, university funding, digital literacy, and equitable access. Proposes alternative frameworks for skill development and curriculum reform.",
-    shadowMinister: { name: "Priya N. Deshmukh", avatar: imgUnsplash3, partyName: "PDF", partyFlag: imgFlag2 },
-    shadowMos: { name: "Derek M. O'Brien", avatar: imgUnsplash7, partyName: "NRA", partyFlag: imgFlag1 },
-    questionHourThemes: [
-      { id: 8, theme: "National Education Policy", questionsReceived: 7 },
-      { id: 9, theme: "Digital Literacy Programmes", questionsReceived: 3 },
-      { id: 10, theme: "University Funding & Research", questionsReceived: 5 },
-    ],
-  },
-  {
-    id: 5,
-    name: "Health & Family Welfare",
-    description: "Shadows the Ministry of Health, scrutinising public healthcare delivery, vaccination drives, and mental health policy. Advocates for improved rural healthcare access and stronger pharmaceutical regulation.",
-    shadowMinister: { name: "Ananya R. Sharma", avatar: imgUnsplash5, partyName: "NRA", partyFlag: imgFlag1 },
-    shadowMos: null,
-    questionHourThemes: [
-      { id: 11, theme: "Rural Healthcare Access", questionsReceived: 6 },
-      { id: 12, theme: "Vaccination Programmes", questionsReceived: 4 },
-      { id: 13, theme: "Mental Health Initiatives", questionsReceived: 2 },
-    ],
-  },
-  {
-    id: 6,
-    name: "Defence",
-    description: "Shadows the Ministry of Defence, monitoring defence procurement, armed forces modernisation, and veteran welfare schemes. Raises concerns on strategic readiness and indigenous equipment production programmes.",
-    shadowMinister: { name: "Lena P. Johansson", avatar: imgUnsplash2, partyName: "GFP", partyFlag: imgFlag },
-    shadowMos: { name: "Fiona A. McCarthy", avatar: imgUnsplash1, partyName: "PDF", partyFlag: imgFlag2 },
-    questionHourThemes: [
-      { id: 14, theme: "Defence Modernisation", questionsReceived: 5 },
-      { id: 15, theme: "Veteran Welfare Schemes", questionsReceived: 3 },
-      { id: 16, theme: "Indigenous Equipment Production", questionsReceived: 2 },
-    ],
-  },
-];
-
-// ── Shadow Minister Person Row ───────────────────────────────────────────────
-
-function ShadowMinisterPersonRow({
-  person,
-  roleLabel,
-}: {
-  person: { name: string; avatar: string; partyName: string; partyFlag: string };
-  roleLabel: string;
-}) {
-  return (
-    <div className="flex items-center gap-[8px] w-full">
-      {/* Avatar */}
-      <div className="relative shrink-0 size-[28px]">
-        <div className="absolute border border-[#e3e6f0] border-solid left-0 overflow-clip rounded-full size-[28px] top-0">
-          <img alt="" className="block max-w-none size-full object-cover" height="28" src={person.avatar} width="28" />
-        </div>
-      </div>
-
-      {/* Name + Party */}
-      <div className="flex items-center gap-[6px] flex-1 min-w-0">
-        <p className="leading-[16px] text-[var(--foreground)] text-[length:var(--text-base)] truncate">{person.name}</p>
-        <StatusChip label={person.partyName} variant="alliance">
-          <div className="relative shrink-0 size-[12px]">
-            <img alt="" className="block max-w-none size-full rounded-full object-cover" height="12" src={person.partyFlag} width="12" />
-          </div>
-        </StatusChip>
-      </div>
-
-      {/* Role chip */}
-      <StatusChip label={roleLabel} />
-    </div>
-  );
-}
-
-// ── Shadow Ministry Detail Modal ─────────────────────────────────────────────
-
-function ShadowMinistryDetailModal({
-  isOpen,
-  onClose,
-  ministry,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  ministry: ShadowMinistry;
-}) {
-  if (!isOpen) return null;
-
-  const totalQuestions = ministry.questionHourThemes.reduce(
-    (sum, t) => sum + t.questionsReceived,
-    0
-  );
-
-  return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white relative rounded-[var(--radius-card)] max-w-[500px] w-full max-h-[80vh] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div
-          aria-hidden="true"
-          className="absolute border border-[#f1f2f8] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]"
-        />
-        <div className="content-stretch flex flex-col gap-[24px] items-start p-[24px] relative overflow-y-auto max-h-[80vh] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {/* Header */}
-          <div className="flex flex-col gap-[4px] w-full">
-            <p className="font-semibold leading-[20px] text-[#041a5e] text-[length:var(--text-h4)]">
-              Shadow Ministry of {ministry.name}
-            </p>
-            <p className="leading-[16px] text-[var(--muted-foreground)] text-[length:var(--text-base)]">
-              {ministry.description}
-            </p>
-          </div>
-
-          {/* Divider */}
-          <div className="w-full h-[1px] bg-[var(--sidebar-primary)]" />
-
-          {/* Shadow Ministers Section */}
-          <div className="flex flex-col gap-[12px] w-full">
-            <p className="font-semibold leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
-              Shadow Ministers
-            </p>
-            <div className="flex flex-col gap-[8px] w-full">
-              <ShadowMinisterPersonRow person={ministry.shadowMinister} roleLabel="Shadow Min." />
-              {ministry.shadowMos && (
-                <ShadowMinisterPersonRow person={ministry.shadowMos} roleLabel="Shadow MoS" />
-              )}
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="w-full h-[1px] bg-[var(--sidebar-primary)]" />
-
-          {/* Question Hour Themes Section */}
-          <div className="flex flex-col gap-[12px] w-full">
-            <div className="flex items-center gap-[8px]">
-              <p className="font-semibold leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
-                Question Hour Themes
-              </p>
-              <StatusChip
-                label={`${totalQuestions} Questions`}
-                variant="alliance"
-              />
-            </div>
-            <div className="flex flex-col w-full">
-              {ministry.questionHourThemes.map((theme, index) => (
-                <div key={theme.id}>
-                  {index > 0 && (
-                    <div className="h-px bg-[var(--sidebar-primary)]" />
-                  )}
-                  <div className="flex items-center justify-between py-[10px]">
-                    <p className="leading-[16px] text-[var(--foreground)] text-[length:var(--text-base)]">
-                      {theme.theme}
-                    </p>
-                    <StatusChip
-                      label={`${theme.questionsReceived}`}
-                      variant="default"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Shadow Cabinet Card ──────────────────────────────────────────────────────
-
-function ShadowCabinetCard() {
-  const [selectedMinistry, setSelectedMinistry] = useState<ShadowMinistry | null>(null);
-
-  return (
-    <>
-      <div className="bg-white relative rounded-[var(--radius-card)] shrink-0 w-full">
-        <div
-          aria-hidden="true"
-          className="absolute border border-[#f1f2f8] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]"
-        />
-        <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
-          {/* Title */}
-          <div className="flex items-center gap-[8px]">
-            <p className="font-semibold leading-[20px] text-[var(--foreground)] text-[length:var(--text-h4)]">Shadow Cabinet</p>
-            <StatusChip label={`${SHADOW_MINISTRIES.length} Portfolios`} variant="alliance" />
-          </div>
-
-          {/* Shadow Ministries List — action card style */}
-          <div className="flex flex-col w-full -mx-[8px] -mt-[10px]">
-            {SHADOW_MINISTRIES.map((ministry, index) => (
-              <div key={ministry.id}>
-                {index > 0 && (
-                  <div className="h-px bg-[var(--sidebar-primary)] mx-[12px]" />
-                )}
-                <button
-                  onClick={() => setSelectedMinistry(ministry)}
-                  className="w-full text-left hover:bg-[var(--input-background)] px-[8px] py-[10px] rounded-[var(--radius)] transition-colors cursor-pointer"
-                >
-                  {/* Ministry Name */}
-                  <p className="flex items-center gap-[6px] font-semibold leading-[16px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)] mb-[10px]">
-                    {ministry.name}
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-30">
-                      <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </p>
-
-                  {/* Shadow Minister & Shadow MoS rows */}
-                  <div className="flex flex-col gap-[8px]">
-                    <ShadowMinisterPersonRow person={ministry.shadowMinister} roleLabel="Shadow Min." />
-                    {ministry.shadowMos && (
-                      <ShadowMinisterPersonRow person={ministry.shadowMos} roleLabel="Shadow MoS" />
-                    )}
-                  </div>
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Shadow Ministry Detail Modal */}
-      {selectedMinistry && (
-        <ShadowMinistryDetailModal
-          isOpen={!!selectedMinistry}
-          onClose={() => setSelectedMinistry(null)}
-          ministry={selectedMinistry}
-        />
-      )}
-    </>
-  );
-}
-
 // ── Main Tab ─────────────────────────────────────────────────────────────────
 
 export function OppositionTab() {
   return (
     <div className="flex gap-[24px] w-full items-start">
-      {/* Left Column */}
-      <div className="flex flex-col gap-[18px] flex-1">
-        <ShadowCabinetCard />
-      </div>
-
-      {/* Right Column */}
-      <div className="flex flex-col gap-[18px] flex-1">
-        <OppositionCoalitionCard />
+      {/* Single column — opposition has no ministry structure */}
+      <div className="flex flex-col gap-[18px] flex-1 max-w-[50%]">
+        <OppositionPartiesCard />
       </div>
     </div>
   );

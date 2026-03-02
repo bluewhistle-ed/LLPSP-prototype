@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { StatusChip } from "./StatusChip";
+import { CompactActionButton } from "./CompactActionButton";
 
 // ── Icons ──────────────────────────────────────────────────────────────────────
 
@@ -166,18 +165,16 @@ export function FeedbackDisplay({
                 className="relative w-full bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius-button-small)] p-[8px] leading-[20px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)] min-h-[80px] resize-none focus:outline-none cursor-text"
               />
               <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full">
-                <button
+                <CompactActionButton
+                  label="Cancel"
+                  variant="secondary"
                   onClick={handleCancelReply}
-                  className="bg-[var(--sidebar-primary)] hover:bg-[var(--border)] content-stretch flex items-center justify-center px-[12px] py-[6px] relative rounded-[var(--radius-button-small)] cursor-pointer transition-colors"
-                >
-                  <p className="leading-[16px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)]">Cancel</p>
-                </button>
-                <button
+                />
+                <CompactActionButton
+                  label="Submit"
+                  variant="primary"
                   onClick={handleSubmitReply}
-                  className="bg-[var(--primary)] hover:bg-[var(--accent)] content-stretch flex items-center justify-center px-[12px] py-[6px] rounded-[var(--radius-button-small)] cursor-pointer transition-colors"
-                >
-                  <p className="leading-[16px] text-[var(--primary-foreground)] text-[length:var(--text-base)]">Submit</p>
-                </button>
+                />
               </div>
             </motion.div>
           )}
@@ -250,19 +247,16 @@ export function FeedbackForm({
         rows={2}
       />
       <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full">
-        <button
+        <CompactActionButton
+          label="Cancel"
+          variant="secondary"
           onClick={onCancel}
-          className="relative bg-[var(--sidebar-primary)] hover:bg-[var(--border)] content-stretch flex items-center justify-center px-[12px] py-[6px] rounded-[var(--radius-button-small)] cursor-pointer transition-colors"
-        >
-          <p className="leading-[14px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-label)]">Cancel</p>
-          <div aria-hidden="true" className="absolute border-[var(--border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius-button-small)]" />
-        </button>
-        <button
+        />
+        <CompactActionButton
+          label={submitLabel}
+          variant="primary"
           onClick={() => { if (text.trim()) onSubmit(text.trim()); }}
-          className="bg-[var(--primary)] hover:bg-[var(--accent)] content-stretch flex items-center justify-center px-[12px] py-[6px] rounded-[var(--radius-button-small)] cursor-pointer transition-colors"
-        >
-          <p className="leading-[14px] text-[var(--primary-foreground)] text-[length:var(--text-label)]">{submitLabel}</p>
-        </button>
+        />
       </div>
     </FeedbackContainer>
   );
