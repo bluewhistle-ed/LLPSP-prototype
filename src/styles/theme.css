@@ -126,10 +126,14 @@
   --status-alliance-bg: rgba(248, 249, 251, 1.00);
   --status-alliance-border: rgba(227, 230, 240, 1.00);
   --status-alliance-text: rgba(60, 76, 124, 1.00);
-  /* Status chip colors — Warning / Minister (amber) */
-  --status-warning-bg: rgba(254, 243, 224, 1.00);
-  --status-warning-border: rgba(245, 158, 11, 1.00);
-  --status-warning-text: rgba(217, 119, 6, 1.00);
+  /* Status chip colors — Warning / Minister (brown) */
+  --status-warning-bg: rgba(254, 247, 237, 1.00);
+  --status-warning-border: rgba(146, 64, 14, 1.00);
+  --status-warning-text: rgba(146, 64, 14, 1.00);
+  /* Status chip colors — Outline (transparent bg, grey border/text) */
+  --status-outline-bg: transparent;
+  --status-outline-border: rgba(110, 124, 168, 1.00);
+  --status-outline-text: rgba(110, 124, 168, 1.00);
   /* Status chip colors — Urgent / Deadline (red) */
   --status-urgent-bg: rgba(254, 226, 226, 1.00);
   --status-urgent-border: rgba(239, 68, 68, 1.00);

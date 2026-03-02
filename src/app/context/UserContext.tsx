@@ -13,7 +13,9 @@ export type StudentRole =
   | 'minister'
   | 'mos'
   | 'sc-member'
-  | 'sc-chair';
+  | 'sc-chair'
+  | 'prime-minister'
+  | 'leader-of-opposition';
 
 /** Auto-assigned display labels (UI only, no routing impact) */
 export type DisplayLabel = 'Prime Minister' | 'Leader of Opposition' | null;
@@ -37,6 +39,8 @@ export interface UserContextValue extends UserState {
   activeRoleLabel: string;
   /** Home route for the current user type */
   homeRoute: string;
+  /** Whether the current student role has Party President privileges (includes PM & LoO) */
+  isPartyPresident: boolean;
 }
 
 // ── Display helpers ────────────────────────────────────────────────────────────
@@ -61,6 +65,8 @@ export const STUDENT_ROLE_LABELS: Record<StudentRole, string> = {
   'mos': 'Minister of State',
   'sc-member': 'Select Committee Member',
   'sc-chair': 'Select Committee Chair',
+  'prime-minister': 'Prime Minister',
+  'leader-of-opposition': 'Leader of Opposition',
 };
 
 export const HOME_ROUTES: Record<UserType, string> = {
@@ -89,6 +95,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
   })();
 
   const homeRoute = HOME_ROUTES[userType];
+
+  const isPartyPresident = ['party-president', 'prime-minister', 'leader-of-opposition'].includes(studentRole);
 
   const handleSetUserType = useCallback((type: UserType) => {
     setUserType(type);
@@ -120,6 +128,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         userTypeLabel,
         activeRoleLabel,
         homeRoute,
+        isPartyPresident,
       }}
     >
       {children}

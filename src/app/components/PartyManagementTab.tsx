@@ -129,7 +129,7 @@ function PartyMembersModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 <img alt="" className="block max-w-none size-full" height="16" src={imgEllipse3} width="16" />
               </div>
               <div className="flex flex-col justify-center leading-[0] not-italic overflow-hidden relative shrink-0 text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">
-                <p className="leading-[16px]">{members.length} Members</p>
+                <p className="leading-[16px]">{ALL_PARTY_MEMBERS.length} Members</p>
               </div>
             </div>
           </div>

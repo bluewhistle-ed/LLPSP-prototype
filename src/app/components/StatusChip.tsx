@@ -23,7 +23,8 @@ export type StatusChipVariant =
   | 'urgent'
   | 'progress'
   | 'info'
-  | 'inactive';
+  | 'inactive'
+  | 'outline';
 
 /** Map human-readable status strings to design-system variants. */
 export const STATUS_VARIANT_MAP: Record<string, StatusChipVariant> = {
@@ -46,6 +47,10 @@ export const STATUS_VARIANT_MAP: Record<string, StatusChipVariant> = {
   'Treasury': 'treasury',
   'Private Member': 'default',
   'Minister': 'warning',
+  'MoS': 'outline',
+  'Shadow Min.': 'warning',
+  'Shadow MoS': 'outline',
+  'Shadow Minister': 'warning',
   // Amendment types
   'Substitute': 'warning',
   'Omit': 'urgent',

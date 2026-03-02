@@ -2,12 +2,19 @@ import { SharedNavBar } from "../components/SharedNavBar";
 import { PageHeader } from "../components/PageHeader";
 import { WelcomeTab } from "../components/MissionControlTab";
 import { PartyManagementTab } from "../components/PartyManagementTab";
+import { GovernmentTab } from "../components/GovernmentTab";
+import { OppositionTab } from "../components/OppositionTab";
 import { useState } from "react";
+import { useUser } from '../context/UserContext';
 
-type TabType = 'welcome' | 'party-management' | 'sitting-of-the-house';
+type TabType = 'welcome' | 'party-management' | 'government' | 'opposition' | 'sitting-of-the-house';
 
 export function PSPDashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>('welcome');
+  const { studentRole } = useUser();
+
+  const showGovernmentTab = studentRole === 'prime-minister';
+  const showOppositionTab = studentRole === 'leader-of-opposition';
 
   return (
     <div className="bg-[#f8f9fb] relative size-full">
@@ -51,6 +58,38 @@ export function PSPDashboardPage() {
             </p>
           </button>
           
+          {showGovernmentTab && (
+            <button
+              onClick={() => setActiveTab('government')}
+              className="flex items-center p-[12px] relative"
+            >
+              {activeTab === 'government' && (
+                <div aria-hidden="true" className="absolute border-[#1850c5] border-b-4 border-solid inset-0 pointer-events-none" />
+              )}
+              <p className={`font-semibold leading-[16px] text-[14px] text-center relative ${
+                activeTab === 'government' ? 'text-[#1850c5]' : 'text-[#6e7ca8]'
+              }`}>
+                Government
+              </p>
+            </button>
+          )}
+
+          {showOppositionTab && (
+            <button
+              onClick={() => setActiveTab('opposition')}
+              className="flex items-center p-[12px] relative"
+            >
+              {activeTab === 'opposition' && (
+                <div aria-hidden="true" className="absolute border-[#1850c5] border-b-4 border-solid inset-0 pointer-events-none" />
+              )}
+              <p className={`font-semibold leading-[16px] text-[14px] text-center relative ${
+                activeTab === 'opposition' ? 'text-[#1850c5]' : 'text-[#6e7ca8]'
+              }`}>
+                Opposition
+              </p>
+            </button>
+          )}
+
           <button
             onClick={() => setActiveTab('sitting-of-the-house')}
             className="flex items-center p-[12px] relative"
@@ -70,6 +109,8 @@ export function PSPDashboardPage() {
         <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full max-h-[calc(100vh-192px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {activeTab === 'welcome' && <WelcomeTab />}
           {activeTab === 'party-management' && <PartyManagementTab />}
+          {activeTab === 'government' && showGovernmentTab && <GovernmentTab />}
+          {activeTab === 'opposition' && showOppositionTab && <OppositionTab />}
           {activeTab === 'sitting-of-the-house' && (
             <div className="bg-white p-[48px] rounded-[12px] text-center w-full">
               <p className="text-[#6e7ca8] text-[16px]">Sitting of The House - Coming Soon</p>

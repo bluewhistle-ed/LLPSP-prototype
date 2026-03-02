@@ -15,7 +15,9 @@ import { imgUnsplash0HjWobhGhJs } from "../../imports/svg-9n6vy";
 import { Bell } from "lucide-react";
 import { StatusChip } from './StatusChip';
 import { JoinPartyModal } from "./JoinPartyModal";
+import { CoalitionFormationModal } from "./CoalitionFormationModal";
 import { useState } from "react";
+import { useUser } from '../context/UserContext';
 
 // Phase badge configuration
 type PhaseType = 'genesis' | 'preparation' | 'execution' | 'reflection';
@@ -903,12 +905,16 @@ function AssociatedAllianceCard() {
 
 export function WelcomeTab() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCoalitionModalOpen, setIsCoalitionModalOpen] = useState(false);
   const [modalAction, setModalAction] = useState<string>("");
+  const { isPartyPresident } = useUser();
 
   const handleActionClick = (actionTitle: string) => {
     setModalAction(actionTitle);
     if (actionTitle === "Join a Party") {
       setIsModalOpen(true);
+    } else if (actionTitle === "Form a Coalition") {
+      setIsCoalitionModalOpen(true);
     } else {
       // Handle other actions
       console.log("Action clicked:", actionTitle);
@@ -922,10 +928,18 @@ export function WelcomeTab() {
     currentPhase: 'genesis' as PhaseType, // Change this to 'preparation', 'execution', or 'reflection' to test
   };
   
-  const nextActions = [
+  const baseActions = [
     { id: 1, title: 'Join a Party', description: 'Select and register with your preferred political party', status: 'pending' },
-    { id: 2, title: 'Complete Profile', description: 'Fill in your complete profile information', status: 'pending' },
   ];
+
+  // "Form a Coalition" is only shown to party presidents
+  if (isPartyPresident) {
+    baseActions.push({ id: 2, title: 'Form a Coalition', description: 'Coordinate with allied parties and lock in your coalition', status: 'pending' });
+  }
+
+  baseActions.push({ id: 3, title: 'Complete Profile', description: 'Fill in your complete profile information', status: 'pending' });
+
+  const nextActions = baseActions;
 
   return (
     <>
@@ -937,16 +951,20 @@ export function WelcomeTab() {
             <div aria-hidden="true" className="absolute border border-[#3c7ce8] border-solid inset-0 pointer-events-none rounded-[12px] opacity-[0.46]" />
             <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
               <p className="font-semibold leading-[20px] text-[#2f3e6d] text-[16px]">Next Actions</p>
-              <div className="flex flex-col w-full divide-y divide-[#f1f2f8]">
+              <div className="flex flex-col w-full -mx-[8px] -mt-[10px]">
                 {nextActions.map((action, index) => (
-                  <button
-                    key={action.id}
-                    onClick={() => handleActionClick(action.title)}
-                    className={`flex flex-col gap-[4px] w-full text-left hover:bg-[#f8f9fb] p-[8px] rounded-[8px] transition-colors cursor-pointer ${index === 0 ? 'pb-[12px] -m-[8px] mb-0' : 'py-[12px] -m-[8px]'}`}
-                  >
-                    <p className="flex items-center gap-[6px] leading-[16px] text-[#3c4c7c] text-[14px]">{action.title}<svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-30"><path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="#3c4c7c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></p>
-                    <p className="leading-[16px] text-[#6e7ca8] text-[12px]">{action.description}</p>
-                  </button>
+                  <div key={action.id}>
+                    {index > 0 && (
+                      <div className="h-px bg-[var(--sidebar-primary)] mx-[12px]" />
+                    )}
+                    <button
+                      onClick={() => handleActionClick(action.title)}
+                      className="flex flex-col gap-[4px] w-full text-left hover:bg-[var(--input-background)] px-[8px] py-[10px] rounded-[var(--radius)] transition-colors cursor-pointer"
+                    >
+                      <p className="flex items-center gap-[6px] leading-[16px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)]">{action.title}<svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 opacity-30"><path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></p>
+                      <p className="leading-[16px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">{action.description}</p>
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -1035,7 +1053,7 @@ export function WelcomeTab() {
               </div>
 
               {/* Date 2 */}
-              <div className="p-[16px] rounded-[8px] bg-[#f8f9fb] w-full">
+              <div className="p-[16px] rounded-[var(--radius)] hover:bg-[var(--input-background)] transition-colors w-full">
                 <div className="flex flex-col gap-[8px]">
                   <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Submission of Draft Bill by Select Committee</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">Only the Select Committee can submit a Draft Bill, which will be circulated among all Members of the House.</p>
@@ -1044,7 +1062,7 @@ export function WelcomeTab() {
               </div>
 
               {/* Date 3 */}
-              <div className="p-[16px] rounded-[8px] bg-[#f8f9fb] w-full">
+              <div className="p-[16px] rounded-[var(--radius)] hover:bg-[var(--input-background)] transition-colors w-full">
                 <div className="flex flex-col gap-[8px]">
                   <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Submission of Notices</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">Each Member of the House can submit one notice.</p>
@@ -1053,7 +1071,7 @@ export function WelcomeTab() {
               </div>
 
               {/* Date 4 */}
-              <div className="p-[16px] rounded-[8px] bg-[#f8f9fb] w-full">
+              <div className="p-[16px] rounded-[var(--radius)] hover:bg-[var(--input-background)] transition-colors w-full">
                 <div className="flex flex-col gap-[8px]">
                   <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Submission of Amendments to the Bill</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">All Members of the House can submit amendments to the Bill that has been circulated.</p>
@@ -1232,6 +1250,9 @@ export function WelcomeTab() {
 
     {/* Join Party Modal */}
     <JoinPartyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+    {/* Coalition Formation Modal */}
+    <CoalitionFormationModal isOpen={isCoalitionModalOpen} onClose={() => setIsCoalitionModalOpen(false)} />
   </>
 );
 }

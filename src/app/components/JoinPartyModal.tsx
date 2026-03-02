@@ -140,7 +140,7 @@ export function JoinPartyModal({ isOpen, onClose }: JoinPartyModalProps) {
           <p className="font-bold leading-[32px] relative shrink-0 text-[#041a5e] text-[24px] w-full">
             Join a Party
           </p>
-          <p className="leading-[20px] relative shrink-0 text-[#4b5b8a] text-[14px] w-full">
+          <p className="leading-[20px] relative shrink-0 text-[var(--muted-foreground)] text-[14px] w-full">
             Select and register with your preferred political party
           </p>
         </div>
