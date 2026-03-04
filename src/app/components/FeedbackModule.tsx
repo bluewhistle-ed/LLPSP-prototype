@@ -1,3 +1,5 @@
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { StatusChip } from "./StatusChip";
 import { CompactActionButton } from "./CompactActionButton";
 

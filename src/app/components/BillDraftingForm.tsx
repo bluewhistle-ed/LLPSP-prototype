@@ -1018,29 +1018,36 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
         </div>
 
         {/* Right Content */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide px-[16px] py-[16px] relative">
-          <div className="absolute top-[16px] right-[16px] flex items-center gap-[8px]">
-            {!isPublished && (
-              <button
-                onClick={handlePublish}
-                className="bg-primary cursor-pointer h-[32px] relative rounded-[var(--radius-button-small)] shrink-0 hover:bg-primary/90 transition-colors"
-              >
-                <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[12px] py-[8px] relative">
-                  <div className="flex flex-col justify-center leading-[0] relative shrink-0 text-[12px] text-left text-primary-foreground whitespace-nowrap">
-                    <p className="leading-[14px]">Publish Bill</p>
+        <div className="flex-1 flex flex-col overflow-hidden relative">
+          {/* Fixed header with chapter chip + action buttons */}
+          <div className="flex items-end justify-between gap-[8px] px-[16px] py-[16px] shrink-0">
+            <div>
+              {selectedChapterData && (
+                <StatusChip label={`CHAPTER ${selectedChapterData.number}`} variant="inactive" />
+              )}
+            </div>
+            <div className="flex items-center gap-[8px]">
+              {!isPublished && (
+                <button
+                  onClick={handlePublish}
+                  className="bg-[var(--primary)] cursor-pointer h-[32px] relative rounded-[var(--radius-button-small)] shrink-0 hover:opacity-90 transition-opacity"
+                >
+                  <div className="flex gap-[4px] items-center justify-center px-[12px] py-[8px] relative">
+                    <div className="flex flex-col justify-center leading-[0] relative shrink-0 text-[12px] text-left text-[var(--primary-foreground)] whitespace-nowrap">
+                      <p className="leading-[14px]">Publish Bill</p>
+                    </div>
                   </div>
-                </div>
-              </button>
-            )}
-            <CloseButton onClick={onClose} />
+                </button>
+              )}
+              <CloseButton onClick={onClose} />
+            </div>
           </div>
 
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-y-auto scrollbar-hide px-[16px] pb-[16px]">
           {selectedChapterData ? (
             <div className="flex flex-col gap-[16px]">
               <div className="flex flex-col gap-[8px]">
-                <div className="mt-[14px]">
-                  <StatusChip label={`CHAPTER ${selectedChapterData.number}`} variant="inactive" />
-                </div>
                 <AutoResizeTextarea
                   value={selectedChapterData.name}
                   onChange={(e) => {
@@ -1049,7 +1056,7 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
                     );
                     setChapters(updatedChapters);
                   }}
-                  className="font-semibold text-[16px] text-[#2f3e6d] leading-[20px] border-none focus:outline-none bg-transparent resize-none overflow-hidden cursor-text"
+                  className="font-semibold text-[length:var(--text-h4)] text-[var(--foreground)] leading-[20px] border-none focus:outline-none bg-transparent resize-none overflow-hidden cursor-text"
                   placeholder="CHAPTER NAME"
                   minRows={1}
                 />
@@ -1329,6 +1336,7 @@ export function BillDraftingForm({ onClose }: BillDraftingFormProps) {
               <p className="text-[#6e7ca8] text-[14px]">Select a chapter to view details</p>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>

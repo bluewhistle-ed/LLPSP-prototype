@@ -403,7 +403,7 @@ export function QuestionForm({ onClose }: QuestionFormProps) {
             </button>
           </div>
           {isMinistryOpen && (
-            <div className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-[#c8cee2] border-solid rounded-[8px] z-[100] shadow-lg max-h-[200px] overflow-y-auto">
+            <div className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-[var(--border)] border-solid rounded-[var(--radius)] z-[100] shadow-lg max-h-[200px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {availableMinistries.map(ministry => (
                 <div
                   key={ministry.id}
@@ -446,7 +446,7 @@ export function QuestionForm({ onClose }: QuestionFormProps) {
               </button>
             </div>
             {isThemeOpen && availableThemes.length > 0 && (
-              <div className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-[#c8cee2] border-solid rounded-[8px] z-[90] shadow-lg max-h-[200px] overflow-y-auto">
+              <div className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-[var(--border)] border-solid rounded-[var(--radius)] z-[100] shadow-lg max-h-[200px] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {availableThemes.map(theme => (
                   <div
                     key={theme}

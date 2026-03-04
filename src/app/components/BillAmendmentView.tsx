@@ -588,20 +588,26 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
         </div>
 
         {/* ── Right Panel: Bill Content + Amendment Interaction ────────── */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide px-[16px] py-[16px] relative" ref={contentRef}>
+        <div className="flex-1 flex flex-col overflow-hidden relative" ref={contentRef}>
 
-          {/* Close button */}
-          <div className="absolute top-[16px] right-[16px] z-10 flex items-center gap-[8px]">
-            <CloseButton onClick={onClose} />
+          {/* Fixed header with chapter chip + close button */}
+          <div className="flex items-end justify-between gap-[8px] px-[16px] py-[16px] shrink-0">
+            <div>
+              {selectedChapterData && (
+                <StatusChip label={`CHAPTER ${selectedChapterData.number}`} variant="inactive" />
+              )}
+            </div>
+            <div className="flex items-center gap-[8px]">
+              <CloseButton onClick={onClose} />
+            </div>
           </div>
 
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-y-auto scrollbar-hide px-[16px] pb-[16px]">
           {selectedChapterData ? (
             <div className="flex flex-col gap-[16px]">
               {/* Chapter header */}
               <div className="flex flex-col gap-[8px]">
-                <div className="mt-[14px]">
-                  <StatusChip label={`CHAPTER ${selectedChapterData.number}`} variant="inactive" />
-                </div>
                 <p className="font-semibold text-[length:var(--text-h4)] text-[var(--foreground)] leading-[20px]">
                   {selectedChapterData.name}
                 </p>
@@ -733,6 +739,7 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
               <p className="text-[var(--muted-foreground)] text-[length:var(--text-base)]">Select a chapter to review</p>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
