@@ -4,3 +4,5 @@
 export * from './parties';
 export * from './government';
 export * from './events';
+export * from './sitting';
+export * from './legislative-business';

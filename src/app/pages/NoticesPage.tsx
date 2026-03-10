@@ -96,7 +96,7 @@ interface Reply {
   content: string;
 }
 
-export function ZeroHourPage() {
+export function NoticesPage() {
   const [showForm, setShowForm] = useState(false);
   const tabs = ['Submitted', 'Approved', 'Rejected'];
   const [activeTab, setActiveTab] = useState(0);
@@ -183,7 +183,7 @@ export function ZeroHourPage() {
     <div className="bg-[#f8f9fb] relative size-full">
       {/* Navbar - positioned absolutely at the top */}
       <div className="absolute page-inset-left top-[32px]">
-        <SharedNavBar activePage="zero-hour" />
+        <SharedNavBar activePage="notices" />
       </div>
 
       {/* Page Header - positioned absolutely at the top-right */}

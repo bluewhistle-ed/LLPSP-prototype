@@ -46,13 +46,13 @@ function NavActive({ label }: { label: string }) {
   );
 }
 
-function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' | 'mentor-dashboard' }) {
+function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'questions' | 'notices' | 'amendments' | 'sitting' | 'mentor-dashboard' }) {
   const navigate = useNavigate();
   const { userType, adminRole } = useUser();
   
   // Determine if we're in student or admin mode
   const isStudentMode = activePage === 'home';
-  const isPSPMode = ['psp-dashboard', 'question-hour', 'zero-hour', 'legislative-business'].includes(activePage) && userType === 'student';
+  const isPSPMode = ['psp-dashboard', 'questions', 'notices', 'amendments', 'sitting'].includes(activePage) && userType === 'student';
   const isMentorMode = userType === 'mentor';
 
   if (isStudentMode) {
@@ -61,7 +61,7 @@ function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 
   }
 
   if (isMentorMode) {
-    // Mentor navigation - Dashboard, Question Hour, Legislative Business
+    // Mentor navigation - Dashboard, Questions, Amendments
     return (
       <div className="content-stretch flex gap-[16px] items-center relative shrink-0" data-name="Tabs">
         {activePage === 'mentor-dashboard' ? (
@@ -70,16 +70,16 @@ function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 
           <Nav label="Dashboard" onClick={() => navigate('/mentor/home')} />
         )}
         
-        {activePage === 'question-hour' ? (
-          <NavActive label="Question Hour" />
+        {activePage === 'questions' ? (
+          <NavActive label="Questions" />
         ) : (
-          <Nav label="Question Hour" onClick={() => navigate('/mentor/question-hour')} />
+          <Nav label="Questions" onClick={() => navigate('/mentor/questions')} />
         )}
         
-        {activePage === 'legislative-business' ? (
-          <NavActive label="Legislative Business" />
+        {activePage === 'amendments' ? (
+          <NavActive label="Amendments" />
         ) : (
-          <Nav label="Legislative Business" onClick={() => navigate('/mentor/legislative-business')} />
+          <Nav label="Amendments" onClick={() => navigate('/mentor/amendments')} />
         )}
       </div>
     );
@@ -95,22 +95,28 @@ function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 
           <Nav label="Dashboard" onClick={() => navigate('/student/psp/dashboard')} />
         )}
         
-        {activePage === 'question-hour' ? (
-          <NavActive label="Question Hour" />
+        {activePage === 'questions' ? (
+          <NavActive label="Questions" />
         ) : (
-          <Nav label="Question Hour" onClick={() => navigate('/student/psp/question-hour')} />
+          <Nav label="Questions" onClick={() => navigate('/student/psp/questions')} />
         )}
         
-        {activePage === 'zero-hour' ? (
-          <NavActive label="Zero Hour" />
+        {activePage === 'notices' ? (
+          <NavActive label="Notices" />
         ) : (
-          <Nav label="Zero Hour" onClick={() => navigate('/student/psp/zero-hour')} />
+          <Nav label="Notices" onClick={() => navigate('/student/psp/notices')} />
         )}
         
-        {activePage === 'legislative-business' ? (
-          <NavActive label="Legislative Business" />
+        {activePage === 'amendments' ? (
+          <NavActive label="Amendments" />
         ) : (
-          <Nav label="Legislative Business" onClick={() => navigate('/student/psp/legislative-business')} />
+          <Nav label="Amendments" onClick={() => navigate('/student/psp/amendments')} />
+        )}
+        
+        {activePage === 'sitting' ? (
+          <NavActive label="Sitting" />
+        ) : (
+          <Nav label="Sitting" onClick={() => navigate('/student/psp/sitting')} />
         )}
       </div>
     );
@@ -150,7 +156,7 @@ function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 
   );
 }
 
-function NavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' | 'mentor-dashboard' }) {
+function NavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'questions' | 'notices' | 'amendments' | 'sitting' | 'mentor-dashboard' }) {
   return (
     <div className="bg-white content-stretch flex gap-[16px] items-center p-[8px] relative rounded-[12px] shadow-[0px_8px_10px_0px_rgba(0,0,0,0.05)] shrink-0" data-name="Nav bar">
       <Logo />
@@ -196,7 +202,7 @@ function TopSideBar() {
   );
 }
 
-export function SharedNavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'question-hour' | 'zero-hour' | 'legislative-business' | 'mentor-dashboard' }) {
+export function SharedNavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'questions' | 'notices' | 'amendments' | 'sitting' | 'mentor-dashboard' }) {
   return (
     <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
       <NavBar activePage={activePage} />

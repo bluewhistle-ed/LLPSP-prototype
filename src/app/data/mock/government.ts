@@ -80,7 +80,7 @@ export const COUNCIL_OF_MINISTERS: MinistryWithMinisters[] = [
     description: "Responsible for the management of government finances, fiscal policy, taxation, public expenditure, and financial regulation. This ministry oversees the Union Budget, monitors macroeconomic indicators, and coordinates economic reforms across sectors.",
     minister: { name: "Aleta H. Starcher", avatar: AVATAR_3, partyName: "UPP", partyFlag: FLAG_UPP },
     mos: { name: "Nathan S. Wright", avatar: AVATAR_2, partyName: "TRP", partyFlag: FLAG_TRP },
-    questionHourThemes: [
+    questionThemes: [
       { id: 1, theme: "Union Budget Allocations", questionsReceived: 8 },
       { id: 2, theme: "GST Implementation", questionsReceived: 5 },
       { id: 3, theme: "Public Debt Management", questionsReceived: 3 },
@@ -93,7 +93,7 @@ export const COUNCIL_OF_MINISTERS: MinistryWithMinisters[] = [
     description: "Handles internal security, law enforcement, border management, and disaster response. The ministry coordinates with state governments on policing, communal harmony, and the maintenance of public order across the nation.",
     minister: { name: "Latricia W. Silletti", avatar: AVATAR_5, partyName: "UPP", partyFlag: FLAG_UPP },
     mos: { name: "Emily R. Thompson", avatar: AVATAR_4, partyName: "CVP", partyFlag: FLAG_CVP },
-    questionHourThemes: [
+    questionThemes: [
       { id: 5, theme: "Border Security Operations", questionsReceived: 7 },
       { id: 6, theme: "Cybercrime Prevention", questionsReceived: 4 },
       { id: 7, theme: "Disaster Response Readiness", questionsReceived: 2 },
@@ -105,7 +105,7 @@ export const COUNCIL_OF_MINISTERS: MinistryWithMinisters[] = [
     description: "Manages India's foreign relations, diplomatic missions, consular services, and international treaties. The ministry shapes foreign policy, fosters bilateral and multilateral partnerships, and protects the interests of citizens abroad.",
     minister: { name: "David R. Patterson", avatar: AVATAR_6, partyName: "TRP", partyFlag: FLAG_TRP },
     mos: null,
-    questionHourThemes: [
+    questionThemes: [
       { id: 8, theme: "Bilateral Trade Agreements", questionsReceived: 5 },
       { id: 9, theme: "Diaspora Welfare Programmes", questionsReceived: 3 },
     ],
@@ -116,7 +116,7 @@ export const COUNCIL_OF_MINISTERS: MinistryWithMinisters[] = [
     description: "Oversees national education policy, school and higher education standards, curriculum development, and research funding. The ministry works to ensure equitable access to quality education and promote skill development across demographics.",
     minister: { name: "Alice Thompson", avatar: AVATAR_3, partyName: "CVP", partyFlag: FLAG_CVP },
     mos: { name: "Mai G. Sollom", avatar: AVATAR_4, partyName: "UPP", partyFlag: FLAG_UPP },
-    questionHourThemes: [
+    questionThemes: [
       { id: 10, theme: "National Education Policy", questionsReceived: 9 },
       { id: 11, theme: "Digital Literacy Programmes", questionsReceived: 4 },
       { id: 12, theme: "University Funding & Research", questionsReceived: 6 },
@@ -129,7 +129,7 @@ export const COUNCIL_OF_MINISTERS: MinistryWithMinisters[] = [
     description: "Responsible for public health infrastructure, disease prevention, medical research, and family welfare programmes. The ministry administers national health insurance schemes and regulates pharmaceutical standards and medical education.",
     minister: { name: "Marcus T. Reynolds", avatar: AVATAR_7, partyName: "TRP", partyFlag: FLAG_TRP },
     mos: { name: "Adrianne P. Tillis", avatar: AVATAR_6, partyName: "UPP", partyFlag: FLAG_UPP },
-    questionHourThemes: [
+    questionThemes: [
       { id: 14, theme: "Rural Healthcare Access", questionsReceived: 7 },
       { id: 15, theme: "Vaccination Programmes", questionsReceived: 5 },
       { id: 16, theme: "Mental Health Initiatives", questionsReceived: 3 },
@@ -141,7 +141,7 @@ export const COUNCIL_OF_MINISTERS: MinistryWithMinisters[] = [
     description: "Manages national defence strategy, armed forces modernisation, defence procurement, and veteran welfare. The ministry coordinates with the three services to ensure territorial integrity and readiness for security challenges.",
     minister: { name: "Isabella M. Chen", avatar: AVATAR_1, partyName: "CVP", partyFlag: FLAG_CVP },
     mos: null,
-    questionHourThemes: [
+    questionThemes: [
       { id: 17, theme: "Defence Modernisation", questionsReceived: 6 },
       { id: 18, theme: "Veteran Welfare Schemes", questionsReceived: 4 },
       { id: 19, theme: "Indigenous Equipment Production", questionsReceived: 3 },

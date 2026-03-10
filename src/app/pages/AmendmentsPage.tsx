@@ -9,7 +9,7 @@ import { CompactActionButton } from "../components/CompactActionButton";
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
 
-export function LegislativeBusinessPage() {
+export function AmendmentsPage() {
   const [showDraftingForm, setShowDraftingForm] = useState(false);
   const [showBillReview, setShowBillReview] = useState(false);
   const [showBillAmendment, setShowBillAmendment] = useState(false);
@@ -33,7 +33,7 @@ export function LegislativeBusinessPage() {
       <div className="bg-[#f8f9fb] relative size-full">
         {/* Navbar - positioned absolutely at the top */}
         <div className="absolute page-inset-left top-[32px]">
-          <SharedNavBar activePage="legislative-business" />
+          <SharedNavBar activePage="amendments" />
         </div>
 
         {/* Page Header - positioned absolutely at the top-right */}
@@ -53,7 +53,7 @@ export function LegislativeBusinessPage() {
       <div className="bg-[var(--input-background)] relative size-full">
         {/* Navbar */}
         <div className="absolute page-inset-left top-[32px]">
-          <SharedNavBar activePage="legislative-business" />
+          <SharedNavBar activePage="amendments" />
         </div>
 
         {/* Page Header */}
@@ -73,7 +73,7 @@ export function LegislativeBusinessPage() {
       <div className="bg-[var(--input-background)] relative size-full">
         {/* Navbar */}
         <div className="absolute page-inset-left top-[32px]">
-          <SharedNavBar activePage="legislative-business" />
+          <SharedNavBar activePage="amendments" />
         </div>
 
         {/* Page Header */}
@@ -91,7 +91,7 @@ export function LegislativeBusinessPage() {
     <div className="bg-[var(--input-background)] relative size-full">
       {/* Navbar - positioned absolutely at the top */}
       <div className="absolute page-inset-left top-[32px]">
-        <SharedNavBar activePage="legislative-business" />
+        <SharedNavBar activePage="amendments" />
       </div>
 
       {/* Page Header - positioned absolutely at the top-right */}

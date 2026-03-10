@@ -7,9 +7,10 @@ import PartnersPage from "./pages/PartnersPage";
 import GlobalListsPage from "./pages/GlobalListsPage";
 import StudentDashboardPage from "./pages/StudentDashboardPage";
 import { PSPDashboardPage } from "./pages/PSPDashboardPage";
-import QuestionHourPage from "./pages/QuestionHourPage";
-import { ZeroHourPage } from "./pages/ZeroHourPage";
-import { LegislativeBusinessPage } from "./pages/LegislativeBusinessPage";
+import QuestionsPage from "./pages/QuestionsPage";
+import { NoticesPage } from "./pages/NoticesPage";
+import { AmendmentsPage } from "./pages/AmendmentsPage";
+import SittingPage from "./pages/SittingPage";
 import { RedirectToStudentHome } from "./components/RedirectToStudentHome";
 import SpeakerHomePage from "./pages/SpeakerHomePage";
 import MentorHomePage from "./pages/MentorHomePage";
@@ -60,16 +61,20 @@ export const router = createBrowserRouter([
         Component: PSPDashboardPage,
       },
       {
-        path: "student/psp/question-hour",
-        Component: QuestionHourPage,
+        path: "student/psp/questions",
+        Component: QuestionsPage,
       },
       {
-        path: "student/psp/zero-hour",
-        Component: ZeroHourPage,
+        path: "student/psp/notices",
+        Component: NoticesPage,
       },
       {
-        path: "student/psp/legislative-business",
-        Component: LegislativeBusinessPage,
+        path: "student/psp/amendments",
+        Component: AmendmentsPage,
+      },
+      {
+        path: "student/psp/sitting",
+        Component: SittingPage,
       },
 
       // ── Speaker routes ─────────────────────────────────────────────────────────
@@ -84,12 +89,12 @@ export const router = createBrowserRouter([
         Component: MentorHomePage,
       },
       {
-        path: "mentor/question-hour",
-        Component: QuestionHourPage,
+        path: "mentor/questions",
+        Component: QuestionsPage,
       },
       {
-        path: "mentor/legislative-business",
-        Component: LegislativeBusinessPage,
+        path: "mentor/amendments",
+        Component: AmendmentsPage,
       },
     ],
   },

@@ -8,6 +8,7 @@ import { PageHeader } from "../components/PageHeader";
 import { SharedNavBar } from "../components/SharedNavBar";
 import { PrimaryActionButton } from "../components/PrimaryActionButton";
 import { QuestionForm } from "../components/QuestionForm";
+import { Divider } from "../components/Divider";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from 'motion/react';
 import { useUser } from "../context/UserContext";
@@ -220,7 +221,7 @@ function QuestionCard() {
       </ul>
 
       {/* Divider */}
-      <div className="border-t border-[#e3e6f0] w-full" />
+      <Divider />
 
       {/* Footer */}
       <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full">
@@ -467,7 +468,7 @@ function QuestionCardWithData({ id, ministry, theme, timestamp, status, question
       </div>
 
       {/* Divider */}
-      <div className="border-t border-[#e3e6f0] w-full" />
+      <Divider />
 
       {/* Footer */}
       <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full">
@@ -605,11 +606,9 @@ function QuestionCardWithData({ id, ministry, theme, timestamp, status, question
   );
 }
 
-export default function QuestionHourPage() {
+export default function QuestionsPage() {
   const { userType, studentRole } = useUser();
   const isMinisterView = userType === 'student' && (studentRole === 'minister' || studentRole === 'mos');
-  const isMoS = userType === 'student' && studentRole === 'mos';
-  const isFullMinister = userType === 'student' && studentRole === 'minister';
   const isMentorView = userType === 'mentor';
 
   const [showForm, setShowForm] = useState(false);
@@ -632,7 +631,7 @@ export default function QuestionHourPage() {
   const mentorTabs = ['Submitted', 'Approved', 'Rejected'];
   const ministerTabs = ['All Questions', 'For Me', 'For Minister of State'];
   const mosTabs = ['All Questions', 'For Minister of State'];
-  const tabs = isMentorView ? mentorTabs : (isMoS ? mosTabs : (isMinisterView ? ministerTabs : privateMemberTabs));
+  const tabs = isMentorView ? mentorTabs : (isMinisterView ? ministerTabs : privateMemberTabs);
 
   // --- Private Member questions (own questions, filtered by status) ---
   const privateMemberQuestions = [
@@ -778,8 +777,6 @@ export default function QuestionHourPage() {
   ];
 
   // --- Minister view questions (questions directed TO the minister's ministry) ---
-  // The minister (Addie V. Biela) sees all questions addressed to their ministry,
-  // from various private members, some directed to the Minister and some to the MoS.
   const ministerQuestions = [
     {
       id: 'mq-1',
@@ -932,7 +929,7 @@ export default function QuestionHourPage() {
   const questions = isMentorView ? mentorQuestions : (isMinisterView ? ministerQuestions : privateMemberQuestions);
 
   // Calculate unassigned questions count (only for full minister, not MoS)
-  const unassignedCount = isFullMinister 
+  const unassignedCount = isMinisterView 
     ? questions.filter(q => !q.id || !assignments[q.id]).length 
     : 0;
 
@@ -944,33 +941,17 @@ export default function QuestionHourPage() {
 
   const filteredQuestions = (() => {
     if (isMinisterView) {
-      if (isMoS) {
-        // MoS tabs: "All Questions" | "For Minister of State"
-        // MoS cannot assign, only views questions assigned to them
-        switch (activeTab) {
-          case 0: return questions;  // All Questions
-          case 1: return questions.filter(q => {
-            const assignment = q.id ? assignments[q.id] : undefined;
-            return assignment === 'Minister of State';
-          });
-          default: return questions;
-        }
-      } else {
-        // Full Minister tabs: "All Questions" | "For Me" | "For Minister of State"
-        // When a question is assigned, it should appear in the respective tab
-        // regardless of the original askedTo.role
-        switch (activeTab) {
-          case 0: return questions;  // All Questions
-          case 1: return questions.filter(q => {
-            const assignment = q.id ? assignments[q.id] : undefined;
-            return assignment === 'Myself';
-          });
-          case 2: return questions.filter(q => {
-            const assignment = q.id ? assignments[q.id] : undefined;
-            return assignment === 'Minister of State';
-          });
-          default: return questions;
-        }
+      switch (activeTab) {
+        case 0: return questions;  // All Questions
+        case 1: return questions.filter(q => {
+          const assignment = q.id ? assignments[q.id] : undefined;
+          return assignment === 'Myself';
+        });
+        case 2: return questions.filter(q => {
+          const assignment = q.id ? assignments[q.id] : undefined;
+          return assignment === 'Minister of State';
+        });
+        default: return questions;
       }
     } else {
       // Private member & Mentor tabs: "Submitted" | "Approved" | "Rejected"
@@ -987,7 +968,7 @@ export default function QuestionHourPage() {
     <div className="bg-[#f8f9fb] relative size-full">
       {/* Navbar - positioned absolutely at the top */}
       <div className="absolute page-inset-left top-[32px]">
-        <SharedNavBar activePage="question-hour" />
+        <SharedNavBar activePage="questions" />
       </div>
 
       {/* Page Header - positioned absolutely at the top-right */}
@@ -1043,7 +1024,7 @@ export default function QuestionHourPage() {
             )}
 
             {/* Unassigned Questions Count Chip — only shown for full Minister (not MoS) */}
-            {isFullMinister && unassignedCount > 0 && (
+            {isMinisterView && unassignedCount > 0 && (
               <StatusChip label={`${unassignedCount} Unassigned`} variant="default" />
             )}
           </div>
@@ -1074,7 +1055,6 @@ export default function QuestionHourPage() {
                     onAssign={handleAssign}
                     onStatusChange={handleStatusChange}
                     assignedTo={'id' in question ? assignments[question.id as string] : undefined}
-                    isMoS={isMoS}
                   />
                 ))
               ) : (

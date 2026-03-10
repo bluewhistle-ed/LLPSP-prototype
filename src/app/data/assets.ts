@@ -21,7 +21,7 @@ export { default as AVATAR_7 } from "figma:asset/1fe3a74538117eb749053e9327f4316
 export { default as USER_AVATAR } from "figma:asset/aea56f3263ece92dd93d47abce807ee8df611744.png";
 
 // ── Session-Level Avatars ───────────────────────────────────────────────────
-// Shared across QuestionHour, ZeroHour, QuestionForm, BillReview, PartyManagement.
+// Shared across Questions, Notices, QuestionForm, BillReview, PartyManagement.
 // These represent session participants whose data doesn't yet live in a provider.
 export { default as SESSION_AVATAR_A } from "figma:asset/255027fc50bca580e944d9010026369329af8a73.png";
 export { default as SESSION_AVATAR_B } from "figma:asset/ba2f16d42d47f4ee59f03debf98e6bdc2a4d8653.png";

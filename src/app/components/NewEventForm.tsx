@@ -244,9 +244,9 @@ export function NewEventForm({ onClose }: { onClose: () => void }) {
   const [committee, setCommittee] = useState('');
   
   // Step 3 fields - Your original 4 deadline fields with calendar support
-  const [questionsForQuestionHourDate, setQuestionsForQuestionHourDate] = useState<Date | undefined>();
+  const [questionsDeadlineDate, setQuestionsDeadlineDate] = useState<Date | undefined>();
   const [billBySelectCommitteeDate, setBillBySelectCommitteeDate] = useState<Date | undefined>();
-  const [noticesForZeroHourDate, setNoticesForZeroHourDate] = useState<Date | undefined>();
+  const [noticesDeadlineDate, setNoticesDeadlineDate] = useState<Date | undefined>();
   const [amendmentsToBillDate, setAmendmentsToBillDate] = useState<Date | undefined>();
   
   // Track which calendar is open
@@ -952,8 +952,8 @@ export function NewEventForm({ onClose }: { onClose: () => void }) {
                   <div className="content-stretch flex gap-[4px] items-center px-[12px] py-[8px] relative w-full">
                     <input
                       type="date"
-                      value={questionsForQuestionHourDate ? format(questionsForQuestionHourDate, 'yyyy-MM-dd') : ''}
-                      onChange={(e) => setQuestionsForQuestionHourDate(e.target.value ? new Date(e.target.value) : undefined)}
+                      value={questionsDeadlineDate ? format(questionsDeadlineDate, 'yyyy-MM-dd') : ''}
+                      onChange={(e) => setQuestionsDeadlineDate(e.target.value ? new Date(e.target.value) : undefined)}
                       placeholder="Select Date"
                       className="flex-1 bg-transparent leading-[20px] min-h-px min-w-px not-italic outline-none relative text-[#2f3e6d] text-[14px] cursor-pointer"
                     />
@@ -992,8 +992,8 @@ export function NewEventForm({ onClose }: { onClose: () => void }) {
                   <div className="content-stretch flex gap-[4px] items-center px-[12px] py-[8px] relative w-full">
                     <input
                       type="date"
-                      value={noticesForZeroHourDate ? format(noticesForZeroHourDate, 'yyyy-MM-dd') : ''}
-                      onChange={(e) => setNoticesForZeroHourDate(e.target.value ? new Date(e.target.value) : undefined)}
+                      value={noticesDeadlineDate ? format(noticesDeadlineDate, 'yyyy-MM-dd') : ''}
+                      onChange={(e) => setNoticesDeadlineDate(e.target.value ? new Date(e.target.value) : undefined)}
                       placeholder="Select Date"
                       className="flex-1 bg-transparent leading-[20px] min-h-px min-w-px not-italic outline-none relative text-[#2f3e6d] text-[14px] cursor-pointer"
                     />

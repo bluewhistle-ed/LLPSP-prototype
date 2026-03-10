@@ -103,7 +103,7 @@ function computeWordDiff(original: string, proposed: string): DiffSegment[] {
 }
 
 /** Render diff segments as highlighted inline spans */
-function DiffHighlight({ original, proposed }: { original: string; proposed: string }) {
+export function DiffHighlight({ original, proposed }: { original: string; proposed: string }) {
   const segments = computeWordDiff(original, proposed);
 
   return (

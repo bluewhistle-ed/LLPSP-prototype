@@ -77,6 +77,8 @@
   --radius-button-small: 6px;
   /* Card border radius for cards and notifications. */
   --radius-card: 12px;
+  /* Card border color — lighter than --border, used for card outlines. */
+  --card-border: rgba(227, 230, 240, 1.00);
   /* The background color for sidebars, navigation menus, and other persistent elements. */
   --sidebar: rgba(255, 255, 255, 1.00);
   /* The default color for text or elements that appear on top of sidebars, navigation menus, and other persistent elements. */

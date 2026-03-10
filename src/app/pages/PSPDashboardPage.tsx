@@ -7,7 +7,7 @@ import { OppositionTab } from "../components/OppositionTab";
 import { useState, useEffect } from "react";
 import { useUser } from '../context/UserContext';
 
-type TabType = 'welcome' | 'party-management' | 'government' | 'opposition' | 'sitting-of-the-house';
+type TabType = 'welcome' | 'party-management' | 'government' | 'opposition';
 
 export function PSPDashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>('welcome');
@@ -95,20 +95,6 @@ export function PSPDashboardPage() {
               </p>
             </button>
           )}
-
-          <button
-            onClick={() => setActiveTab('sitting-of-the-house')}
-            className="flex items-center p-[12px] relative"
-          >
-            {activeTab === 'sitting-of-the-house' && (
-              <div aria-hidden="true" className="absolute border-[#1850c5] border-b-4 border-solid inset-0 pointer-events-none" />
-            )}
-            <p className={`font-semibold leading-[16px] text-[14px] text-center relative ${
-              activeTab === 'sitting-of-the-house' ? 'text-[#1850c5]' : 'text-[#6e7ca8]'
-            }`}>
-              Sitting of The House
-            </p>
-          </button>
         </div>
         
         {/* Tab Content - Scrollable area with hidden scrollbar */}
@@ -117,11 +103,6 @@ export function PSPDashboardPage() {
           {activeTab === 'party-management' && <PartyManagementTab />}
           {activeTab === 'government' && showGovernmentTab && <GovernmentTab />}
           {activeTab === 'opposition' && showOppositionTab && <OppositionTab />}
-          {activeTab === 'sitting-of-the-house' && (
-            <div className="bg-white p-[48px] rounded-[12px] text-center w-full">
-              <p className="text-[#6e7ca8] text-[16px]">Sitting of The House - Coming Soon</p>
-            </div>
-          )}
         </div>
       </div>
     </div>

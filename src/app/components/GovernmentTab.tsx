@@ -305,7 +305,7 @@ function MinistryDetailModal({
 }) {
   if (!isOpen) return null;
 
-  const totalQuestions = ministry.questionHourThemes.reduce(
+  const totalQuestions = ministry.questionThemes.reduce(
     (sum, t) => sum + t.questionsReceived,
     0
   );
@@ -353,11 +353,11 @@ function MinistryDetailModal({
           {/* Divider */}
           <div className="w-full h-[1px] bg-[var(--sidebar-primary)]" />
 
-          {/* Question Hour Themes Section */}
+          {/* Question Themes Section */}
           <div className="flex flex-col gap-[12px] w-full">
             <div className="flex items-center gap-[8px]">
               <p className="font-semibold leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
-                Question Hour Themes
+                Question Themes
               </p>
               <StatusChip
                 label={`${totalQuestions} Questions`}
@@ -365,7 +365,7 @@ function MinistryDetailModal({
               />
             </div>
             <div className="flex flex-col w-full">
-              {ministry.questionHourThemes.map((theme, index) => (
+              {ministry.questionThemes.map((theme, index) => (
                 <div key={theme.id}>
                   {index > 0 && (
                     <div className="h-px bg-[var(--sidebar-primary)]" />

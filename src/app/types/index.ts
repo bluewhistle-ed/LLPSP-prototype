@@ -89,7 +89,7 @@ export interface MinistryWithMinisters {
   description: string;
   minister: MinisterPerson;
   mos: MinisterPerson | null;
-  questionHourThemes: QuestionHourTheme[];
+  questionThemes: QuestionTheme[];
 }
 
 export interface MinisterPerson {
@@ -99,7 +99,7 @@ export interface MinisterPerson {
   partyFlag: string;
 }
 
-export interface QuestionHourTheme {
+export interface QuestionTheme {
   id: number;
   theme: string;
   questionsReceived: number;
