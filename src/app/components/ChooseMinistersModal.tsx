@@ -1,116 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { CompactActionButton } from './CompactActionButton';
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
-import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
-import imgUnsplash1 from "figma:asset/2255efa6e3d4e9cd3d5daf58f5f5df679f8ce61b.png";
-import imgUnsplash2 from "figma:asset/bdd8fbc00e625d0c6fe14c2c8af968a19e0b5258.png";
-import imgUnsplash3 from "figma:asset/666aaf651ac2fa50457b5314dddb3ef527236357.png";
-import imgUnsplash4 from "figma:asset/0c010bee9a65e7abc8fbcfcd9aabb12192721142.png";
-import imgUnsplash5 from "figma:asset/4fe1dc6012c7950c64680d0050aa8870cf6b7629.png";
-import imgUnsplash6 from "figma:asset/970678de1f18c883f87566bc9d6cb8a33ce7c22b.png";
-import imgUnsplash7 from "figma:asset/1fe3a74538117eb749053e9327f4316a11266495.png";
-
-// ── Types ────────────────────────────────────────────────────────────────────
-
-interface PartyMember {
-  id: number;
-  name: string;
-  role: string;
-  avatar: string;
-}
-
-interface CoalitionParty {
-  id: number;
-  name: string;
-  shortName: string;
-  flag: string;
-  members: PartyMember[];
-}
-
-interface AllocatedBerth {
-  ministryId: number;
-  ministryName: string;
-  roleType: 'Minister' | 'MoS';
-}
-
-/** Berths grouped by ministry for card rendering */
-interface MinistryGroup {
-  ministryId: number;
-  ministryName: string;
-  hasMinister: boolean;
-  hasMoS: boolean;
-}
-
-// ── Mock data ────────────────────────────────────────────────────────────────
-
-const COALITION_PARTIES: CoalitionParty[] = [
-  {
-    id: 1,
-    name: "Unity Progress Party",
-    shortName: "UPP",
-    flag: imgFlag,
-    members: [
-      { id: 1, name: "Sheilah T. Sayasane", role: "President", avatar: imgUnsplash1 },
-      { id: 2, name: "Roy X. Hinde", role: "V.President", avatar: imgUnsplash2 },
-      { id: 3, name: "Aleta H. Starcher", role: "Member", avatar: imgUnsplash3 },
-      { id: 4, name: "Mai G. Sollom", role: "Member", avatar: imgUnsplash4 },
-      { id: 5, name: "Latricia W. Silletti", role: "Member", avatar: imgUnsplash5 },
-      { id: 6, name: "Adrianne P. Tillis", role: "Member", avatar: imgUnsplash6 },
-      { id: 7, name: "Elvira E. Aus", role: "Member", avatar: imgUnsplash7 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Techno-Revolution Party",
-    shortName: "TRP",
-    flag: imgFlag1,
-    members: [
-      { id: 8, name: "Alex Johnson", role: "President", avatar: imgUnsplash4 },
-      { id: 9, name: "Marcus T. Reynolds", role: "V.President", avatar: imgUnsplash7 },
-      { id: 10, name: "David R. Patterson", role: "Member", avatar: imgUnsplash6 },
-      { id: 11, name: "Sophia L. Martinez", role: "Member", avatar: imgUnsplash5 },
-      { id: 12, name: "Nathan S. Wright", role: "Member", avatar: imgUnsplash2 },
-    ],
-  },
-  {
-    id: 3,
-    name: "Citizen's Voice Party",
-    shortName: "CVP",
-    flag: imgFlag2,
-    members: [
-      { id: 13, name: "Alice Thompson", role: "President", avatar: imgUnsplash3 },
-      { id: 14, name: "Isabella M. Chen", role: "V.President", avatar: imgUnsplash1 },
-      { id: 15, name: "James K. Anderson", role: "Member", avatar: imgUnsplash7 },
-      { id: 16, name: "Emily R. Thompson", role: "Member", avatar: imgUnsplash4 },
-    ],
-  },
-];
-
-// Simulated PM allocation — key: partyId → berths allocated to that party
-// TRP deliberately gets both Minister AND MoS for Health to demo the grouped-card layout
-const PM_ALLOCATION: Record<number, AllocatedBerth[]> = {
-  1: [
-    { ministryId: 1, ministryName: "Ministry of Finance", roleType: "Minister" },
-    { ministryId: 2, ministryName: "Ministry of Home Affairs", roleType: "Minister" },
-    { ministryId: 4, ministryName: "Ministry of Education", roleType: "MoS" },
-    { ministryId: 6, ministryName: "Ministry of Defence", roleType: "MoS" },
-  ],
-  2: [
-    { ministryId: 3, ministryName: "Ministry of External Affairs", roleType: "Minister" },
-    { ministryId: 5, ministryName: "Ministry of Health & Family Welfare", roleType: "Minister" },
-    { ministryId: 5, ministryName: "Ministry of Health & Family Welfare", roleType: "MoS" },
-    { ministryId: 1, ministryName: "Ministry of Finance", roleType: "MoS" },
-  ],
-  3: [
-    { ministryId: 4, ministryName: "Ministry of Education", roleType: "Minister" },
-    { ministryId: 6, ministryName: "Ministry of Defence", roleType: "Minister" },
-    { ministryId: 2, ministryName: "Ministry of Home Affairs", roleType: "MoS" },
-  ],
-};
-
-const DEMO_PARTY_ID = 2;
+import { useParties } from '../context/PartyContext';
+import { useGovernment } from '../context/GovernmentContext';
+import type { PartyMember, Party, AllocatedBerth, MinistryGroup } from '../types';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -360,7 +253,7 @@ interface ChooseMinistersModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm?: (nominations: Record<string, number>) => void;
-  /** Which party the logged-in president belongs to — defaults to DEMO_PARTY_ID */
+  /** Which party the logged-in president belongs to — defaults to currentPartyId from context */
   partyId?: number;
 }
 
@@ -368,10 +261,14 @@ export function ChooseMinistersModal({
   isOpen,
   onClose,
   onConfirm,
-  partyId = DEMO_PARTY_ID,
+  partyId,
 }: ChooseMinistersModalProps) {
-  const berths = PM_ALLOCATION[partyId] ?? [];
-  const party = COALITION_PARTIES.find(p => p.id === partyId);
+  const { governmentParties, currentPartyId } = useParties();
+  const { pmAllocation } = useGovernment();
+
+  const effectivePartyId = partyId ?? currentPartyId;
+  const berths = pmAllocation[effectivePartyId] ?? [];
+  const party = governmentParties.find(p => p.id === effectivePartyId);
   const ministryGroups = groupByMinistry(berths);
 
   // Eligible members: all party members except the president
@@ -394,7 +291,7 @@ export function ChooseMinistersModal({
       setNominations(initial);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, partyId]);
+  }, [isOpen, effectivePartyId]);
 
   if (!isOpen || !party) return null;
 

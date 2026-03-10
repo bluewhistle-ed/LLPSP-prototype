@@ -1,16 +1,18 @@
 import svgPaths from "../../imports/svg-cbwl7h0y6b";
 import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
-import imgUnsplash0HjWobhGhJs1 from "figma:asset/aa54fa5a3bd4d263bcb864f95f6d443a92beae03.png";
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import imgEllipse1 from "figma:asset/aea56f3263ece92dd93d47abce807ee8df611744.png";
-import imgEllipse3 from "figma:asset/4a8f8e72f5fe25465071d4ab7006bf2930bf6fc5.png";
-import imgEllipse4 from "figma:asset/072958e13f38abd0a42ad7f8edae5e3aa7e2ff2b.png";
-import imgEllipse5 from "figma:asset/7e0d7ab070d39f3cfc9f86f2768f90e8f6c155d2.png";
-import imgEllipse6 from "figma:asset/e754befde01d23dc9b0ee961c7db7f0d45c70f90.png";
-import imgEllipse7 from "figma:asset/40f6d59c4c64e58f45df1ad8a583decfd06e5817.png";
-import imgEllipse8 from "figma:asset/25865008497d19d3e4a672e5cc60b40969e02c3f.png";
-import imgEllipse9 from "figma:asset/7d537f4f1b05e605b168f4447189c4a1b187cdb6.png";
-import imgFlag1 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
+import {
+  MC_BANNER as imgUnsplash0HjWobhGhJs1,
+  FLAG_UPP as imgFlag,
+  USER_AVATAR as imgEllipse1,
+  MC_AVATAR_1 as imgEllipse3,
+  SESSION_AVATAR_D as imgEllipse4,
+  MC_AVATAR_2 as imgEllipse5,
+  MC_AVATAR_3 as imgEllipse6,
+  MC_AVATAR_4 as imgEllipse7,
+  MC_AVATAR_5 as imgEllipse8,
+  MC_AVATAR_6 as imgEllipse9,
+  FLAG_CVP as imgFlag1,
+} from '../data/assets';
 import { imgUnsplash0HjWobhGhJs } from "../../imports/svg-9n6vy";
 import { Bell } from "lucide-react";
 import { StatusChip } from './StatusChip';

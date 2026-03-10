@@ -1,6 +1,7 @@
 import svgPathsForm from "../../imports/svg-bmen1r6wqa";
 import { useState, useRef, useEffect } from "react";
 import { CloseButton } from "./CloseButton";
+import { useGovernment } from '../context/GovernmentContext';
 
 function IconsFormatListBulleted() {
   return (
@@ -22,23 +23,13 @@ interface NoticeFormProps {
 }
 
 export function NoticeForm({ onClose }: NoticeFormProps) {
+  const { noticeThemes } = useGovernment();
   const [noticeText, setNoticeText] = useState('');
   const [theme, setTheme] = useState('');
   const [showThemeDropdown, setShowThemeDropdown] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const themes = [
-    'Education',
-    'Healthcare',
-    'Infrastructure',
-    'Agriculture',
-    'Economy',
-    'Environment',
-    'Social Welfare',
-    'Technology',
-    'Security',
-    'Other'
-  ];
+  const themes = noticeThemes;
 
   const handleBulletListClick = () => {
     if (!textareaRef.current) return;

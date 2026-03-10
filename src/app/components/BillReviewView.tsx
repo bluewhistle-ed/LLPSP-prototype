@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import imgMentorAvatar from "figma:asset/f6ba6f3786e668346bbfc663e520ac1bacb87949.png";
+import { SESSION_AVATAR_C as imgMentorAvatar } from '../data/assets';
 import { motion, AnimatePresence } from "motion/react";
 import { CloseButton } from "./CloseButton";
 import { StatusChip } from "./StatusChip";

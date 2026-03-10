@@ -1,89 +1,14 @@
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { StatusChip } from './StatusChip';
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
-import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
 import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
-import imgUnsplash1 from "figma:asset/2255efa6e3d4e9cd3d5daf58f5f5df679f8ce61b.png";
-import imgUnsplash2 from "figma:asset/bdd8fbc00e625d0c6fe14c2c8af968a19e0b5258.png";
-import imgUnsplash3 from "figma:asset/666aaf651ac2fa50457b5314dddb3ef527236357.png";
-import imgUnsplash4 from "figma:asset/0c010bee9a65e7abc8fbcfcd9aabb12192721142.png";
-import imgUnsplash5 from "figma:asset/4fe1dc6012c7950c64680d0050aa8870cf6b7629.png";
-import imgUnsplash6 from "figma:asset/970678de1f18c883f87566bc9d6cb8a33ce7c22b.png";
-import imgUnsplash7 from "figma:asset/1fe3a74538117eb749053e9327f4316a11266495.png";
-
-// ── Types ────────────────────────────────────────────────────────────────────
-
-interface Member {
-  id: number;
-  name: string;
-  role: string;
-  avatar: string;
-}
-
-interface CoalitionParty {
-  id: number;
-  name: string;
-  tagline: string;
-  flag: string;
-  memberCount: number;
-  members: Member[];
-}
-
-// ── Mock coalition data ──────────────────────────────────────────────────────
-
-const TOTAL_HOUSE_STRENGTH = 50;
-
-const COALITION_PARTIES: CoalitionParty[] = [
-  {
-    id: 1,
-    name: "Unity Progress Party",
-    tagline: "Forging Together, Advancing Forward",
-    flag: imgFlag,
-    memberCount: 15,
-    members: [
-      { id: 1, name: "Sheilah T. Sayasane", role: "President", avatar: imgUnsplash1 },
-      { id: 2, name: "Roy X. Hinde", role: "V.President", avatar: imgUnsplash2 },
-      { id: 3, name: "Aleta H. Starcher", role: "Minister", avatar: imgUnsplash3 },
-      { id: 4, name: "Mai G. Sollom", role: "Member", avatar: imgUnsplash4 },
-      { id: 5, name: "Latricia W. Silletti", role: "Minister", avatar: imgUnsplash5 },
-      { id: 6, name: "Adrianne P. Tillis", role: "Member", avatar: imgUnsplash6 },
-      { id: 7, name: "Elvira E. Aus", role: "Member", avatar: imgUnsplash7 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Techno-Revolution Party",
-    tagline: "Innovation for the People",
-    flag: imgFlag1,
-    memberCount: 12,
-    members: [
-      { id: 8, name: "Alex Johnson", role: "President", avatar: imgUnsplash4 },
-      { id: 9, name: "Marcus T. Reynolds", role: "V.President", avatar: imgUnsplash7 },
-      { id: 10, name: "David R. Patterson", role: "Minister", avatar: imgUnsplash6 },
-      { id: 11, name: "Sophia L. Martinez", role: "Member", avatar: imgUnsplash5 },
-      { id: 12, name: "Nathan S. Wright", role: "Member", avatar: imgUnsplash2 },
-    ],
-  },
-  {
-    id: 3,
-    name: "Citizen's Voice Party",
-    tagline: "Power to the People",
-    flag: imgFlag2,
-    memberCount: 10,
-    members: [
-      { id: 13, name: "Alice Thompson", role: "President", avatar: imgUnsplash3 },
-      { id: 14, name: "Isabella M. Chen", role: "V.President", avatar: imgUnsplash1 },
-      { id: 15, name: "James K. Anderson", role: "Member", avatar: imgUnsplash7 },
-      { id: 16, name: "Emily R. Thompson", role: "Member", avatar: imgUnsplash4 },
-    ],
-  },
-];
+import { useParties } from '../context/PartyContext';
+import { useGovernment } from '../context/GovernmentContext';
+import type { Party, PartyMember, MinistryWithMinisters, SpeakerEntry } from '../types';
 
 // ── Read-only Member Row (matches PartyManagementTab MemberRow) ──────────────
 
-function ReadOnlyMemberRow({ member }: { member: Member }) {
+function ReadOnlyMemberRow({ member }: { member: PartyMember }) {
   const getRoleTag = () => {
     if (member.role === "President") {
       return (
@@ -147,7 +72,7 @@ function CoalitionMembersModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  party: CoalitionParty;
+  party: Party;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -267,7 +192,8 @@ function CoalitionMembersModal({
 // ── Coalition Card ───────────────────────────────────────────────────────────
 
 function CoalitionCard() {
-  const [selectedParty, setSelectedParty] = useState<CoalitionParty | null>(null);
+  const { governmentParties, totalHouseStrength } = useParties();
+  const [selectedParty, setSelectedParty] = useState<Party | null>(null);
 
   return (
     <>
@@ -279,12 +205,12 @@ function CoalitionCard() {
         <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
           <div className="flex items-center gap-[8px]">
             <p className="font-semibold leading-[20px] text-[var(--foreground)] text-[length:var(--text-h4)]">Government</p>
-            <StatusChip label={`${COALITION_PARTIES.reduce((sum, p) => sum + p.memberCount, 0)}/${TOTAL_HOUSE_STRENGTH} Members`} />
+            <StatusChip label={`${governmentParties.reduce((sum, p) => sum + p.memberCount, 0)}/${totalHouseStrength} Members`} />
           </div>
 
           {/* Coalition Parties List — action card style */}
           <div className="flex flex-col w-full -mx-[8px] -mt-[10px]">
-            {COALITION_PARTIES.map((party, index) => (
+            {governmentParties.map((party, index) => (
               <div key={party.id}>
                 {index > 0 && (
                   <div className="h-px bg-[var(--sidebar-primary)] mx-[12px]" />
@@ -332,93 +258,6 @@ function CoalitionCard() {
   );
 }
 
-// ── Council of Ministers Data ─────────────────────────────────────────────────
-
-interface Ministry {
-  id: number;
-  name: string;
-  description: string;
-  minister: { name: string; avatar: string; partyName: string; partyFlag: string };
-  mos: { name: string; avatar: string; partyName: string; partyFlag: string } | null;
-  questionHourThemes: { id: number; theme: string; questionsReceived: number }[];
-}
-
-const MINISTRIES: Ministry[] = [
-  {
-    id: 1,
-    name: "Finance",
-    description: "Responsible for the management of government finances, fiscal policy, taxation, public expenditure, and financial regulation. This ministry oversees the Union Budget, monitors macroeconomic indicators, and coordinates economic reforms across sectors.",
-    minister: { name: "Aleta H. Starcher", avatar: imgUnsplash3, partyName: "UPP", partyFlag: imgFlag },
-    mos: { name: "Nathan S. Wright", avatar: imgUnsplash2, partyName: "TRP", partyFlag: imgFlag1 },
-    questionHourThemes: [
-      { id: 1, theme: "Union Budget Allocations", questionsReceived: 8 },
-      { id: 2, theme: "GST Implementation", questionsReceived: 5 },
-      { id: 3, theme: "Public Debt Management", questionsReceived: 3 },
-      { id: 4, theme: "Banking Sector Reforms", questionsReceived: 6 },
-    ],
-  },
-  {
-    id: 2,
-    name: "Home Affairs",
-    description: "Handles internal security, law enforcement, border management, and disaster response. The ministry coordinates with state governments on policing, communal harmony, and the maintenance of public order across the nation.",
-    minister: { name: "Latricia W. Silletti", avatar: imgUnsplash5, partyName: "UPP", partyFlag: imgFlag },
-    mos: { name: "Emily R. Thompson", avatar: imgUnsplash4, partyName: "CVP", partyFlag: imgFlag2 },
-    questionHourThemes: [
-      { id: 5, theme: "Border Security Operations", questionsReceived: 7 },
-      { id: 6, theme: "Cybercrime Prevention", questionsReceived: 4 },
-      { id: 7, theme: "Disaster Response Readiness", questionsReceived: 2 },
-    ],
-  },
-  {
-    id: 3,
-    name: "External Affairs",
-    description: "Manages India's foreign relations, diplomatic missions, consular services, and international treaties. The ministry shapes foreign policy, fosters bilateral and multilateral partnerships, and protects the interests of citizens abroad.",
-    minister: { name: "David R. Patterson", avatar: imgUnsplash6, partyName: "TRP", partyFlag: imgFlag1 },
-    mos: null,
-    questionHourThemes: [
-      { id: 8, theme: "Bilateral Trade Agreements", questionsReceived: 5 },
-      { id: 9, theme: "Diaspora Welfare Programmes", questionsReceived: 3 },
-    ],
-  },
-  {
-    id: 4,
-    name: "Education",
-    description: "Oversees national education policy, school and higher education standards, curriculum development, and research funding. The ministry works to ensure equitable access to quality education and promote skill development across demographics.",
-    minister: { name: "Alice Thompson", avatar: imgUnsplash3, partyName: "CVP", partyFlag: imgFlag2 },
-    mos: { name: "Mai G. Sollom", avatar: imgUnsplash4, partyName: "UPP", partyFlag: imgFlag },
-    questionHourThemes: [
-      { id: 10, theme: "National Education Policy", questionsReceived: 9 },
-      { id: 11, theme: "Digital Literacy Programmes", questionsReceived: 4 },
-      { id: 12, theme: "University Funding & Research", questionsReceived: 6 },
-      { id: 13, theme: "Mid-day Meal Scheme", questionsReceived: 2 },
-    ],
-  },
-  {
-    id: 5,
-    name: "Health & Family Welfare",
-    description: "Responsible for public health infrastructure, disease prevention, medical research, and family welfare programmes. The ministry administers national health insurance schemes and regulates pharmaceutical standards and medical education.",
-    minister: { name: "Marcus T. Reynolds", avatar: imgUnsplash7, partyName: "TRP", partyFlag: imgFlag1 },
-    mos: { name: "Adrianne P. Tillis", avatar: imgUnsplash6, partyName: "UPP", partyFlag: imgFlag },
-    questionHourThemes: [
-      { id: 14, theme: "Rural Healthcare Access", questionsReceived: 7 },
-      { id: 15, theme: "Vaccination Programmes", questionsReceived: 5 },
-      { id: 16, theme: "Mental Health Initiatives", questionsReceived: 3 },
-    ],
-  },
-  {
-    id: 6,
-    name: "Defence",
-    description: "Manages national defence strategy, armed forces modernisation, defence procurement, and veteran welfare. The ministry coordinates with the three services to ensure territorial integrity and readiness for security challenges.",
-    minister: { name: "Isabella M. Chen", avatar: imgUnsplash1, partyName: "CVP", partyFlag: imgFlag2 },
-    mos: null,
-    questionHourThemes: [
-      { id: 17, theme: "Defence Modernisation", questionsReceived: 6 },
-      { id: 18, theme: "Veteran Welfare Schemes", questionsReceived: 4 },
-      { id: 19, theme: "Indigenous Equipment Production", questionsReceived: 3 },
-    ],
-  },
-];
-
 // ── Minister Row (used inside each ministry) ─────────────────────────────────
 
 function MinisterPersonRow({
@@ -462,7 +301,7 @@ function MinistryDetailModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  ministry: Ministry;
+  ministry: MinistryWithMinisters;
 }) {
   if (!isOpen) return null;
 
@@ -553,7 +392,8 @@ function MinistryDetailModal({
 // ── Council of Ministers Card ─────────────────────────────────────────────────
 
 function CouncilOfMinistersCard() {
-  const [selectedMinistry, setSelectedMinistry] = useState<Ministry | null>(null);
+  const { councilOfMinisters } = useGovernment();
+  const [selectedMinistry, setSelectedMinistry] = useState<MinistryWithMinisters | null>(null);
 
   return (
     <>
@@ -566,12 +406,12 @@ function CouncilOfMinistersCard() {
           {/* Title */}
           <div className="flex items-center gap-[8px]">
             <p className="font-semibold leading-[20px] text-[var(--foreground)] text-[length:var(--text-h4)]">Council of Ministers</p>
-            <StatusChip label={`${MINISTRIES.length} Portfolios`} variant="alliance" />
+            <StatusChip label={`${councilOfMinisters.length} Portfolios`} variant="alliance" />
           </div>
 
           {/* Ministries List — action card style */}
           <div className="flex flex-col w-full -mx-[8px] -mt-[10px]">
-            {MINISTRIES.map((ministry, index) => (
+            {councilOfMinisters.map((ministry, index) => (
               <div key={ministry.id}>
                 {index > 0 && (
                   <div className="h-px bg-[var(--sidebar-primary)] mx-[12px]" />
@@ -611,35 +451,11 @@ function CouncilOfMinistersCard() {
   );
 }
 
-// ── Speaker List Data ────────────────────────────────────────────────────────
-
-interface Speaker {
-  id: number;
-  name: string;
-  avatar: string;
-  partyName: string;
-  partyFlag: string;
-  time: string;
-}
-
-const DAY1_SPEAKERS: Speaker[] = [
-  { id: 1, name: "Sheilah T. Sayasane", avatar: imgUnsplash1, partyName: "UPP", partyFlag: imgFlag, time: "5 min" },
-  { id: 2, name: "Alex Johnson", avatar: imgUnsplash4, partyName: "TRP", partyFlag: imgFlag1, time: "8 min" },
-  { id: 3, name: "Aleta H. Starcher", avatar: imgUnsplash3, partyName: "UPP", partyFlag: imgFlag, time: "5 min" },
-  { id: 4, name: "Isabella M. Chen", avatar: imgUnsplash7, partyName: "CVP", partyFlag: imgFlag2, time: "7 min" },
-  { id: 5, name: "Roy X. Hinde", avatar: imgUnsplash2, partyName: "UPP", partyFlag: imgFlag, time: "5 min" },
-];
-
-const DAY2_SPEAKERS: Speaker[] = [
-  { id: 6, name: "Marcus T. Reynolds", avatar: imgUnsplash5, partyName: "TRP", partyFlag: imgFlag1, time: "10 min" },
-  { id: 7, name: "Alice Thompson", avatar: imgUnsplash6, partyName: "CVP", partyFlag: imgFlag2, time: "6 min" },
-];
-
 const PREVIEW_SPEAKER_COUNT = 3;
 
 // ── Speaker Row ──────────────────────────────────────────────────────────────
 
-function SpeakerRow({ speaker }: { speaker: Speaker }) {
+function SpeakerRow({ speaker }: { speaker: SpeakerEntry }) {
   return (
     <div className="flex items-center gap-[8px] w-full">
       {/* Member Avatar */}
@@ -668,6 +484,8 @@ function SpeakerRow({ speaker }: { speaker: Speaker }) {
 // ── Speaker List Modal ───────────────────────────────────────────────────────
 
 function SpeakerListModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const { day1Speakers, day2Speakers } = useGovernment();
+
   if (!isOpen) return null;
 
   return (
@@ -694,7 +512,7 @@ function SpeakerListModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               <StatusChip label="30 min" variant="alliance" />
             </div>
             <div className="flex flex-col gap-[12px] w-full">
-              {DAY1_SPEAKERS.map((speaker) => (
+              {day1Speakers.map((speaker) => (
                 <SpeakerRow key={speaker.id} speaker={speaker} />
               ))}
             </div>
@@ -710,7 +528,7 @@ function SpeakerListModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               <StatusChip label="16 min" variant="alliance" />
             </div>
             <div className="flex flex-col gap-[12px] w-full">
-              {DAY2_SPEAKERS.map((speaker) => (
+              {day2Speakers.map((speaker) => (
                 <SpeakerRow key={speaker.id} speaker={speaker} />
               ))}
             </div>
@@ -724,6 +542,7 @@ function SpeakerListModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 // ── Speaker List Card (preview) ──────────────────────────────────────────────
 
 function SpeakerListCard() {
+  const { day1Speakers, day2Speakers } = useGovernment();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const formatDate = (date: Date) => {
@@ -735,8 +554,8 @@ function SpeakerListCard() {
   const day1Date = new Date(2026, 1, 26);
   const day2Date = new Date(2026, 1, 27);
 
-  const day1Preview = DAY1_SPEAKERS.slice(0, PREVIEW_SPEAKER_COUNT);
-  const day1Remaining = DAY1_SPEAKERS.length - PREVIEW_SPEAKER_COUNT;
+  const day1Preview = day1Speakers.slice(0, PREVIEW_SPEAKER_COUNT);
+  const day1Remaining = day1Speakers.length - PREVIEW_SPEAKER_COUNT;
 
   return (
     <>
@@ -780,7 +599,7 @@ function SpeakerListCard() {
               <StatusChip label="16 min" variant="alliance" />
             </div>
 
-            {DAY2_SPEAKERS.map((speaker) => (
+            {day2Speakers.map((speaker) => (
               <SpeakerRow key={speaker.id} speaker={speaker} />
             ))}
           </div>

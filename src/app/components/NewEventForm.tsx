@@ -6,64 +6,9 @@ import svgPaths from "../../imports/svg-dv2wdhz28y";
 import searchSvgPaths from "../../imports/svg-hkh4t53hh4";
 import stepSvgPaths from "../../imports/svg-sclhcs6pf";
 import { useUser } from '../context/UserContext';
+import { useSession } from '../context/SessionContext';
+import { useGovernment } from '../context/GovernmentContext';
 import { CloseButton } from './CloseButton';
-
-// Mock data
-const availablePartners = [
-  'St. Mary\'s High School',
-  'Lincoln Academy',
-  'Riverside International School',
-  'Greenwood Public School',
-  'Summit Preparatory School',
-  'Perry Traditional Academy',
-  'Peabody High School',
-  'Oakland Catholic High School',
-  'Northgate Junior - Senior High School',
-  'Oliver High School',
-  'Pittsburgh Central Catholic',
-  'Diplomatic Summit Hall',
-  'InnovateEd Tech Expo Center',
-  'Future Learning Center',
-  'Wellness Convention Center',
-];
-
-const availableMinistries = [
-  { 
-    id: 'ministry-1', 
-    name: 'Ministry of Education',
-    themes: ['Curriculum Development', 'Teacher Training', 'Student Assessment', 'Infrastructure', 'Digital Learning']
-  },
-  { 
-    id: 'ministry-2', 
-    name: 'Ministry of Health',
-    themes: ['Public Health', 'Healthcare Access', 'Medical Research', 'Disease Prevention', 'Mental Health']
-  },
-  { 
-    id: 'ministry-3', 
-    name: 'Ministry of Finance',
-    themes: ['Budget Planning', 'Tax Policy', 'Economic Growth', 'Financial Regulation', 'Public Debt']
-  },
-  { 
-    id: 'ministry-4', 
-    name: 'Ministry of Environment',
-    themes: ['Climate Change', 'Conservation', 'Pollution Control', 'Renewable Energy', 'Wildlife Protection']
-  },
-  { 
-    id: 'ministry-5', 
-    name: 'Ministry of Transportation',
-    themes: ['Infrastructure Development', 'Public Transit', 'Road Safety', 'Aviation', 'Maritime']
-  },
-  { 
-    id: 'ministry-6', 
-    name: 'Ministry of Agriculture',
-    themes: ['Food Security', 'Sustainable Farming', 'Rural Development', 'Livestock', 'Crop Production']
-  },
-  { 
-    id: 'ministry-7', 
-    name: 'Ministry of Technology',
-    themes: ['Digital Innovation', 'Cybersecurity', 'AI & ML', 'Telecommunications', 'Data Privacy']
-  },
-];
 
 const timeOptions = [
   '08:00 AM', '08:30 AM', '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
@@ -257,6 +202,8 @@ function StepperBlock({ number, label, isActive }: { number: string; label: stri
 
 export function NewEventForm({ onClose }: { onClose: () => void }) {
   const { adminRole } = useUser();
+  const { availablePartners } = useSession();
+  const { eventFormMinistries: availableMinistries } = useGovernment();
   const isBluewhistleAdmin = adminRole === 'bluewhistle-admin';
   const isSchoolAdmin = adminRole === 'school-admin';
   const [currentStep, setCurrentStep] = useState(1); // Start at step 1

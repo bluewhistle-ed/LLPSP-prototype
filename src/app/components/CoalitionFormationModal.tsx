@@ -1,21 +1,12 @@
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
-import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
 import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
 import { StatusChip } from './StatusChip';
 import { CompactActionButton } from './CompactActionButton';
 import { useState, useRef, useEffect } from "react";
 import { Check, X, ChevronDown, Lock, CheckCircle2 } from "lucide-react";
+import { useParties } from '../context/PartyContext';
+import type { Party } from '../types';
 
 // ── Types ────────────────────────────────────────────────────────────────────
-
-interface Party {
-  id: number;
-  name: string;
-  flag: string;
-  president: string;
-  memberCount: number;
-}
 
 export interface CoalitionRequest {
   fromPartyId: number;
@@ -32,21 +23,9 @@ interface CoalitionFormationModalProps {
 
 // ── Mock data ────────────────────────────────────────────────────────────────
 
-const CURRENT_PARTY_ID = 1; // The current user's party
+// ... remove this code ...
 
-const ALL_PARTIES: Party[] = [
-  { id: 1, name: "Unity Progress Party", flag: imgFlag, president: "Sheilah T. Sayasane", memberCount: 15 },
-  { id: 2, name: "Techno-Revolution Party", flag: imgFlag1, president: "Alex Johnson", memberCount: 12 },
-  { id: 3, name: "Citizen's Voice Party", flag: imgFlag2, president: "Alice Thompson", memberCount: 10 },
-  { id: 4, name: "National Democratic Front", flag: imgFlag1, president: "Rajiv M. Kapoor", memberCount: 9 },
-  { id: 5, name: "Green Future Alliance", flag: imgFlag2, president: "Priya S. Nair", memberCount: 8 },
-  { id: 6, name: "People's Reform Party", flag: imgFlag, president: "David K. Osei", memberCount: 11 },
-];
-
-const TOTAL_HOUSE_SEATS = ALL_PARTIES.reduce((sum, p) => sum + p.memberCount, 0);
-const MAJORITY_THRESHOLD = Math.floor(TOTAL_HOUSE_SEATS / 2) + 1;
-
-// ── Coalition Seat Tracker ───────────────────────────────────────────────────
+// ── Coalition Seat Tracker ─────────────────────────────��─────────────────────
 
 function CoalitionSeatTracker({
   currentSeats,
@@ -310,10 +289,12 @@ function CoalitionPartyRow({
 // ── Main Modal ───────────────────────────────────────────────────────────────
 
 export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: CoalitionFormationModalProps) {
+  const { allParties, currentPartyId, totalHouseSeats, majorityThreshold } = useParties();
+
   const [requests, setRequests] = useState<CoalitionRequest[]>([
     // Simulate: CVP and NDF have sent us requests
-    { fromPartyId: 3, toPartyId: CURRENT_PARTY_ID, status: 'pending' },
-    { fromPartyId: 4, toPartyId: CURRENT_PARTY_ID, status: 'pending' },
+    { fromPartyId: 3, toPartyId: currentPartyId, status: 'pending' },
+    { fromPartyId: 4, toPartyId: currentPartyId, status: 'pending' },
   ]);
 
   const [coalitionLocked, setCoalitionLocked] = useState(false);
@@ -326,28 +307,28 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
 
   // ── Derived state (must be computed before hooks that depend on them) ──────
 
-  const currentParty = ALL_PARTIES.find(p => p.id === CURRENT_PARTY_ID)!;
-  const otherParties = ALL_PARTIES.filter(p => p.id !== CURRENT_PARTY_ID);
+  const currentParty = allParties.find(p => p.id === currentPartyId)!;
+  const otherParties = allParties.filter(p => p.id !== currentPartyId);
 
   // All coalition partner IDs (accepted + sent-pending) — used for section grouping & lock-in
   // Received-pending parties stay in Available until accepted
   const coalitionPartnerIds = requests
     .filter(r =>
       r.status === 'accepted' ||
-      (r.status === 'pending' && r.fromPartyId === CURRENT_PARTY_ID)
+      (r.status === 'pending' && r.fromPartyId === currentPartyId)
     )
-    .map(r => r.fromPartyId === CURRENT_PARTY_ID ? r.toPartyId : r.fromPartyId);
+    .map(r => r.fromPartyId === currentPartyId ? r.toPartyId : r.fromPartyId);
 
   // Coalition seat count (our seats + all coalition partners' seats)
   const coalitionSeats = currentParty.memberCount +
     coalitionPartnerIds.reduce((sum, pid) => {
       // Exclude partners who declined during lock-in
       if (partnerConfirmations[pid] === 'declined') return sum;
-      const p = ALL_PARTIES.find(pp => pp.id === pid);
+      const p = allParties.find(pp => pp.id === pid);
       return sum + (p?.memberCount ?? 0);
     }, 0);
 
-  const hasMajority = coalitionSeats >= MAJORITY_THRESHOLD;
+  const hasMajority = coalitionSeats >= majorityThreshold;
 
   // Check if all partners have responded (confirmed or declined) — coalition is fully locked
   const allPartnersResponded = coalitionLocked &&
@@ -368,7 +349,7 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
     // Simulate party 4 (NDF) declining after 4 seconds
     // Also auto-decline any party we sent a proposal to (sent-pending)
     const sentPendingIds = requests
-      .filter(r => r.fromPartyId === CURRENT_PARTY_ID && (r.status === 'pending' || r.status === 'accepted'))
+      .filter(r => r.fromPartyId === currentPartyId && (r.status === 'pending' || r.status === 'accepted'))
       .map(r => r.toPartyId);
 
     const timer2 = setTimeout(() => {
@@ -388,7 +369,7 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
       onLockComplete({
         hasMajority,
         finalSeats: coalitionSeats,
-        totalSeats: TOTAL_HOUSE_SEATS,
+        totalSeats: totalHouseSeats,
       });
     }
   }, [allPartnersResponded, lockCompleteNotified, onLockComplete, hasMajority, coalitionSeats]);
@@ -398,33 +379,29 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
   // ── Request state per party ────────────────────────────────────────────────
 
   const getRequestState = (partyId: number): 'none' | 'sent-pending' | 'received-pending' | 'accepted' | 'rejected' => {
-    // Check accepted
     const accepted = requests.find(
       r =>
         r.status === 'accepted' &&
-        ((r.fromPartyId === CURRENT_PARTY_ID && r.toPartyId === partyId) ||
-          (r.fromPartyId === partyId && r.toPartyId === CURRENT_PARTY_ID))
+        ((r.fromPartyId === currentPartyId && r.toPartyId === partyId) ||
+          (r.fromPartyId === partyId && r.toPartyId === currentPartyId))
     );
     if (accepted) return 'accepted';
 
-    // Check sent pending
     const sent = requests.find(
-      r => r.fromPartyId === CURRENT_PARTY_ID && r.toPartyId === partyId && r.status === 'pending'
+      r => r.fromPartyId === currentPartyId && r.toPartyId === partyId && r.status === 'pending'
     );
     if (sent) return 'sent-pending';
 
-    // Check received pending
     const received = requests.find(
-      r => r.fromPartyId === partyId && r.toPartyId === CURRENT_PARTY_ID && r.status === 'pending'
+      r => r.fromPartyId === partyId && r.toPartyId === currentPartyId && r.status === 'pending'
     );
     if (received) return 'received-pending';
 
-    // Check rejected
     const rejected = requests.find(
       r =>
         r.status === 'rejected' &&
-        ((r.fromPartyId === CURRENT_PARTY_ID && r.toPartyId === partyId) ||
-          (r.fromPartyId === partyId && r.toPartyId === CURRENT_PARTY_ID))
+        ((r.fromPartyId === currentPartyId && r.toPartyId === partyId) ||
+          (r.fromPartyId === partyId && r.toPartyId === currentPartyId))
     );
     if (rejected) return 'rejected';
 
@@ -435,26 +412,23 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
 
   const handleSendRequest = (toPartyId: number) => {
     if (coalitionLocked) return;
-
-    // Don't allow if a request already exists between these two parties
     const existing = requests.find(
       r =>
         r.status === 'pending' &&
-        ((r.fromPartyId === CURRENT_PARTY_ID && r.toPartyId === toPartyId) ||
-          (r.fromPartyId === toPartyId && r.toPartyId === CURRENT_PARTY_ID))
+        ((r.fromPartyId === currentPartyId && r.toPartyId === toPartyId) ||
+          (r.fromPartyId === toPartyId && r.toPartyId === currentPartyId))
     );
     if (existing) return;
-
     setRequests(prev => [
       ...prev,
-      { fromPartyId: CURRENT_PARTY_ID, toPartyId, status: 'pending' },
+      { fromPartyId: currentPartyId, toPartyId, status: 'pending' },
     ]);
   };
 
   const handleWithdraw = (toPartyId: number) => {
     setRequests(prev =>
       prev.filter(
-        r => !(r.fromPartyId === CURRENT_PARTY_ID && r.toPartyId === toPartyId && r.status === 'pending')
+        r => !(r.fromPartyId === currentPartyId && r.toPartyId === toPartyId && r.status === 'pending')
       )
     );
   };
@@ -462,7 +436,7 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
   const handleAccept = (fromPartyId: number) => {
     setRequests(prev =>
       prev.map(r =>
-        r.fromPartyId === fromPartyId && r.toPartyId === CURRENT_PARTY_ID && r.status === 'pending'
+        r.fromPartyId === fromPartyId && r.toPartyId === currentPartyId && r.status === 'pending'
           ? { ...r, status: 'accepted' }
           : r
       )
@@ -472,7 +446,7 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
   const handleReject = (fromPartyId: number) => {
     setRequests(prev =>
       prev.map(r =>
-        r.fromPartyId === fromPartyId && r.toPartyId === CURRENT_PARTY_ID && r.status === 'pending'
+        r.fromPartyId === fromPartyId && r.toPartyId === currentPartyId && r.status === 'pending'
           ? { ...r, status: 'rejected' }
           : r
       )
@@ -481,13 +455,12 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
 
   const handleRemovePartner = (partyId: number) => {
     if (coalitionLocked) return;
-    // Remove the accepted request involving this party
     setRequests(prev =>
       prev.filter(
         r => !(
           r.status === 'accepted' &&
-          ((r.fromPartyId === CURRENT_PARTY_ID && r.toPartyId === partyId) ||
-            (r.fromPartyId === partyId && r.toPartyId === CURRENT_PARTY_ID))
+          ((r.fromPartyId === currentPartyId && r.toPartyId === partyId) ||
+            (r.fromPartyId === partyId && r.toPartyId === currentPartyId))
         )
       )
     );
@@ -495,7 +468,6 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
 
   const handleLockCoalition = () => {
     if (!hasMajority) return;
-    // Set all coalition partners to 'waiting'
     const initial: Record<number, 'waiting' | 'confirmed' | 'declined'> = {};
     coalitionPartnerIds.forEach(pid => { initial[pid] = 'waiting'; });
     setPartnerConfirmations(initial);
@@ -550,8 +522,8 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
         <div className="w-full relative shrink-0 bg-[var(--input-background)] rounded-[var(--radius)] p-[16px]">
           <CoalitionSeatTracker
             currentSeats={coalitionSeats}
-            majorityThreshold={MAJORITY_THRESHOLD}
-            totalSeats={TOTAL_HOUSE_SEATS}
+            majorityThreshold={majorityThreshold}
+            totalSeats={totalHouseSeats}
             partnerCount={coalitionPartnerIds.length}
             lockState={coalitionLocked ? (allPartnersResponded ? 'complete' : 'in-progress') : 'unlocked'}
           />

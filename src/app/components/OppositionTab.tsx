@@ -1,85 +1,13 @@
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { StatusChip } from './StatusChip';
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
-import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
 import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
-import imgUnsplash1 from "figma:asset/2255efa6e3d4e9cd3d5daf58f5f5df679f8ce61b.png";
-import imgUnsplash2 from "figma:asset/bdd8fbc00e625d0c6fe14c2c8af968a19e0b5258.png";
-import imgUnsplash3 from "figma:asset/666aaf651ac2fa50457b5314dddb3ef527236357.png";
-import imgUnsplash4 from "figma:asset/0c010bee9a65e7abc8fbcfcd9aabb12192721142.png";
-import imgUnsplash5 from "figma:asset/4fe1dc6012c7950c64680d0050aa8870cf6b7629.png";
-import imgUnsplash6 from "figma:asset/970678de1f18c883f87566bc9d6cb8a33ce7c22b.png";
-import imgUnsplash7 from "figma:asset/1fe3a74538117eb749053e9327f4316a11266495.png";
-
-// ── Types ────────────────────────────────────────────────────────────────────
-
-interface Member {
-  id: number;
-  name: string;
-  role: string;
-  avatar: string;
-}
-
-interface OppositionParty {
-  id: number;
-  name: string;
-  tagline: string;
-  flag: string;
-  memberCount: number;
-  members: Member[];
-}
-
-// ── Mock opposition data ─────────────────────────────────────────────────────
-
-const TOTAL_HOUSE_STRENGTH = 50;
-
-const OPPOSITION_PARTIES: OppositionParty[] = [
-  {
-    id: 1,
-    name: "People's Democratic Front",
-    tagline: "Democracy Through Dissent",
-    flag: imgFlag2,
-    memberCount: 8,
-    members: [
-      { id: 1, name: "Rajesh K. Malhotra", role: "President", avatar: imgUnsplash6 },
-      { id: 2, name: "Priya N. Deshmukh", role: "V.President", avatar: imgUnsplash3 },
-      { id: 3, name: "Carlos D. Mendez", role: "Member", avatar: imgUnsplash7 },
-      { id: 4, name: "Fiona A. McCarthy", role: "Member", avatar: imgUnsplash1 },
-      { id: 5, name: "Samuel T. Okonkwo", role: "Member", avatar: imgUnsplash4 },
-    ],
-  },
-  {
-    id: 2,
-    name: "National Reform Alliance",
-    tagline: "Reform, Rebuild, Renew",
-    flag: imgFlag1,
-    memberCount: 6,
-    members: [
-      { id: 6, name: "Ananya R. Sharma", role: "President", avatar: imgUnsplash5 },
-      { id: 7, name: "Viktor J. Petrov", role: "V.President", avatar: imgUnsplash2 },
-      { id: 8, name: "Helena G. Santos", role: "Member", avatar: imgUnsplash4 },
-      { id: 9, name: "Derek M. O'Brien", role: "Member", avatar: imgUnsplash7 },
-    ],
-  },
-  {
-    id: 3,
-    name: "Green Future Party",
-    tagline: "Sustainable Governance for All",
-    flag: imgFlag,
-    memberCount: 4,
-    members: [
-      { id: 10, name: "Lena P. Johansson", role: "President", avatar: imgUnsplash2 },
-      { id: 11, name: "Kwame A. Mensah", role: "V.President", avatar: imgUnsplash6 },
-      { id: 12, name: "Irene L. Costa", role: "Member", avatar: imgUnsplash3 },
-    ],
-  },
-];
+import { useParties } from '../context/PartyContext';
+import type { Party, PartyMember } from '../types';
 
 // ── Read-only Member Row ─────────────────────────────────────────────────────
 
-function ReadOnlyMemberRow({ member }: { member: Member }) {
+function ReadOnlyMemberRow({ member }: { member: PartyMember }) {
   const getRoleTag = () => {
     if (member.role === "President") {
       return (
@@ -141,7 +69,7 @@ function OppositionMembersModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  party: OppositionParty;
+  party: Party;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -261,7 +189,8 @@ function OppositionMembersModal({
 // ── Opposition Parties Card ──────────────────────────────────────────────────
 
 function OppositionPartiesCard() {
-  const [selectedParty, setSelectedParty] = useState<OppositionParty | null>(null);
+  const { oppositionParties, totalHouseStrength } = useParties();
+  const [selectedParty, setSelectedParty] = useState<Party | null>(null);
 
   return (
     <>
@@ -273,12 +202,12 @@ function OppositionPartiesCard() {
         <div className="content-stretch flex flex-col gap-[16px] items-start p-[20px] relative w-full">
           <div className="flex items-center gap-[8px]">
             <p className="font-semibold leading-[20px] text-[var(--foreground)] text-[length:var(--text-h4)]">Opposition</p>
-            <StatusChip label={`${OPPOSITION_PARTIES.reduce((sum, p) => sum + p.memberCount, 0)}/${TOTAL_HOUSE_STRENGTH} Members`} />
+            <StatusChip label={`${oppositionParties.reduce((sum, p) => sum + p.memberCount, 0)}/${totalHouseStrength} Members`} />
           </div>
 
           {/* Opposition Parties List — action card style */}
           <div className="flex flex-col w-full -mx-[8px] -mt-[10px]">
-            {OPPOSITION_PARTIES.map((party, index) => (
+            {oppositionParties.map((party, index) => (
               <div key={party.id}>
                 {index > 0 && (
                   <div className="h-px bg-[var(--sidebar-primary)] mx-[12px]" />

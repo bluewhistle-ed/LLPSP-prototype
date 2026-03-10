@@ -1,5 +1,4 @@
-import svgPaths from "../../imports/svg-ukbgtczgk2";
-import imgEllipse1 from "figma:asset/aea56f3263ece92dd93d47abce807ee8df611744.png";
+import { USER_AVATAR as imgEllipse1 } from '../data/assets';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import {

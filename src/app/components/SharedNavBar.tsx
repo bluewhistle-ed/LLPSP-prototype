@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import svgPaths from "../../imports/svg-hkh4t53hh4";
-import imgEllipse1 from "figma:asset/aea56f3263ece92dd93d47abce807ee8df611744.png";
+import { USER_AVATAR as imgEllipse1 } from '../data/assets';
 import { useUser, HOME_ROUTES } from '../context/UserContext';
 
 function Group() {

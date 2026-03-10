@@ -1,48 +1,21 @@
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import svgPaths from "../../imports/svg-g3dbnhdfg1";
 import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
-import imgEllipse3 from "figma:asset/255027fc50bca580e944d9010026369329af8a73.png";
-import imgUnsplash0HjWobhGhJs1 from "figma:asset/2255efa6e3d4e9cd3d5daf58f5f5df679f8ce61b.png";
-import imgUnsplash0HjWobhGhJs2 from "figma:asset/bdd8fbc00e625d0c6fe14c2c8af968a19e0b5258.png";
-import imgUnsplash0HjWobhGhJs3 from "figma:asset/666aaf651ac2fa50457b5314dddb3ef527236357.png";
-import imgUnsplash0HjWobhGhJs4 from "figma:asset/0c010bee9a65e7abc8fbcfcd9aabb12192721142.png";
-import imgUnsplash0HjWobhGhJs5 from "figma:asset/4fe1dc6012c7950c64680d0050aa8870cf6b7629.png";
-import imgUnsplash0HjWobhGhJs6 from "figma:asset/970678de1f18c883f87566bc9d6cb8a33ce7c22b.png";
-import imgUnsplash0HjWobhGhJs7 from "figma:asset/1fe3a74538117eb749053e9327f4316a11266495.png";
-import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
-import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
+import { SESSION_AVATAR_A as imgEllipse3 } from '../data/assets';
 import { Search, Send, ArrowDown } from "lucide-react";
 import { Link } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { StatusChip } from './StatusChip';
-
-// Shared party members data
-const ALL_PARTY_MEMBERS = [
-  { id: 1, name: "Sheilah T. Sayasane", role: "President", avatar: imgUnsplash0HjWobhGhJs1 },
-  { id: 2, name: "Roy X. Hinde", role: "V.President", avatar: imgUnsplash0HjWobhGhJs2 },
-  { id: 3, name: "Aleta H. Starcher", role: "Member", avatar: imgUnsplash0HjWobhGhJs3 },
-  { id: 4, name: "Mai G. Sollom", role: "Member", avatar: imgUnsplash0HjWobhGhJs4 },
-  { id: 5, name: "Latricia W. Silletti", role: "Minister", avatar: imgUnsplash0HjWobhGhJs5 },
-  { id: 6, name: "Adrianne P. Tillis", role: "Member", avatar: imgUnsplash0HjWobhGhJs6 },
-  { id: 7, name: "Elvira E. Aus", role: "Member", avatar: imgUnsplash0HjWobhGhJs7 },
-  { id: 8, name: "Marcus T. Reynolds", role: "Member", avatar: "https://images.unsplash.com/photo-1554765345-6ad6a5417cde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzE5Njk3MTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  { id: 9, name: "Isabella M. Chen", role: "Member", avatar: "https://images.unsplash.com/photo-1701096351544-7de3c7fa0272?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB3b21hbiUyMGhlYWRzaG90fGVufDF8fHx8MTc3MTk5NDA4N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  { id: 10, name: "David R. Patterson", role: "Minister", avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTkzMTQ0OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  { id: 11, name: "Sophia L. Martinez", role: "Member", avatar: "https://images.unsplash.com/photo-1752650735547-990f918bd028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcGhvdG98ZW58MXx8fHwxNzcyMDI2MjcwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  { id: 12, name: "James K. Anderson", role: "Member", avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  { id: 13, name: "Emily R. Thompson", role: "Member", avatar: "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFufGVufDF8fHx8MTc3MjAxMjIyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  { id: 14, name: "Nathan S. Wright", role: "Minister", avatar: "https://images.unsplash.com/photo-1769636929261-e913ed023c83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBtYW4lMjBoZWFkc2hvdHxlbnwxfHx8fDE3NzE5MTUzMjh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-  { id: 15, name: "Olivia H. Bennett", role: "Member", avatar: "https://images.unsplash.com/photo-1613473350016-1fe047d6d360?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjB3b21hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTk4NjM3Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
-];
+import { useParties } from '../context/PartyContext';
+import type { PartyMember } from '../types';
 
 const PREVIEW_MEMBER_COUNT = 5;
 
 // Party Ideology Card
 function PartyIdeologyCard() {
-  const allianceParties = [
-    { id: 1, name: "TRP", avatar: imgFlag1 },
-    { id: 2, name: "CVP", avatar: imgFlag2 },
-  ];
+  const { allParties, governmentParties, currentPartyId } = useParties();
+  const currentParty = allParties.find(p => p.id === currentPartyId);
+  const allianceParties = governmentParties
+    .filter(p => p.id !== currentPartyId)
+    .map(p => ({ id: p.id, name: p.shortName, avatar: p.flag }));
 
   return (
     <div className="bg-white relative rounded-[12px] shrink-0 w-full">
@@ -51,12 +24,12 @@ function PartyIdeologyCard() {
         <div className="flex items-start gap-[12px] w-full">
           {/* Party Logo */}
           <div className="relative shrink-0 size-[48px]">
-            <img alt="Party Logo" className="block max-w-none size-full rounded-full" src={imgFlag} />
+            <img alt="Party Logo" className="block max-w-none size-full rounded-full" src={currentParty?.flag ?? ''} />
           </div>
           
           {/* Name and Details */}
           <div className="flex flex-col gap-[8px] flex-1">
-            <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">Unity Progress Party</p>
+            <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[14px]">{currentParty?.name ?? 'Unknown Party'}</p>
             
             {/* Treasury Chip and Alliance Chips */}
             <div className="flex items-center gap-[6px] flex-wrap">
@@ -78,7 +51,7 @@ function PartyIdeologyCard() {
         {/* Ideology Description */}
         <div className="flex flex-col gap-[12px] p-[12px] rounded-[8px] bg-[#f8f9fb] w-full">
           <p className="leading-[20px] text-[#6e7ca8] text-[14px]">
-            We believe in collaborative governance, sustainable growth, and social equity. Empowering communities through inclusive policies, innovation, and equal access to education and healthcare for all.
+            {currentParty?.tagline ?? ''} — We believe in collaborative governance, sustainable growth, and social equity. Empowering communities through inclusive policies, innovation, and equal access to education and healthcare for all.
           </p>
         </div>
       </div>
@@ -88,11 +61,13 @@ function PartyIdeologyCard() {
 
 // Party Members Modal
 function PartyMembersModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const { currentPartyMembers, allParties, currentPartyId } = useParties();
+  const currentParty = allParties.find(p => p.id === currentPartyId);
   const [searchQuery, setSearchQuery] = useState("");
 
   if (!isOpen) return null;
 
-  const filteredMembers = ALL_PARTY_MEMBERS.filter(member =>
+  const filteredMembers = currentPartyMembers.filter(member =>
     member.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -108,15 +83,15 @@ function PartyMembersModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
           <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
             <div className="relative shrink-0 size-[40px]">
               <div className="absolute border-[0.465px] border-solid border-white inset-0 overflow-clip rounded-[5.581px]">
-                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgFlag} />
+                <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={currentParty?.flag ?? ''} />
               </div>
             </div>
             <div className="content-stretch flex flex-[1_0_0] flex-col items-start justify-center leading-[0] min-h-px min-w-px not-italic relative text-ellipsis">
               <div className="flex flex-col font-semibold justify-center overflow-hidden relative shrink-0 text-[#2f3e6d] text-[16px] w-full">
-                <p className="leading-[1.4] whitespace-pre-wrap">Unity Progress Party</p>
+                <p className="leading-[1.4] whitespace-pre-wrap">{currentParty?.name ?? 'Unknown Party'}</p>
               </div>
               <div className="flex flex-col justify-center overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] w-full">
-                <p className="leading-[1.4] whitespace-pre-wrap">Forging Together, Advancing Forward</p>
+                <p className="leading-[1.4] whitespace-pre-wrap">{currentParty?.tagline ?? ''}</p>
               </div>
             </div>
           </div>
@@ -129,7 +104,7 @@ function PartyMembersModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 <img alt="" className="block max-w-none size-full" height="16" src={imgEllipse3} width="16" />
               </div>
               <div className="flex flex-col justify-center leading-[0] not-italic overflow-hidden relative shrink-0 text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">
-                <p className="leading-[16px]">{ALL_PARTY_MEMBERS.length} Members</p>
+                <p className="leading-[16px]">{currentPartyMembers.length} Members</p>
               </div>
             </div>
           </div>
@@ -242,11 +217,12 @@ function MemberRow({ member }: { member: { id: number; name: string; role: strin
 
 // Party Members Card (shows preview with "View All" button)
 function PartyMembersCard() {
+  const { currentPartyMembers } = useParties();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Show only the first few members as preview
-  const allPreviewMembers = ALL_PARTY_MEMBERS.slice(0, PREVIEW_MEMBER_COUNT);
-  const remainingMemberCount = ALL_PARTY_MEMBERS.length - PREVIEW_MEMBER_COUNT;
+  const allPreviewMembers = currentPartyMembers.slice(0, PREVIEW_MEMBER_COUNT);
+  const remainingMemberCount = currentPartyMembers.length - PREVIEW_MEMBER_COUNT;
 
   return (
     <>
@@ -292,16 +268,16 @@ function DiscussionSpeakersModal({ isOpen, onClose }: { isOpen: boolean; onClose
   if (!isOpen) return null;
 
   const day1Speakers = [
-    { id: 1, name: "Sheilah T. Sayasane", time: "5 min", avatar: imgUnsplash0HjWobhGhJs1 },
-    { id: 2, name: "Roy X. Hinde", time: "8 min", avatar: imgUnsplash0HjWobhGhJs2 },
-    { id: 3, name: "Aleta H. Starcher", time: "5 min", avatar: imgUnsplash0HjWobhGhJs3 },
-    { id: 4, name: "Latricia W. Silletti", time: "7 min", avatar: imgUnsplash0HjWobhGhJs5 },
-    { id: 5, name: "Adrianne P. Tillis", time: "5 min", avatar: imgUnsplash0HjWobhGhJs6 },
+    { id: 1, name: "Sheilah T. Sayasane", time: "5 min", avatar: "https://images.unsplash.com/photo-1554765345-6ad6a5417cde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzE5Njk3MTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 2, name: "Roy X. Hinde", time: "8 min", avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 3, name: "Aleta H. Starcher", time: "5 min", avatar: "https://images.unsplash.com/photo-1752650735547-990f918bd028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcGhvdG98ZW58MXx8fHwxNzcyMDI2MjcwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 4, name: "Latricia W. Silletti", time: "7 min", avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTkzMTQ0OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 5, name: "Adrianne P. Tillis", time: "5 min", avatar: "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFufGVufDF8fHx8MTc3MjAxMjIyMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
   ];
 
   const day2Speakers = [
-    { id: 6, name: "Mai G. Sollom", time: "10 min", avatar: imgUnsplash0HjWobhGhJs4 },
-    { id: 7, name: "Elvira E. Aus", time: "6 min", avatar: imgUnsplash0HjWobhGhJs7 },
+    { id: 6, name: "Mai G. Sollom", time: "10 min", avatar: "https://images.unsplash.com/photo-1769636929261-e913ed023c83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBtYW4lMjBoZWFkc2hvdHxlbnwxfHx8fDE3NzE5MTUzMjh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 7, name: "Elvira E. Aus", time: "6 min", avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
   ];
 
   return (
@@ -393,14 +369,14 @@ function DiscussionSpeakersCard() {
   const day2Date = new Date(2026, 1, 27); // Feb 27, 2026
 
   const day1PreviewSpeakers = [
-    { id: 1, name: "Sheilah T. Sayasane", time: "5 min", avatar: imgUnsplash0HjWobhGhJs1 },
-    { id: 2, name: "Roy X. Hinde", time: "8 min", avatar: imgUnsplash0HjWobhGhJs2 },
-    { id: 3, name: "Aleta H. Starcher", time: "5 min", avatar: imgUnsplash0HjWobhGhJs3 },
+    { id: 1, name: "Sheilah T. Sayasane", time: "5 min", avatar: "https://images.unsplash.com/photo-1554765345-6ad6a5417cde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzE5Njk3MTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 2, name: "Roy X. Hinde", time: "8 min", avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 3, name: "Aleta H. Starcher", time: "5 min", avatar: "https://images.unsplash.com/photo-1752650735547-990f918bd028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcGhvdG98ZW58MXx8fHwxNzcyMDI2MjcwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
   ];
 
   const day2PreviewSpeakers = [
-    { id: 6, name: "Mai G. Sollom", time: "10 min", avatar: imgUnsplash0HjWobhGhJs4 },
-    { id: 7, name: "Elvira E. Aus", time: "6 min", avatar: imgUnsplash0HjWobhGhJs7 },
+    { id: 6, name: "Mai G. Sollom", time: "10 min", avatar: "https://images.unsplash.com/photo-1769636929261-e913ed023c83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBtYW4lMjBoZWFkc2hvdHxlbnwxfHx8fDE3NzE5MTUzMjh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
+    { id: 7, name: "Elvira E. Aus", time: "6 min", avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" },
   ];
 
   return (
@@ -533,7 +509,7 @@ function PartyChatCard() {
     {
       id: 1,
       sender: "Sheilah T. Sayasane",
-      avatar: imgUnsplash0HjWobhGhJs1,
+      avatar: "https://images.unsplash.com/photo-1554765345-6ad6a5417cde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBwb3J0cmFpdHxlbnwxfHx8fDE3NzE5Njk3MTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       content: "Team, let's focus on the climate policy amendments for tomorrow's session.",
       timestamp: "10:32 AM",
       isCurrentUser: false,
@@ -541,7 +517,7 @@ function PartyChatCard() {
     {
       id: 2,
       sender: "Roy X. Hinde",
-      avatar: imgUnsplash0HjWobhGhJs2,
+      avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzE5OTU5MDd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       content: "Agreed. I've prepared the talking points for our proposal.",
       timestamp: "10:35 AM",
       isCurrentUser: false,
@@ -549,7 +525,7 @@ function PartyChatCard() {
     {
       id: 3,
       sender: "You",
-      avatar: imgUnsplash0HjWobhGhJs3,
+      avatar: "https://images.unsplash.com/photo-1752650735547-990f918bd028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcGhvdG98ZW58MXx8fHwxNzcyMDI2MjcwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       content: "Perfect! Should we coordinate with the allied parties?",
       timestamp: "10:38 AM",
       isCurrentUser: true,
@@ -557,7 +533,7 @@ function PartyChatCard() {
     {
       id: 4,
       sender: "Latricia W. Silletti",
-      avatar: imgUnsplash0HjWobhGhJs5,
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1hbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MTkzMTQ0OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
       content: "I'll reach out to TRP and CVP representatives.",
       timestamp: "10:40 AM",
       isCurrentUser: false,
@@ -593,7 +569,7 @@ function PartyChatCard() {
       setMessages([...messages, {
         id: messages.length + 1,
         sender: "You",
-        avatar: imgUnsplash0HjWobhGhJs3,
+        avatar: "https://images.unsplash.com/photo-1752650735547-990f918bd028?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcGhvdG98ZW58MXx8fHwxNzcyMDI2MjcwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
         content: newMessage,
         timestamp: timeStr,
         isCurrentUser: true,

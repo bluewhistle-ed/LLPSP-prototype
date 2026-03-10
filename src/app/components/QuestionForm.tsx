@@ -1,8 +1,8 @@
-import svgPathsForm from "../../imports/svg-bmen1r6wqa";
-import imgEllipse4 from "figma:asset/255027fc50bca580e944d9010026369329af8a73.png";
-import imgEllipse8 from "figma:asset/ba2f16d42d47f4ee59f03debf98e6bdc2a4d8653.png";
+import { SESSION_AVATAR_A as imgEllipse4 } from '../data/assets';
+import { SESSION_AVATAR_B as imgEllipse8 } from '../data/assets';
 import { useState, useRef, useEffect } from "react";
 import { CloseButton } from "./CloseButton";
+import { useGovernment } from '../context/GovernmentContext';
 
 function PartyBadge({ party }: { party: string }) {
   const colors: Record<string, { bg: string; border: string; text: string }> = {
@@ -179,45 +179,8 @@ interface QuestionFormProps {
   onClose: () => void;
 }
 
-const availableMinistries = [
-  { 
-    id: 'ministry-1', 
-    name: 'Ministry of Education',
-    themes: ['Curriculum Development', 'Teacher Training', 'Student Assessment', 'Infrastructure', 'Digital Learning']
-  },
-  { 
-    id: 'ministry-2', 
-    name: 'Ministry of Health',
-    themes: ['Public Health', 'Healthcare Access', 'Medical Research', 'Disease Prevention', 'Mental Health']
-  },
-  { 
-    id: 'ministry-3', 
-    name: 'Ministry of Finance',
-    themes: ['Budget Planning', 'Tax Policy', 'Economic Growth', 'Financial Regulation', 'Public Debt']
-  },
-  { 
-    id: 'ministry-4', 
-    name: 'Ministry of Environment',
-    themes: ['Climate Change', 'Conservation', 'Pollution Control', 'Renewable Energy', 'Wildlife Protection']
-  },
-  { 
-    id: 'ministry-5', 
-    name: 'Ministry of Transportation',
-    themes: ['Infrastructure Development', 'Public Transit', 'Road Safety', 'Aviation', 'Maritime']
-  },
-  { 
-    id: 'ministry-6', 
-    name: 'Ministry of Agriculture',
-    themes: ['Food Security', 'Sustainable Farming', 'Rural Development', 'Livestock', 'Crop Production']
-  },
-  { 
-    id: 'ministry-7', 
-    name: 'Ministry of Technology',
-    themes: ['Digital Innovation', 'Cybersecurity', 'AI & ML', 'Telecommunications', 'Data Privacy']
-  },
-];
-
 export function QuestionForm({ onClose }: QuestionFormProps) {
+  const { eventFormMinistries: availableMinistries } = useGovernment();
   const [selectedMinistry, setSelectedMinistry] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('');
   const [questionText, setQuestionText] = useState('');
@@ -353,21 +316,6 @@ export function QuestionForm({ onClose }: QuestionFormProps) {
       }
     }
   };
-
-  const ministries = [
-    'Ministry of Human Resource Development',
-    'Ministry of Commerce & Industry',
-    'Ministry of Defence',
-    'Ministry of Ports, Shipping and Waterways'
-  ];
-
-  const themes = [
-    'Higher Education',
-    'School Education',
-    'Skill Development',
-    'Research & Innovation',
-    'Student Welfare'
-  ];
 
   return (
     <div className="bg-white content-stretch flex flex-col gap-[16px] items-start p-[24px] relative rounded-[16px] w-full max-h-[calc(100vh-180px)] overflow-hidden">

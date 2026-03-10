@@ -1,47 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { CompactActionButton } from './CompactActionButton';
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
-import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
-
-// ── Types ────────────────────────────────────────────────────────────────────
-
-interface CoalitionParty {
-  id: number;
-  name: string;
-  shortName: string;
-  flag: string;
-}
-
-interface Ministry {
-  id: number;
-  name: string;
-}
-
-interface BerthAllocation {
-  cabinetMinisterPartyId: number;
-  mosPartyId: number | null;
-}
-
-// ── Mock data ────────────────────────────────────────────────────────────────
-
-const PM_PARTY_ID = 1;
-
-const COALITION_PARTIES: CoalitionParty[] = [
-  { id: 1, name: "Unity Progress Party", shortName: "UPP", flag: imgFlag },
-  { id: 2, name: "Techno-Revolution Party", shortName: "TRP", flag: imgFlag1 },
-  { id: 3, name: "Citizen's Voice Party", shortName: "CVP", flag: imgFlag2 },
-];
-
-const MINISTRIES: Ministry[] = [
-  { id: 1, name: "Ministry of Finance" },
-  { id: 2, name: "Ministry of Home Affairs" },
-  { id: 3, name: "Ministry of External Affairs" },
-  { id: 4, name: "Ministry of Education" },
-  { id: 5, name: "Ministry of Health & Family Welfare" },
-  { id: 6, name: "Ministry of Defence" },
-];
+import { useParties } from '../context/PartyContext';
+import { useGovernment } from '../context/GovernmentContext';
+import type { Party, Ministry, BerthAllocation } from '../types';
 
 // ── Party Dropdown ───────────────────────────────────────────────────────────
 
@@ -49,10 +11,14 @@ function PartyDropdown({
   selectedPartyId,
   onChange,
   allowNone,
+  coalitionParties,
+  currentPartyId,
 }: {
   selectedPartyId: number | null;
   onChange: (partyId: number | null) => void;
   allowNone?: boolean;
+  coalitionParties: Party[];
+  currentPartyId: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -69,7 +35,7 @@ function PartyDropdown({
   }, [isOpen]);
 
   const selectedParty = selectedPartyId !== null
-    ? COALITION_PARTIES.find(p => p.id === selectedPartyId)
+    ? coalitionParties.find(p => p.id === selectedPartyId)
     : null;
 
   return (
@@ -99,7 +65,7 @@ function PartyDropdown({
         <div className="absolute left-0 top-[calc(100%+4px)] bg-[var(--card)] rounded-[var(--radius-button-small)] shadow-[var(--elevation-sm)] z-20 overflow-hidden min-w-full w-max">
           <div className="absolute border border-[var(--border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-button-small)]" />
 
-          {COALITION_PARTIES.map((party) => (
+          {coalitionParties.map((party) => (
             <button
               key={party.id}
               onClick={() => { onChange(party.id); setIsOpen(false); }}
@@ -111,7 +77,7 @@ function PartyDropdown({
                 <img alt="" className="block max-w-none size-full rounded-[2px] object-cover" src={party.flag} />
               </div>
               <span className="text-[var(--foreground)] truncate">{party.name}</span>
-              {party.id === PM_PARTY_ID && (
+              {party.id === currentPartyId && (
                 <span className="text-[var(--muted-foreground)] text-[length:var(--text-label)] ml-auto shrink-0 pl-[8px]">(Your party)</span>
               )}
             </button>
@@ -143,10 +109,14 @@ function MinistryCard({
   ministry,
   allocation,
   onUpdate,
+  coalitionParties,
+  currentPartyId,
 }: {
   ministry: Ministry;
   allocation: BerthAllocation;
   onUpdate: (updated: BerthAllocation) => void;
+  coalitionParties: Party[];
+  currentPartyId: number;
 }) {
   return (
     <div className="bg-white relative rounded-[var(--radius-card)] shrink-0 w-full">
@@ -167,7 +137,9 @@ function MinistryCard({
           </p>
           <PartyDropdown
             selectedPartyId={allocation.cabinetMinisterPartyId}
-            onChange={(partyId) => onUpdate({ ...allocation, cabinetMinisterPartyId: partyId ?? PM_PARTY_ID })}
+            onChange={(partyId) => onUpdate({ ...allocation, cabinetMinisterPartyId: partyId ?? currentPartyId })}
+            coalitionParties={coalitionParties}
+            currentPartyId={currentPartyId}
           />
         </div>
 
@@ -180,6 +152,8 @@ function MinistryCard({
             selectedPartyId={allocation.mosPartyId}
             onChange={(partyId) => onUpdate({ ...allocation, mosPartyId: partyId })}
             allowNone
+            coalitionParties={coalitionParties}
+            currentPartyId={currentPartyId}
           />
         </div>
       </div>
@@ -189,13 +163,23 @@ function MinistryCard({
 
 // ── Summary Tracker ──────────────────────────────────────────────────────────
 
-function AllocationSummary({ allocations, onConfirm }: { allocations: Record<number, BerthAllocation>; onConfirm: () => void }) {
+function AllocationSummary({
+  allocations,
+  onConfirm,
+  coalitionParties,
+  ministries,
+}: {
+  allocations: Record<number, BerthAllocation>;
+  onConfirm: () => void;
+  coalitionParties: Party[];
+  ministries: Ministry[];
+}) {
   const partyCounts: Record<number, { minister: number; mos: number }> = {};
-  COALITION_PARTIES.forEach(p => { partyCounts[p.id] = { minister: 0, mos: 0 }; });
+  coalitionParties.forEach(p => { partyCounts[p.id] = { minister: 0, mos: 0 }; });
 
   Object.entries(allocations).forEach(([ministryIdStr, alloc]) => {
     const ministryId = Number(ministryIdStr);
-    const ministry = MINISTRIES.find(m => m.id === ministryId);
+    const ministry = ministries.find(m => m.id === ministryId);
     if (!ministry) return;
 
     if (partyCounts[alloc.cabinetMinisterPartyId]) {
@@ -209,7 +193,7 @@ function AllocationSummary({ allocations, onConfirm }: { allocations: Record<num
   return (
     <div className="flex flex-col gap-[8px] w-full">
       <div className="flex flex-wrap gap-[8px]">
-        {COALITION_PARTIES.map(party => {
+        {coalitionParties.map(party => {
           const counts = partyCounts[party.id];
           const total = counts.minister + counts.mos;
           return (
@@ -246,11 +230,14 @@ interface MinistryAllocationModalProps {
 }
 
 export function MinistryAllocationModal({ isOpen, onClose, onConfirm }: MinistryAllocationModalProps) {
+  const { governmentParties, currentPartyId } = useParties();
+  const { allocationMinistries } = useGovernment();
+
   const [allocations, setAllocations] = useState<Record<number, BerthAllocation>>(() => {
     const initial: Record<number, BerthAllocation> = {};
-    MINISTRIES.forEach(m => {
+    allocationMinistries.forEach(m => {
       initial[m.id] = {
-        cabinetMinisterPartyId: PM_PARTY_ID,
+        cabinetMinisterPartyId: currentPartyId,
         mosPartyId: null,
       };
     });
@@ -292,17 +279,24 @@ export function MinistryAllocationModal({ isOpen, onClose, onConfirm }: Ministry
 
         {/* Summary tracker */}
         <div className="w-full relative shrink-0 bg-[var(--input-background)] rounded-[var(--radius)] p-[16px]">
-          <AllocationSummary allocations={allocations} onConfirm={handleConfirm} />
+          <AllocationSummary
+            allocations={allocations}
+            onConfirm={handleConfirm}
+            coalitionParties={governmentParties}
+            ministries={allocationMinistries}
+          />
         </div>
 
         {/* Scrollable ministry cards */}
         <div className="content-stretch flex flex-col gap-[12px] items-start relative w-full overflow-y-auto scrollbar-hide flex-1 min-h-0">
-          {MINISTRIES.map((ministry) => (
+          {allocationMinistries.map((ministry) => (
             <MinistryCard
               key={ministry.id}
               ministry={ministry}
               allocation={allocations[ministry.id]}
               onUpdate={(updated) => handleUpdate(ministry.id, updated)}
+              coalitionParties={governmentParties}
+              currentPartyId={currentPartyId}
             />
           ))}
         </div>

@@ -1,7 +1,6 @@
 import svgPaths from "../../imports/svg-yy4ljbh9ou";
 import svgPathsNotice from "../../imports/svg-l4efvdw4l8";
-import imgEllipse4 from "figma:asset/255027fc50bca580e944d9010026369329af8a73.png";
-import imgEllipse8 from "figma:asset/ba2f16d42d47f4ee59f03debf98e6bdc2a4d8653.png";
+import { SESSION_AVATAR_A as imgEllipse4, SESSION_AVATAR_B as imgEllipse8 } from '../data/assets';
 import { PageHeader } from "../components/PageHeader";
 import { SharedNavBar } from "../components/SharedNavBar";
 import { PrimaryActionButton } from "../components/PrimaryActionButton";

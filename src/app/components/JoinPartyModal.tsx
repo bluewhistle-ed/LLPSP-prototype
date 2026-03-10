@@ -1,10 +1,8 @@
 import svgPaths from "../../imports/svg-7zrpvq7f8n";
 import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
-import imgFlag from "figma:asset/e93f8184d4e0a003421c8b115cdf0646b0047716.png";
-import imgFlag1 from "figma:asset/f3d28dab76472dda8be30af14710d0d9220a3f6c.png";
-import imgFlag2 from "figma:asset/0f2334d3dd6983342dde2fc10d440067b79ce1fa.png";
 import { StatusChip } from './StatusChip';
 import { useState } from "react";
+import { useParties } from '../context/PartyContext';
 
 function IconsCheckCircle() {
   return (
@@ -102,13 +100,14 @@ interface JoinPartyModalProps {
 }
 
 export function JoinPartyModal({ isOpen, onClose }: JoinPartyModalProps) {
+  const { allParties } = useParties();
   const [selectedParty, setSelectedParty] = useState<string | null>(null);
 
-  const parties: Party[] = [
-    { name: "Unity Progress Party", flag: imgFlag, president: "John Doe" },
-    { name: "Techno-Revolution Party", flag: imgFlag1, president: "Jane Smith" },
-    { name: "Citizen's Voice Party", flag: imgFlag2, president: "Alice Johnson" },
-  ];
+  const parties = allParties.map(p => ({
+    name: p.name,
+    flag: p.flag,
+    president: p.president,
+  }));
 
   const handleJoin = () => {
     if (selectedParty) {

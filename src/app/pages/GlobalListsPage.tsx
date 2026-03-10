@@ -6,63 +6,31 @@ import { PageHeader } from '../components/PageHeader';
 import { AddMinistryForm } from '../components/AddMinistryForm';
 import { AddCommitteeForm } from '../components/AddCommitteeForm';
 import { motion, AnimatePresence } from 'motion/react';
+import { useGovernment } from '../context/GovernmentContext';
 
 export default function GlobalListsPage() {
+  const { ministries, committees, addMinistry, addCommittee } = useGovernment();
+
   const [activeTab, setActiveTab] = useState<'ministries' | 'committees'>('ministries');
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddMinistryFormOpen, setIsAddMinistryFormOpen] = useState(false);
   const [isAddCommitteeFormOpen, setIsAddCommitteeFormOpen] = useState(false);
-  
-  const [ministriesList, setMinistriesList] = useState([
-    { id: 1, name: 'Ministry of Justice and Legal Affairs', status: 'active' },
-    { id: 2, name: 'Ministry of Finance and Economic Planning', status: 'active' },
-    { id: 3, name: 'Ministry of Education and Research', status: 'active' },
-    { id: 4, name: 'Ministry of Health and Public Welfare', status: 'inactive' },
-    { id: 5, name: 'Ministry of Foreign Affairs and Diplomacy', status: 'active' },
-    { id: 6, name: 'Ministry of Environmental Conservation', status: 'active' },
-    { id: 7, name: 'Ministry of Science and Technology Innovation', status: 'inactive' },
-    { id: 8, name: 'Ministry of Social Justice and Equality', status: 'active' },
-    { id: 9, name: 'Ministry of Cultural Heritage and the Arts', status: 'inactive' },
-    { id: 10, name: 'Ministry of Infrastructure and Transportation', status: 'active' },
-  ]);
 
-  const [committeesList, setCommitteesList] = useState([
-    { id: 1, name: 'Committee on Arts and Creative Expression' },
-    { id: 2, name: 'Committee on Public Communications and Media' },
-    { id: 3, name: 'Committee on Innovation and Entrepreneurship' },
-    { id: 4, name: 'Committee on Cultural Heritage and the Arts' },
-    { id: 5, name: 'Committee on Environmental Sustainability' },
-    { id: 6, name: 'Committee on Infrastructure and Transportation' },
-    { id: 7, name: 'Committee on Public Health and Wellness' },
-    { id: 8, name: 'Committee on Democracy and Electoral Reforms' },
-    { id: 9, name: 'Committee on Financial Stability and Fiscal Policy' },
-    { id: 10, name: 'Committee on Digital Innovation and Technology' },
-  ]);
-
-  const filteredMinistries = ministriesList.filter(ministry =>
+  const filteredMinistries = ministries.filter(ministry =>
     ministry.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredCommittees = committeesList.filter(committee =>
+  const filteredCommittees = committees.filter(committee =>
     committee.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleAddMinistry = (ministryName: string) => {
-    const newMinistry = {
-      id: ministriesList.length + 1,
-      name: ministryName,
-      status: 'active' as const
-    };
-    setMinistriesList([...ministriesList, newMinistry]);
+    addMinistry(ministryName);
     setIsAddMinistryFormOpen(false);
   };
 
   const handleAddCommittee = (committeeName: string) => {
-    const newCommittee = {
-      id: committeesList.length + 1,
-      name: committeeName
-    };
-    setCommitteesList([...committeesList, newCommittee]);
+    addCommittee(committeeName);
     setIsAddCommitteeFormOpen(false);
   };
 
