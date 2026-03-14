@@ -164,4 +164,10 @@
   --diff-removed-text: rgba(185, 28, 28, 1.00);
   --diff-added-bg: rgba(209, 250, 229, 1.00);
   --diff-added-text: rgba(5, 150, 105, 1.00);
+
+  /* Diagonal stripe overlay — used for disposed / completed / break states */
+  --stripe-color: rgba(209, 213, 219, 1.00);
+  --stripe-opacity: 0.4;
+  --stripe-spacing: 8;
+  --stripe-width: 1.5;
 }

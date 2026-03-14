@@ -2,11 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { AnimatePresence } from "motion/react";
 import { CloseButton } from "./CloseButton";
 import { StatusChip } from "./StatusChip";
-import {
-  AmendmentActionMenu,
-  AmendmentInput,
-  AmendmentDisplay,
-} from "./AmendmentModule";
 import type { AmendmentData, AmendmentType } from "./AmendmentModule";
 
 // ── Data Interfaces (shared with BillReviewView) ───────────────────────────────
@@ -413,7 +408,7 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
   const handleSubmitAmendment = (
     nodeId: string,
     nodeLabel: string,
-    data: { type: AmendmentType; proposedText?: string; reason?: string }
+    data: { type: AmendmentType; proposedText?: string }
   ) => {
     const newAmendment: AmendmentData = {
       id: `amend-${Date.now()}`,
@@ -421,7 +416,6 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
       nodeLabel,
       type: data.type,
       proposedText: data.proposedText,
-      reason: data.reason,
       originalText: getNodeText(nodeId),
       memberName: "You",
       memberAvatar: MEMBER_AVATAR,

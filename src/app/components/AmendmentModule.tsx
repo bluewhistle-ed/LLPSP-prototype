@@ -14,8 +14,6 @@ export interface AmendmentData {
   type: AmendmentType;
   /** For substitute: the proposed replacement text. For insert: the new text. */
   proposedText?: string;
-  /** Optional reason/justification (primarily for omit) */
-  reason?: string;
   /** Original text of the node (stored for reference) */
   originalText: string;
   memberName: string;
@@ -205,20 +203,16 @@ export function AmendmentActionMenu({ onSelect }: AmendmentActionMenuProps) {
 interface AmendmentFormProps {
   type: AmendmentType;
   originalText: string;
-  onSubmit: (data: { type: AmendmentType; proposedText?: string; reason?: string }) => void;
+  onSubmit: (data: { type: AmendmentType; proposedText?: string }) => void;
   onCancel: () => void;
 }
 
 export function AmendmentForm({ type, originalText, onSubmit, onCancel }: AmendmentFormProps) {
   const [proposedText, setProposedText] = useState(type === 'substitute' ? originalText : '');
-  const [reason, setReason] = useState('');
   const textRef = useRef<HTMLTextAreaElement>(null);
-  const reasonRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (type === 'omit') {
-      reasonRef.current?.focus();
-    } else {
+    if (type !== 'omit') {
       textRef.current?.focus();
     }
   }, [type]);
@@ -231,19 +225,11 @@ export function AmendmentForm({ type, originalText, onSubmit, onCancel }: Amendm
     }
   }, [proposedText]);
 
-  // Auto-resize for reason
-  useEffect(() => {
-    if (reasonRef.current) {
-      reasonRef.current.style.height = 'auto';
-      reasonRef.current.style.height = reasonRef.current.scrollHeight + 'px';
-    }
-  }, [reason]);
-
   const handleSubmit = () => {
     if (type === 'omit') {
-      onSubmit({ type, reason: reason.trim() || undefined });
+      onSubmit({ type });
     } else if (proposedText.trim()) {
-      onSubmit({ type, proposedText: proposedText.trim(), reason: reason.trim() || undefined });
+      onSubmit({ type, proposedText: proposedText.trim() });
     }
   };
 
@@ -294,16 +280,6 @@ export function AmendmentForm({ type, originalText, onSubmit, onCancel }: Amendm
         </p>
       )}
 
-      {/* Reason field — optional for all types */}
-      <textarea
-        ref={reasonRef}
-        value={reason}
-        onChange={(e) => setReason(e.target.value)}
-        placeholder="Reason for amendment (optional)..."
-        className="relative w-full bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius-button-small)] p-[8px] leading-[20px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)] resize-none overflow-hidden focus:outline-none cursor-text"
-        rows={1}
-      />
-
       {/* Action buttons */}
       <div className="content-stretch flex gap-[8px] items-center justify-end relative shrink-0 w-full">
         <CompactActionButton
@@ -342,10 +318,10 @@ export function AmendmentDisplay({ amendment, onEdit, onWithdraw, isEditing }: A
 
       {/* Header: type badge + label + action buttons */}
       <div className="content-stretch flex items-center gap-[8px] relative shrink-0 w-full">
-        <StatusChip label={typeLabel} variant={typeVariant} />
         <p className="font-semibold leading-[14px] text-[var(--foreground)] text-[length:var(--text-label)]">
           Amendment to {amendment.nodeLabel}
         </p>
+        <StatusChip label={typeLabel} variant={typeVariant} />
         {/* Spacer */}
         <div className="flex-1" />
         {/* Edit / Withdraw action buttons — MentorActionButton style */}
@@ -379,7 +355,6 @@ export function AmendmentDisplay({ amendment, onEdit, onWithdraw, isEditing }: A
       {/* Content based on type */}
       {amendment.type === 'substitute' && amendment.proposedText && (
         <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-          <p className="leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">Proposed changes:</p>
           <p className="leading-[20px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)]">
             <DiffHighlight original={amendment.originalText} proposed={amendment.proposedText} />
           </p>
@@ -397,16 +372,6 @@ export function AmendmentDisplay({ amendment, onEdit, onWithdraw, isEditing }: A
           <p className="leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">New text to insert:</p>
           <p className="leading-[20px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)]">
             {amendment.proposedText}
-          </p>
-        </div>
-      )}
-
-      {/* Reason if provided */}
-      {amendment.reason && (
-        <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
-          <p className="leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">Reason:</p>
-          <p className="leading-[20px] text-[var(--sidebar-primary-foreground)] text-[length:var(--text-base)]">
-            {amendment.reason}
           </p>
         </div>
       )}
@@ -441,7 +406,7 @@ export function AmendmentDisplay({ amendment, onEdit, onWithdraw, isEditing }: A
 interface AmendmentInputProps {
   type: AmendmentType;
   originalText: string;
-  onSubmit: (data: { type: AmendmentType; proposedText?: string; reason?: string }) => void;
+  onSubmit: (data: { type: AmendmentType; proposedText?: string }) => void;
   onCancel: () => void;
 }
 

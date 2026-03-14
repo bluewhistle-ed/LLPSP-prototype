@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useSearchParams } from "react-router";
 import { SharedNavBar } from "../components/SharedNavBar";
 import { PageHeader } from "../components/PageHeader";
 import { StatusChip } from "../components/StatusChip";
 import { Divider } from "../components/Divider";
 import { LegislativeBusinessTab } from "../components/LegislativeBusinessTab";
+import { PartyBadge } from "../components/PartyBadge";
 import svgPathsM62qn7xwsa from "../../imports/svg-m62qn7xwsa";
 import type { SittingQuestion } from "../data/mock/sitting";
 import { SITTING_1_QUESTIONS, SITTING_2_QUESTIONS } from "../data/mock/sitting";
@@ -79,22 +81,6 @@ function SectionHeader({ title, count, variant = 'default' }: { title: string; c
 
 // ── Badges (matching QuestionsPage exactly) ──────────────────────────────────
 
-function PartyBadge({ party }: { party: string }) {
-  const colors: Record<string, { bg: string; border: string; text: string }> = {
-    UPP: { bg: '#fef3e8', border: '#ed7d31', text: '#ed7d31' },
-    TRP: { bg: '#e8f4ff', border: '#2766da', text: '#2766da' },
-    CVP: { bg: '#f5f0ff', border: '#6820ff', text: '#6820ff' },
-  };
-  const color = colors[party] || colors.UPP;
-
-  return (
-    <div className="content-stretch flex gap-[4px] items-center px-[6px] py-[2px] relative rounded-[var(--radius-chip)] shrink-0" style={{ backgroundColor: color.bg }}>
-      <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius-chip)]" style={{ borderColor: color.border }} />
-      <p className="leading-[14px] overflow-hidden relative shrink-0 text-[length:var(--text-label)] text-ellipsis" style={{ color: color.text }}>{party}</p>
-    </div>
-  );
-}
-
 function IconsGovernment() {
   return (
     <div className="relative shrink-0 size-[16px]">
@@ -169,9 +155,7 @@ function ActiveQuestionCard({ question, questionNumber }: { question: SittingQue
           </div>
         </div>
         {/* Question number badge — top-right, like pending cards */}
-        <div className="flex items-center justify-center size-[24px] rounded-full bg-[var(--sidebar-primary)] shrink-0">
-          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--sidebar-primary-foreground)]">{questionNumber}</p>
-        </div>
+        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] tabular-nums shrink-0">#{questionNumber}</p>
       </div>
 
       {/* Questions */}
@@ -212,9 +196,7 @@ function PendingQuestionCard({ question, queueNumber }: { question: SittingQuest
             <p className="leading-[14px] text-[length:var(--text-label)] text-[var(--muted-foreground)]">{question.theme}</p>
           </div>
         </div>
-        <div className="flex items-center justify-center size-[24px] rounded-full bg-[var(--sidebar-primary)] shrink-0">
-          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--sidebar-primary-foreground)]">{queueNumber}</p>
-        </div>
+        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] tabular-nums shrink-0">#{queueNumber}</p>
       </div>
 
       {/* Questions */}
@@ -307,7 +289,7 @@ function DisposedQuestionCard({ question }: { question: SittingQuestion }) {
   );
 }
 
-// ── Question Hour Tab ────────────────────────────────────────────────────────
+// ── Question Hour Tab ────────���───────────────────────────────────────────────
 
 function QuestionHourTab() {
   const [activeDay, setActiveDay] = useState<SittingDay>('sitting-1');
@@ -391,7 +373,14 @@ function ZeroHourTab() {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function SittingPage() {
-  const [activeTab, setActiveTab] = useState<SittingTab>('question-hour');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab') as SittingTab | null;
+  const VALID_TABS: SittingTab[] = ['question-hour', 'zero-hour', 'legislative-business'];
+  const activeTab: SittingTab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'question-hour';
+
+  const setActiveTab = (tab: SittingTab) => {
+    setSearchParams({ tab }, { replace: true });
+  };
 
   return (
     <div className="bg-[var(--input-background)] relative size-full overflow-hidden">

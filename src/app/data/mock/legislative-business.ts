@@ -7,6 +7,7 @@ import {
   AVATAR_1, AVATAR_2, AVATAR_3, AVATAR_4,
   AVATAR_5, AVATAR_6, AVATAR_7,
   SESSION_AVATAR_A, SESSION_AVATAR_B, SESSION_AVATAR_C, SESSION_AVATAR_D,
+  MC_AVATAR_1, MC_AVATAR_2, MC_AVATAR_3, MC_AVATAR_4, MC_AVATAR_5, MC_AVATAR_6,
 } from '../../data/assets';
 
 // ── Bill Data Types (shared with BillAmendmentView) ─────────────────────────
@@ -77,7 +78,6 @@ export interface LBClauseAmendment {
   clauseLabel: string;        // e.g. "Clause 4(2)"
   type: LBAmendmentType;
   proposedText?: string;
-  reason?: string;
   originalText: string;
   submittedBy: {
     name: string;
@@ -88,6 +88,7 @@ export interface LBClauseAmendment {
   votingResult?: {
     ayes: number;
     nays: number;
+    abstained: number;
     passed: boolean;
   };
 }
@@ -287,9 +288,10 @@ export const toRomanNumeral = (num: number): string => {
 
 // ── Speaker Queue — General Consideration ───────────────────────────────────
 // Sitting 1: General Consideration is in progress with speakers debating the bill.
+// In a typical sitting, Legislative Business runs 3.5–4 hours with ~15 speakers.
 
 export const SITTING_1_SPEAKERS: LBSpeaker[] = [
-  // 2 completed
+  // ── 8 completed ────────────────────────────────────────────────────────
   {
     id: 'spk-1',
     name: 'Nathan S. Wright',
@@ -297,8 +299,8 @@ export const SITTING_1_SPEAKERS: LBSpeaker[] = [
     party: 'TRP',
     partyFlag: FLAG_TRP,
     role: 'Private Member',
-    allocatedTime: 300,
-    elapsedTime: 300,
+    allocatedTime: 900,
+    elapsedTime: 900,
     status: 'completed',
   },
   {
@@ -308,64 +310,152 @@ export const SITTING_1_SPEAKERS: LBSpeaker[] = [
     party: 'UPP',
     partyFlag: FLAG_UPP,
     role: 'Private Member',
-    allocatedTime: 300,
-    elapsedTime: 287,
+    allocatedTime: 840,
+    elapsedTime: 823,
     status: 'completed',
   },
-  // 1 active
   {
     id: 'spk-3',
-    name: 'Isabella M. Chen',
-    avatar: SESSION_AVATAR_A,
+    name: 'Kavya Reddy',
+    avatar: SESSION_AVATAR_C,
     party: 'CVP',
     partyFlag: FLAG_CVP,
     role: 'Minister',
-    allocatedTime: 300,
-    elapsedTime: 138,
-    status: 'active',
+    allocatedTime: 1200,
+    elapsedTime: 1200,
+    status: 'completed',
   },
-  // 4 upcoming
   {
     id: 'spk-4',
-    name: 'Roy X. Hinde',
-    avatar: AVATAR_2,
-    party: 'UPP',
-    partyFlag: FLAG_UPP,
-    role: 'Private Member',
-    allocatedTime: 300,
-    elapsedTime: 0,
-    status: 'upcoming',
-  },
-  {
-    id: 'spk-5',
-    name: 'Marcus T. Reynolds',
-    avatar: AVATAR_7,
+    name: 'Addie V. Biela',
+    avatar: SESSION_AVATAR_B,
     party: 'TRP',
     partyFlag: FLAG_TRP,
     role: 'Private Member',
-    allocatedTime: 300,
-    elapsedTime: 0,
-    status: 'upcoming',
+    allocatedTime: 900,
+    elapsedTime: 876,
+    status: 'completed',
+  },
+  {
+    id: 'spk-5',
+    name: 'Roy X. Hinde',
+    avatar: MC_AVATAR_1,
+    party: 'UPP',
+    partyFlag: FLAG_UPP,
+    role: 'Private Member',
+    allocatedTime: 840,
+    elapsedTime: 840,
+    status: 'completed',
   },
   {
     id: 'spk-6',
+    name: 'Latricia W. Silletti',
+    avatar: AVATAR_5,
+    party: 'UPP',
+    partyFlag: FLAG_UPP,
+    role: 'Private Member',
+    allocatedTime: 900,
+    elapsedTime: 887,
+    status: 'completed',
+  },
+  {
+    id: 'spk-7',
+    name: 'Smayan S.',
+    avatar: SESSION_AVATAR_D,
+    party: 'TRP',
+    partyFlag: FLAG_TRP,
+    role: 'President',
+    allocatedTime: 960,
+    elapsedTime: 960,
+    status: 'completed',
+  },
+  {
+    id: 'spk-8',
     name: 'Emily R. Thompson',
     avatar: AVATAR_4,
     party: 'CVP',
     partyFlag: FLAG_CVP,
     role: 'Private Member',
-    allocatedTime: 240,
+    allocatedTime: 840,
+    elapsedTime: 815,
+    status: 'completed',
+  },
+  // ── 1 active ───────────────────────────────────────────────────────────
+  {
+    id: 'spk-9',
+    name: 'Isabella M. Chen',
+    avatar: SESSION_AVATAR_A,
+    party: 'CVP',
+    partyFlag: FLAG_CVP,
+    role: 'Minister',
+    allocatedTime: 1200,
+    elapsedTime: 438,
+    status: 'active',
+  },
+  // ── 6 upcoming ─────────────────────────────────────────────────────────
+  {
+    id: 'spk-10',
+    name: 'Marcus T. Reynolds',
+    avatar: AVATAR_7,
+    party: 'TRP',
+    partyFlag: FLAG_TRP,
+    role: 'Private Member',
+    allocatedTime: 900,
     elapsedTime: 0,
     status: 'upcoming',
   },
   {
-    id: 'spk-7',
+    id: 'spk-11',
     name: 'Aleta H. Starcher',
     avatar: AVATAR_3,
     party: 'UPP',
     partyFlag: FLAG_UPP,
     role: 'Minister',
-    allocatedTime: 300,
+    allocatedTime: 1200,
+    elapsedTime: 0,
+    status: 'upcoming',
+  },
+  {
+    id: 'spk-12',
+    name: 'Dhruv K. Patel',
+    avatar: MC_AVATAR_2,
+    party: 'TRP',
+    partyFlag: FLAG_TRP,
+    role: 'Private Member',
+    allocatedTime: 840,
+    elapsedTime: 0,
+    status: 'upcoming',
+  },
+  {
+    id: 'spk-13',
+    name: 'Miriam O. Faulkner',
+    avatar: MC_AVATAR_3,
+    party: 'CVP',
+    partyFlag: FLAG_CVP,
+    role: 'Private Member',
+    allocatedTime: 900,
+    elapsedTime: 0,
+    status: 'upcoming',
+  },
+  {
+    id: 'spk-14',
+    name: 'Joaquin R. Estrada',
+    avatar: MC_AVATAR_4,
+    party: 'UPP',
+    partyFlag: FLAG_UPP,
+    role: 'Private Member',
+    allocatedTime: 840,
+    elapsedTime: 0,
+    status: 'upcoming',
+  },
+  {
+    id: 'spk-15',
+    name: 'Priya N. Sharma',
+    avatar: MC_AVATAR_5,
+    party: 'TRP',
+    partyFlag: FLAG_TRP,
+    role: 'Private Member',
+    allocatedTime: 900,
     elapsedTime: 0,
     status: 'upcoming',
   },
@@ -422,9 +512,8 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'It shall come into force on the ninetieth day from the date of its publication in the Official Gazette.',
     originalText: 'It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint.',
-    reason: 'A fixed commencement date ensures timely implementation rather than leaving it to executive discretion.',
     submittedBy: { name: 'Roy X. Hinde', avatar: AVATAR_2, party: 'UPP', partyFlag: FLAG_UPP },
-    votingResult: { ayes: 10, nays: 15, passed: false },
+    votingResult: { ayes: 10, nays: 15, abstained: 3, passed: false },
   },
   // Clause 2(3) — substitute: broaden cultivation zone definition
   {
@@ -434,9 +523,8 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: '"Cultivation Zone" means any area designated by the State Government, in consultation with local Panchayati Raj institutions, for the systematic cultivation, conservation, and propagation of medicinal and aromatic plants;',
     originalText: '"Cultivation Zone" means any area designated by the State Government for the systematic cultivation of medicinal and aromatic plants;',
-    reason: 'Including local governance bodies ensures community participation in zone designation.',
     submittedBy: { name: 'Aleta H. Starcher', avatar: AVATAR_3, party: 'UPP', partyFlag: FLAG_UPP },
-    votingResult: { ayes: 16, nays: 9, passed: true },
+    votingResult: { ayes: 16, nays: 9, abstained: 1, passed: true },
   },
   // Clause 2(4) — insert: add a fourth item to the medicinal plant definition
   {
@@ -446,7 +534,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'insert',
     proposedText: '(iv) nutraceutical and dietary supplement preparations recognised by the Food Safety and Standards Authority of India.',
     originalText: '"Medicinal Plant" means any plant or part thereof… which possesses therapeutic properties and is used in—',
-    reason: 'The nutraceutical sector is a major consumer of medicinal plants and should be within scope.',
     submittedBy: { name: 'Marcus T. Reynolds', avatar: AVATAR_7, party: 'TRP', partyFlag: FLAG_TRP },
   },
 
@@ -459,9 +546,8 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'eight members to be nominated by the Central Government, of whom\u2014',
     originalText: 'six members to be nominated by the Central Government, of whom\u2014',
-    reason: 'Increasing Board representation to include more diverse stakeholders.',
     submittedBy: { name: 'Roy X. Hinde', avatar: AVATAR_2, party: 'UPP', partyFlag: FLAG_UPP },
-    votingResult: { ayes: 14, nays: 11, passed: true },
+    votingResult: { ayes: 14, nays: 11, abstained: 2, passed: true },
   },
   // Clause 4(2)(ii) — substitute: broaden NE representation
   {
@@ -471,9 +557,8 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'two shall be representatives of State Governments, with at least one from the North-Eastern States and one from a State with significant tribal population;',
     originalText: 'two shall be representatives of State Governments from North-Eastern States;',
-    reason: 'Broadening geographic representation beyond the North-East to include tribal States like Jharkhand and Chhattisgarh.',
     submittedBy: { name: 'Emily R. Thompson', avatar: AVATAR_4, party: 'CVP', partyFlag: FLAG_CVP },
-    votingResult: { ayes: 13, nays: 12, passed: true },
+    votingResult: { ayes: 13, nays: 12, abstained: 0, passed: true },
   },
   // Clause 4(3) proviso — substitute: include persons with disabilities
   {
@@ -483,9 +568,8 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'the Central Government shall ensure adequate representation of women, members of Scheduled Tribes, and persons with disabilities in the composition of the Board.',
     originalText: 'the Central Government shall ensure adequate representation of women and members of Scheduled Tribes in the composition of the Board.',
-    reason: 'Including persons with disabilities to ensure wider representation.',
     submittedBy: { name: 'Emily R. Thompson', avatar: AVATAR_4, party: 'CVP', partyFlag: FLAG_CVP },
-    votingResult: { ayes: 18, nays: 7, passed: true },
+    votingResult: { ayes: 18, nays: 7, abstained: 1, passed: true },
   },
   // Clause 5 — substitute: extend term from 3 to 4 years
   {
@@ -495,7 +579,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'The Chairperson and members of the Board shall hold office for a term of four years from the date of their appointment and shall be eligible for re-appointment for one additional term.',
     originalText: 'The Chairperson and members of the Board shall hold office for a term of three years from the date of their appointment and shall be eligible for re-appointment for one additional term.',
-    reason: 'A four-year term aligns with common statutory body practices and provides better continuity.',
     submittedBy: { name: 'Nathan S. Wright', avatar: AVATAR_2, party: 'TRP', partyFlag: FLAG_TRP },
   },
 
@@ -508,7 +591,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'insert',
     proposedText: 'develop and implement climate-resilient conservation strategies for medicinal and aromatic plant species identified as vulnerable to environmental degradation;',
     originalText: 'coordinate with State Governments, research institutions, and stakeholders for the conservation and sustainable harvesting of such plants;',
-    reason: 'Climate change poses a direct threat to medicinal plant biodiversity; the Board must have an explicit mandate to address it.',
     submittedBy: { name: 'Isabella M. Chen', avatar: SESSION_AVATAR_A, party: 'CVP', partyFlag: FLAG_CVP },
   },
   // Clause 6(5) explanation — omit
@@ -518,7 +600,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     clauseLabel: 'Clause 6(5) Explanation',
     type: 'omit',
     originalText: 'For the purposes of this clause, "bio-piracy" means the appropriation of traditional knowledge or genetic resources of medicinal plants without the prior informed consent of the communities or the country of origin.',
-    reason: 'The definition of bio-piracy should be in the definitions section (Clause 2), not inline.',
     submittedBy: { name: 'Aleta H. Starcher', avatar: AVATAR_3, party: 'UPP', partyFlag: FLAG_UPP },
   },
   // Clause 7(3) — substitute: add enforcement power
@@ -529,7 +610,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'issue guidelines and standards for the quality control of medicinal and aromatic plant products, and enforce compliance through periodic inspection and certification mechanisms;',
     originalText: 'issue guidelines and standards for the quality control of medicinal and aromatic plant products.',
-    reason: 'Without enforcement mechanisms, quality standards remain advisory and ineffective.',
     submittedBy: { name: 'Sheilah T. Sayasane', avatar: AVATAR_1, party: 'UPP', partyFlag: FLAG_UPP },
   },
 
@@ -542,7 +622,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'insert',
     proposedText: 'The Board shall also be empowered to receive grants, donations, and contributions from international organisations and non-governmental bodies, subject to prior approval of the Central Government.',
     originalText: 'The Central Government shall, after due appropriation made by Parliament by law in this behalf, pay to the Board by way of grants such sums of money as the Central Government may think fit for being utilised for the purposes of this Act.',
-    reason: 'Enabling additional funding sources to supplement government grants.',
     submittedBy: { name: 'Marcus T. Reynolds', avatar: AVATAR_7, party: 'TRP', partyFlag: FLAG_TRP },
   },
   // Clause 9(2) — substitute: add deadline
@@ -553,7 +632,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'The Board shall furnish to the Central Government, before the thirtieth day of September each year, its annual report containing a full account of its activities during the previous financial year, and such report shall be laid before each House of Parliament.',
     originalText: 'The Board shall furnish to the Central Government, before such date as may be prescribed, its annual report containing a full account of its activities during the previous financial year.',
-    reason: 'Fixing a specific deadline for the annual report and requiring parliamentary tabling ensures transparency and accountability.',
     submittedBy: { name: 'Kavya Reddy', avatar: SESSION_AVATAR_C, party: 'CVP', partyFlag: FLAG_CVP },
   },
 
@@ -565,7 +643,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     clauseLabel: 'Clause 10(1)(iv)',
     type: 'omit',
     originalText: 'the designation and management of cultivation zones by State Governments.',
-    reason: 'Cultivation zone management should remain under State-level legislation to respect federal principles; Central rules should not prescribe on this.',
     submittedBy: { name: 'Addie V. Biela', avatar: SESSION_AVATAR_B, party: 'TRP', partyFlag: FLAG_TRP },
   },
   // Clause 11 — insert: add whistleblower protection
@@ -576,7 +653,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'insert',
     proposedText: 'Any person who, in good faith, reports a violation of the provisions of this Act or the rules made thereunder shall be protected from any civil or criminal liability arising from such disclosure.',
     originalText: 'No suit, prosecution, or other legal proceeding shall lie against the Board, the Chairperson, or any member or officer of the Board for anything which is done or intended to be done in good faith under this Act or the rules made thereunder.',
-    reason: 'Whistleblower protections are essential for ensuring accountability and deterring misuse of Board authority.',
     submittedBy: { name: 'Smayan S.', avatar: SESSION_AVATAR_D, party: 'TRP', partyFlag: FLAG_TRP },
   },
   // Clause 12 proviso — substitute: extend from 2 to 3 years
@@ -587,7 +663,6 @@ export const CLAUSE_AMENDMENTS: LBClauseAmendment[] = [
     type: 'substitute',
     proposedText: 'no order shall be made under this section after the expiry of three years from the date of commencement of this Act.',
     originalText: 'no order shall be made under this section after the expiry of two years from the date of commencement of this Act.',
-    reason: 'Extending the difficulty-removal window from two to three years for adequate implementation.',
     submittedBy: { name: 'Latricia W. Silletti', avatar: AVATAR_5, party: 'UPP', partyFlag: FLAG_UPP },
   },
 ];
@@ -632,6 +707,36 @@ export function getAmendmentCountForClause(clauseId: string): number {
     clause.specialBlocks.forEach(sb => nodeIds.add(sb.id));
     return nodeIds.has(a.clauseId);
   }).length;
+}
+
+export function getPendingAmendmentCountForClause(clauseId: string): number {
+  return CLAUSE_AMENDMENTS.filter(a => {
+    if (a.votingResult) return false; // Skip disposed amendments
+    const clause = SITTING_BILL.chapters.flatMap(ch => ch.clauses).find(cl => cl.id === clauseId);
+    if (!clause) return false;
+    const nodeIds = new Set<string>([clause.id]);
+    clause.subClauses.forEach(sc => {
+      nodeIds.add(sc.id);
+      sc.items.forEach(it => {
+        nodeIds.add(it.id);
+        it.specialBlocks.forEach(sb => nodeIds.add(sb.id));
+      });
+      sc.specialBlocks.forEach(sb => nodeIds.add(sb.id));
+    });
+    clause.specialBlocks.forEach(sb => nodeIds.add(sb.id));
+    return nodeIds.has(a.clauseId);
+  }).length;
+}
+
+/** Get all passed amendments indexed by their target node ID */
+export function getPassedAmendmentsByNodeId(): Map<string, LBClauseAmendment> {
+  const map = new Map<string, LBClauseAmendment>();
+  CLAUSE_AMENDMENTS.forEach(a => {
+    if (a.votingResult?.passed) {
+      map.set(a.clauseId, a);
+    }
+  });
+  return map;
 }
 
 export function getAmendmentCountForChapter(chapterId: string): number {

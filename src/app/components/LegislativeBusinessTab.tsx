@@ -2,6 +2,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { StatusChip } from "./StatusChip";
 import { Divider } from "./Divider";
 import { DiffHighlight } from "./AmendmentModule";
+import { motion, AnimatePresence } from "motion/react";
+import { PartyBadge } from "./PartyBadge";
+import { DiagonalStripeOverlay } from "./DiagonalStripeOverlay";
+
 import {
   SITTING_BILL,
   SITTING_1_SPEAKERS,
@@ -11,6 +15,8 @@ import {
   toRomanNumeral,
   getAmendmentCountForClause,
   getAmendmentCountForChapter,
+  getPendingAmendmentCountForClause,
+  getPassedAmendmentsByNodeId,
 } from "../data/mock/legislative-business";
 import type {
   LBSpeaker,
@@ -25,7 +31,7 @@ import type {
 type SittingDay = 'sitting-1' | 'sitting-2';
 type LBPhase = 'general' | 'clause-by-clause' | 'passing';
 
-// ── Amendment Type Helpers ───────────────────────────────────────────────────
+// ── Amendment Type Helpers ───────────────────────────────────────���──────���───
 
 const AMENDMENT_TYPE_LABELS: Record<string, string> = {
   substitute: 'Substitute',
@@ -38,24 +44,6 @@ const AMENDMENT_TYPE_VARIANTS: Record<string, string> = {
   omit: 'urgent',
   insert: 'progress',
 };
-
-// ── Party Badge (same as SittingPage) ────────────────────────────────────────
-
-function PartyBadge({ party }: { party: string }) {
-  const colors: Record<string, { bg: string; border: string; text: string }> = {
-    UPP: { bg: '#fef3e8', border: '#ed7d31', text: '#ed7d31' },
-    TRP: { bg: '#e8f4ff', border: '#2766da', text: '#2766da' },
-    CVP: { bg: '#f5f0ff', border: '#6820ff', text: '#6820ff' },
-  };
-  const color = colors[party] || colors.UPP;
-
-  return (
-    <div className="content-stretch flex gap-[4px] items-center px-[6px] py-[2px] relative rounded-[var(--radius-chip)] shrink-0" style={{ backgroundColor: color.bg }}>
-      <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius-chip)]" style={{ borderColor: color.border }} />
-      <p className="leading-[14px] overflow-hidden relative shrink-0 text-[length:var(--text-label)] text-ellipsis" style={{ color: color.text }}>{party}</p>
-    </div>
-  );
-}
 
 // ── Sitting Day Switcher ─────────────────────────────────────────────────────
 
@@ -70,7 +58,7 @@ function SittingDaySwitcher({ activeDay, onDayChange }: { activeDay: SittingDay;
             : 'bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
         }`}
       >
-        Sitting One
+        General Consideration
       </button>
       <button
         onClick={() => onDayChange('sitting-2')}
@@ -80,7 +68,7 @@ function SittingDaySwitcher({ activeDay, onDayChange }: { activeDay: SittingDay;
             : 'bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
         }`}
       >
-        Sitting Two
+        Clause-by-Clause Consideration
       </button>
     </div>
   );
@@ -183,10 +171,6 @@ function ChapterSelector({
 
   const activeChapter = SITTING_BILL.chapters.find(ch => ch.id === activeChapterId);
 
-  // The chapter whose clauses are displayed — hovered takes priority, then active
-  const previewChapterId = hoveredChapterId || activeChapterId;
-  const previewChapter = SITTING_BILL.chapters.find(ch => ch.id === previewChapterId);
-
   const handleMouseEnter = () => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
     setShowDropdown(true);
@@ -246,81 +230,89 @@ function ChapterSelector({
         >
           <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
 
-          {/* Chapter list */}
-          <div className="flex flex-col gap-[2px] p-[6px]">
+          {/* Chapter list with inline clause expansion on hover */}
+          <div className="flex flex-col gap-[2px] p-[6px] max-h-[420px] overflow-y-auto">
             {SITTING_BILL.chapters.map((chapter) => {
               const isSelected = chapter.id === activeChapterId;
               const isHovered = chapter.id === hoveredChapterId;
               const chapterAmendmentCount = getAmendmentCountForChapter(chapter.id);
+              const showClauses = (isHovered || (isSelected && hoveredChapterId === null)) && chapter.clauses.length > 0;
 
               return (
-                <button
-                  key={chapter.id}
-                  onMouseEnter={() => setHoveredChapterId(chapter.id)}
-                  onClick={() => {
-                    onChapterSelect(chapter.id);
-                    setShowDropdown(false);
-                    setHoveredChapterId(null);
-                  }}
-                  className={`flex gap-[6px] items-center px-[8px] py-[6px] rounded-[4px] cursor-pointer hover:bg-[var(--sidebar-primary)] transition-colors w-full text-left ${
-                    isSelected ? 'bg-[var(--sidebar-primary)]' : ''
-                  }`}
-                >
-                  <p className="flex-1 leading-[16px] text-[length:var(--text-base)] text-[var(--sidebar-primary-foreground)]">
-                    <span className="text-[var(--foreground)]">{chapter.number}.</span> {chapter.name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
-                  </p>
-                  {chapterAmendmentCount > 0 && (
-                    <StatusChip label={`${chapterAmendmentCount}`} variant="warning" />
-                  )}
-                </button>
+                <div key={chapter.id}>
+                  <button
+                    onMouseEnter={() => setHoveredChapterId(chapter.id)}
+                    onClick={() => {
+                      onChapterSelect(chapter.id);
+                      setShowDropdown(false);
+                      setHoveredChapterId(null);
+                    }}
+                    className={`flex gap-[6px] items-center px-[8px] py-[6px] rounded-[4px] cursor-pointer transition-colors w-full text-left ${
+                      isHovered
+                        ? 'bg-[var(--sidebar-primary)]'
+                        : isSelected
+                          ? 'bg-[var(--sidebar-primary)]'
+                          : 'hover:bg-[var(--sidebar-primary)]'
+                    }`}
+                  >
+                    <p className="flex-1 leading-[16px] text-[length:var(--text-base)] text-[var(--sidebar-primary-foreground)]">
+                      <span className="text-[var(--foreground)]">{chapter.number}.</span> {chapter.name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+                    </p>
+                    {/* Inline chevron indicating expandable */}
+                    <svg className={`size-[12px] text-[var(--muted-foreground)] transition-transform duration-200 ${showClauses ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 16 16">
+                      <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+
+                  {/* Inline clause list — expands below hovered chapter or active chapter (anchor) */}
+                  <AnimatePresence initial={false}>
+                    {showClauses && (
+                      <motion.div
+                        key={`clauses-${chapter.id}`}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.18, ease: 'easeInOut' }}
+                        className="overflow-hidden"
+                      >
+                        <div className="flex flex-col ml-[6px] my-[2px]">
+                          {chapter.clauses.map((clause) => {
+                            const clAmendCount = getAmendmentCountForClause(clause.id);
+                            const statusIcon = getClauseStatusIcon(clause.id);
+                            const clauseTitle = clause.title.length > 60 ? clause.title.substring(0, 60) + '…' : clause.title;
+
+                            return (
+                              <button
+                                key={clause.id}
+                                className="flex items-center gap-[6px] px-[8px] py-[5px] hover:bg-[var(--sidebar-primary)] rounded-[4px] transition-colors cursor-pointer w-full text-left"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onChapterSelect(chapter.id);
+                                  onClauseClick(clause.id);
+                                  setShowDropdown(false);
+                                  setHoveredChapterId(null);
+                                }}
+                              >
+                                {statusIcon && (
+                                  <div className="flex items-center justify-center size-[14px] shrink-0">
+                                    {statusIcon}
+                                  </div>
+                                )}
+                                <p className="flex-1 text-[length:var(--text-label)] leading-[14px] text-[var(--sidebar-primary-foreground)] truncate">
+                                  <span className="font-semibold text-[var(--foreground)]">Cl. {clause.number}</span>
+                                  <span className="text-[var(--muted-foreground)]"> — {clauseTitle}</span>
+                                </p>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               );
             })}
           </div>
-
-          {/* Clause list for hovered/active chapter — dynamically updates on hover */}
-          {previewChapter && previewChapter.clauses.length > 0 && (
-            <>
-              <div className="mx-[6px] border-t border-[var(--card-border)]" />
-              <div className="px-[6px] py-[4px]">
-                <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] px-[8px] py-[4px]">
-                  Clauses in {previewChapter.name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
-                </p>
-                <div className="flex flex-col">
-                  {previewChapter.clauses.map((clause) => {
-                    const clAmendCount = getAmendmentCountForClause(clause.id);
-                    const statusIcon = getClauseStatusIcon(clause.id);
-                    const clauseTitle = clause.title.length > 70 ? clause.title.substring(0, 70) + '…' : clause.title;
-
-                    return (
-                      <button
-                        key={clause.id}
-                        className="flex items-center gap-[8px] px-[8px] py-[6px] hover:bg-[var(--sidebar-primary)] rounded-[4px] transition-colors cursor-pointer w-full text-left"
-                        onClick={() => {
-                          onChapterSelect(previewChapter.id);
-                          onClauseClick(clause.id);
-                          setShowDropdown(false);
-                          setHoveredChapterId(null);
-                        }}
-                      >
-                        {statusIcon && (
-                          <div className="flex items-center justify-center size-[16px] shrink-0">
-                            {statusIcon}
-                          </div>
-                        )}
-                        <p className="flex-1 text-[length:var(--text-label)] leading-[16px] text-[var(--sidebar-primary-foreground)] truncate">
-                          <span className="font-semibold text-[var(--foreground)]">Clause {clause.number}</span>
-                          <span className="text-[var(--muted-foreground)]"> — {clauseTitle}</span>
-                        </p>
-                        {clAmendCount > 0 && (
-                          <StatusChip label={`${clAmendCount}`} variant="warning" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          )}
         </div>
       )}
     </div>
@@ -329,7 +321,110 @@ function ChapterSelector({
 
 // ── Bill Text Renderer ───────────────────────────────────────────────────────
 
-function SpecialBlockRenderer({ block, index, totalOfType }: { block: SpecialBlock; index: number; totalOfType: number }) {
+/** Expandable amendments list for General Consideration phase */
+function ClauseAmendmentsExpandable({ 
+  nodeId, 
+  clauseLabel 
+}: { 
+  nodeId: string; 
+  clauseLabel: string;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Find all amendments targeting this node
+  const amendments = CLAUSE_AMENDMENTS.filter(a => a.clauseId === nodeId);
+  
+  if (amendments.length === 0) return null;
+  
+  const typeLabel = (type: string) => AMENDMENT_TYPE_LABELS[type] || type;
+  const typeVariant = (type: string) => AMENDMENT_TYPE_VARIANTS[type];
+  
+  return (
+    <div className="mt-[8px] ml-[24px]">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex items-center gap-[6px] px-[8px] py-[4px] rounded-[4px] hover:bg-[var(--sidebar-primary)] transition-colors w-full text-left group"
+      >
+        <svg 
+          className={`size-[12px] text-[var(--muted-foreground)] transition-transform ${isExpanded ? 'rotate-180' : ''}`} 
+          fill="none" 
+          viewBox="0 0 16 16"
+        >
+          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
+          {amendments.length} {amendments.length === 1 ? 'Amendment' : 'Amendments'}
+        </p>
+      </button>
+      
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.18, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-[6px] mt-[6px]">
+              {amendments.map((amendment) => (
+                <div 
+                  key={amendment.id} 
+                  className="bg-[var(--input-background)] rounded-[4px] px-[10px] py-[8px] flex flex-col gap-[6px]"
+                >
+                  {/* Amendment type and submitter */}
+                  <div className="flex items-center gap-[6px] flex-wrap">
+                    <StatusChip label={typeLabel(amendment.type)} variant={typeVariant(amendment.type) as any} />
+                    <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] flex items-center gap-[4px]">
+                      <span className="opacity-60">by</span>
+                      <span>{amendment.submittedBy.name}</span>
+                    </p>
+                  </div>
+                  
+                  {/* Amendment content */}
+                  {amendment.type === 'substitute' && amendment.proposedText && (
+                    <div className="flex flex-col gap-[3px]">
+                      <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">
+                        <DiffHighlight original={amendment.originalText} proposed={amendment.proposedText} />
+                      </p>
+                    </div>
+                  )}
+                  {amendment.type === 'omit' && (
+                    <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--sidebar-primary-foreground)] line-through opacity-60">
+                      {amendment.originalText}
+                    </p>
+                  )}
+                  {amendment.type === 'insert' && amendment.proposedText && (
+                    <div className="bg-[var(--status-progress-bg)] border-l-[2px] border-[var(--status-progress-text)] px-[8px] py-[4px] rounded-[2px]">
+                      <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--status-progress-text)]">
+                        {amendment.proposedText}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {/* Voting result if available */}
+                  {amendment.votingResult && (
+                    <div className="flex items-center gap-[6px] pt-[4px] border-t border-[var(--card-border)]">
+                      <StatusChip 
+                        label={amendment.votingResult.passed ? 'Passed' : 'Rejected'} 
+                        variant={amendment.votingResult.passed ? 'approved' : 'rejected'} 
+                      />
+                      <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">
+                        {amendment.votingResult.ayes} - {amendment.votingResult.nays}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function SpecialBlockRenderer({ block, index, totalOfType, highlightedNodeId, passedAmendments }: { block: SpecialBlock; index: number; totalOfType: number; highlightedNodeId?: string | null; passedAmendments?: Map<string, LBClauseAmendment> }) {
   const getPrefix = () => {
     if (totalOfType === 1) {
       switch (block.type) {
@@ -353,15 +448,63 @@ function SpecialBlockRenderer({ block, index, totalOfType }: { block: SpecialBlo
     }
   };
 
+  // Check if the highlighted node is the special block
+  const isHighlighted = highlightedNodeId === block.id;
+
+  // Check for passed amendment on this special block
+  const sbAmendment = passedAmendments?.get(block.id);
+  const sbContent = sbAmendment?.type === 'substitute' && sbAmendment.proposedText
+    ? sbAmendment.proposedText
+    : block.content;
+  const isSbOmitted = sbAmendment?.type === 'omit';
+
+  if (isSbOmitted) {
+    return (
+      <div className={`${getBgColor()} rounded-[4px] p-[10px] flex flex-col gap-[4px] mt-[6px] opacity-50`} data-node-id={block.id}>
+        <div className="flex gap-[6px]">
+          <span className="font-semibold text-[length:var(--text-label)] text-[var(--muted-foreground)] leading-[16px] shrink-0">{getPrefix()}</span>
+          <p className="flex-1 text-[length:var(--text-label)] text-[var(--muted-foreground)] leading-[16px] line-through">{block.content}</p>
+        </div>
+        <span className="inline-flex items-center gap-[3px] bg-[var(--status-rejected-bg)] text-[var(--status-rejected-text)] text-[length:var(--text-label)] leading-[14px] px-[5px] py-[1px] rounded-[4px] w-fit">
+          <svg className="size-[10px]" fill="none" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor" />
+          </svg>
+          Omitted
+        </span>
+      </div>
+    );
+  }
+
   return (
-    <div className={`${getBgColor()} rounded-[4px] p-[10px] flex gap-[6px] mt-[6px]`}>
+    <div className={`${getBgColor()} rounded-[4px] p-[10px] flex gap-[6px] mt-[6px] transition-all duration-200 ${
+      isHighlighted
+        ? 'bg-[var(--status-warning-bg)] ring-1 ring-[var(--status-warning-border)]'
+        : ''
+    }`} data-node-id={block.id}>
       <span className="font-semibold text-[length:var(--text-label)] text-[var(--foreground)] leading-[16px] shrink-0">{getPrefix()}</span>
-      <p className="flex-1 text-[length:var(--text-label)] text-[var(--sidebar-primary-foreground)] leading-[16px]">{block.content}</p>
+      <div className="flex-1">
+        <p className="text-[length:var(--text-label)] text-[var(--sidebar-primary-foreground)] leading-[16px]">
+          {sbContent}
+          {sbAmendment?.type === 'substitute' && (
+            <span className="inline-flex items-center gap-[3px] bg-[var(--status-approved-bg)] text-[var(--status-approved-text)] text-[length:var(--text-label)] leading-[14px] px-[5px] py-[1px] rounded-[4px] ml-[4px] align-middle">
+              <svg className="size-[10px]" fill="none" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
+              </svg>
+              Amended
+            </span>
+          )}
+        </p>
+        {sbAmendment?.type === 'insert' && sbAmendment.proposedText && (
+          <div className="mt-[4px] bg-[var(--status-approved-bg)] rounded-[4px] px-[10px] py-[6px] border-l-[3px] border-[var(--status-approved-text)]">
+            <p className="text-[length:var(--text-label)] leading-[16px] text-[var(--status-approved-text)]">{sbAmendment.proposedText}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-function renderSpecialBlocks(blocks: SpecialBlock[]) {
+function renderSpecialBlocks(blocks: SpecialBlock[], highlightedNodeId?: string | null, passedAmendments?: Map<string, LBClauseAmendment>) {
   const typeOrder = { proviso: 0, explanation: 1, illustration: 2 };
   const sorted = [...blocks].sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
   const countByType = blocks.reduce((acc, b) => { acc[b.type] = (acc[b.type] || 0) + 1; return acc; }, {} as Record<string, number>);
@@ -370,8 +513,44 @@ function renderSpecialBlocks(blocks: SpecialBlock[]) {
   return sorted.map((block) => {
     const idx = indexByType[block.type];
     indexByType[block.type]++;
-    return <SpecialBlockRenderer key={block.id} block={block} index={idx} totalOfType={countByType[block.type] || 0} />;
+    return <SpecialBlockRenderer key={block.id} block={block} index={idx} totalOfType={countByType[block.type] || 0} highlightedNodeId={highlightedNodeId} passedAmendments={passedAmendments} />;
   });
+}
+
+/** Inline indicator for text that has been amended by a passed amendment */
+function AmendedTextIndicator() {
+  return (
+    <span className="inline-flex items-center gap-[3px] bg-[var(--status-approved-bg)] text-[var(--status-approved-text)] text-[length:var(--text-label)] leading-[14px] px-[5px] py-[1px] rounded-[4px] ml-[4px] align-middle">
+      <svg className="size-[10px]" fill="none" viewBox="0 0 24 24">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
+      </svg>
+      Amended
+    </span>
+  );
+}
+
+/** Inline indicator for text that has been inserted by a passed amendment */
+function InsertedTextBlock({ text }: { text: string }) {
+  return (
+    <div className="mt-[4px] bg-[var(--status-approved-bg)] rounded-[4px] px-[10px] py-[6px] border-l-[3px] border-[var(--status-approved-text)]">
+      <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--status-approved-text)]">{text}</p>
+    </div>
+  );
+}
+
+/** Omitted text indicator for nodes removed by a passed omit amendment */
+function OmittedTextBlock({ originalText }: { originalText: string }) {
+  return (
+    <div className="relative overflow-hidden">
+      <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--muted-foreground)] line-through opacity-50">{originalText}</p>
+      <span className="inline-flex items-center gap-[3px] bg-[var(--status-rejected-bg)] text-[var(--status-rejected-text)] text-[length:var(--text-label)] leading-[14px] px-[5px] py-[1px] rounded-[4px] mt-[2px]">
+        <svg className="size-[10px]" fill="none" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor" />
+        </svg>
+        Omitted
+      </span>
+    </div>
+  );
 }
 
 function BillClauseRenderer({
@@ -382,6 +561,9 @@ function BillClauseRenderer({
   onClick,
   amendmentCount,
   clauseRef,
+  highlightedNodeId,
+  passedAmendments,
+  showAmendments,
 }: {
   clause: Clause;
   isActiveClause: boolean;
@@ -390,28 +572,56 @@ function BillClauseRenderer({
   onClick?: () => void;
   amendmentCount?: number;
   clauseRef?: (el: HTMLDivElement | null) => void;
+  highlightedNodeId?: string | null;
+  passedAmendments?: Map<string, LBClauseAmendment>;
+  showAmendments?: boolean;
 }) {
   const toLowerRoman = (n: number) => toRomanNumeral(n).toLowerCase();
+
+  // Check if the highlighted node is the clause itself
+  const isClauseHighlighted = highlightedNodeId === clause.id;
+
+  // Get passed amendment for the clause title itself
+  const clauseAmendment = passedAmendments?.get(clause.id);
+  const clauseTitleText = clauseAmendment?.type === 'substitute' && clauseAmendment.proposedText
+    ? clauseAmendment.proposedText
+    : clause.title;
+  const isClauseOmitted = clauseAmendment?.type === 'omit';
 
   return (
     <div
       ref={clauseRef}
       data-clause-id={clause.id}
+      data-node-id={clause.id}
       onClick={isClickable ? onClick : undefined}
-      className={`flex flex-col gap-[6px] py-[8px] px-[12px] rounded-[var(--radius)] transition-colors ${
-        isSelectedClause
-          ? 'bg-[var(--status-role-bg)] ring-1 ring-[var(--status-role-border)]'
-          : isActiveClause
-            ? 'bg-[var(--status-role-bg)] bg-opacity-30'
-            : isClickable
-              ? 'hover:bg-[var(--sidebar-primary)]'
-              : ''
+      className={`flex flex-col gap-[6px] py-[8px] px-[12px] rounded-[var(--radius)] transition-all duration-200 ${
+        isClauseHighlighted
+          ? 'bg-[var(--status-warning-bg)] ring-1 ring-[var(--status-warning-border)]'
+          : isSelectedClause
+            ? 'bg-[var(--status-role-bg)] ring-1 ring-[var(--status-role-border)]'
+            : isActiveClause
+              ? 'bg-[var(--status-role-bg)] bg-opacity-30'
+              : isClickable
+                ? 'hover:bg-[var(--sidebar-primary)]'
+                : ''
       } ${isClickable ? 'cursor-pointer' : ''}`}
     >
       {/* Clause heading */}
       <div className="flex gap-[8px] items-start">
         <p className="font-semibold text-[length:var(--text-base)] leading-[20px] text-[var(--foreground)] shrink-0">{clause.number}.</p>
-        <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)] flex-1">{clause.title}</p>
+        {isClauseOmitted ? (
+          <OmittedTextBlock originalText={clause.title} />
+        ) : (
+          <div className="flex-1">
+            <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)]">
+              {clauseTitleText}
+              {clauseAmendment?.type === 'substitute' && <AmendedTextIndicator />}
+            </p>
+            {clauseAmendment?.type === 'insert' && clauseAmendment.proposedText && (
+              <InsertedTextBlock text={clauseAmendment.proposedText} />
+            )}
+          </div>
+        )}
         {isClickable && amendmentCount !== undefined && amendmentCount > 0 && (
           <StatusChip label={`${amendmentCount}`} variant="warning" />
         )}
@@ -426,32 +636,117 @@ function BillClauseRenderer({
         )}
       </div>
 
+      {/* Amendments expandable for general consideration */}
+      {showAmendments && (
+        <ClauseAmendmentsExpandable 
+          nodeId={clause.id} 
+          clauseLabel={`Clause ${clause.number}`} 
+        />
+      )}
+
       {/* Sub-clauses */}
-      {clause.subClauses.map((sc) => (
-        <div key={sc.id} className="ml-[24px] flex flex-col gap-[4px]">
-          <div className="flex gap-[6px] items-start">
-            <p className="text-[length:var(--text-label)] leading-[18px] text-[var(--muted-foreground)] shrink-0 w-[20px]">({sc.number})</p>
-            <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)] flex-1">{sc.content}</p>
-          </div>
+      {clause.subClauses.map((sc) => {
+        const isScHighlighted = highlightedNodeId === sc.id;
+        const scAmendment = passedAmendments?.get(sc.id);
+        const scContent = scAmendment?.type === 'substitute' && scAmendment.proposedText
+          ? scAmendment.proposedText
+          : sc.content;
+        const isScOmitted = scAmendment?.type === 'omit';
 
-          {/* Items */}
-          {sc.items.map((item) => (
-            <div key={item.id} className="ml-[28px] flex gap-[6px] items-start">
-              <p className="text-[length:var(--text-label)] leading-[18px] text-[var(--muted-foreground)] shrink-0 w-[24px]">({toLowerRoman(item.number)})</p>
-              <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)] flex-1">{item.content}</p>
+        return (
+          <div
+            key={sc.id}
+            data-node-id={sc.id}
+            className={`ml-[24px] flex flex-col gap-[4px] rounded-[4px] transition-all duration-200 ${
+              isScHighlighted
+                ? 'bg-[var(--status-warning-bg)] ring-1 ring-[var(--status-warning-border)] px-[8px] py-[4px] -mx-[8px]'
+                : ''
+            }`}
+          >
+            <div className="flex gap-[6px] items-start">
+              <p className="text-[length:var(--text-label)] leading-[18px] text-[var(--muted-foreground)] shrink-0 w-[20px]">({sc.number})</p>
+              {isScOmitted ? (
+                <OmittedTextBlock originalText={sc.content} />
+              ) : (
+                <div className="flex-1">
+                  <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)]">
+                    {scContent}
+                    {scAmendment?.type === 'substitute' && <AmendedTextIndicator />}
+                  </p>
+                  {scAmendment?.type === 'insert' && scAmendment.proposedText && (
+                    <InsertedTextBlock text={scAmendment.proposedText} />
+                  )}
+                </div>
+              )}
             </div>
-          ))}
 
-          {/* Sub-clause special blocks */}
-          {sc.specialBlocks.length > 0 && (
-            <div className="ml-[28px]">{renderSpecialBlocks(sc.specialBlocks)}</div>
-          )}
-        </div>
-      ))}
+            {/* Amendments expandable for sub-clause in general consideration */}
+            {showAmendments && (
+              <ClauseAmendmentsExpandable 
+                nodeId={sc.id} 
+                clauseLabel={`Clause ${clause.number}(${sc.number})`} 
+              />
+            )}
+
+            {/* Items */}
+            {sc.items.map((item) => {
+              const isItemHighlighted = highlightedNodeId === item.id;
+              const itemAmendment = passedAmendments?.get(item.id);
+              const itemContent = itemAmendment?.type === 'substitute' && itemAmendment.proposedText
+                ? itemAmendment.proposedText
+                : item.content;
+              const isItemOmitted = itemAmendment?.type === 'omit';
+
+              return (
+                <div key={item.id} className="flex flex-col gap-[0px]">
+                <div
+                  data-node-id={item.id}
+                  className={`ml-[28px] flex gap-[6px] items-start rounded-[4px] transition-all duration-200 ${
+                    isItemHighlighted
+                      ? 'bg-[var(--status-warning-bg)] ring-1 ring-[var(--status-warning-border)] px-[6px] py-[3px] -mx-[6px]'
+                      : ''
+                  }`}
+                >
+                  <p className="text-[length:var(--text-label)] leading-[18px] text-[var(--muted-foreground)] shrink-0 w-[24px]">({toLowerRoman(item.number)})</p>
+                  {isItemOmitted ? (
+                    <OmittedTextBlock originalText={item.content} />
+                  ) : (
+                    <div className="flex-1">
+                      <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)]">
+                        {itemContent}
+                        {itemAmendment?.type === 'substitute' && <AmendedTextIndicator />}
+                      </p>
+                      {itemAmendment?.type === 'insert' && itemAmendment.proposedText && (
+                        <InsertedTextBlock text={itemAmendment.proposedText} />
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Amendments expandable for item in general consideration */}
+                {showAmendments && (
+                  <div className="ml-[28px]">
+                    <ClauseAmendmentsExpandable 
+                      nodeId={item.id} 
+                      clauseLabel={`Clause ${clause.number}(${sc.number})(${toLowerRoman(item.number)})`} 
+                    />
+                  </div>
+                )}
+                </div>
+              );
+            })}
+
+            {/* Sub-clause special blocks */}
+            {sc.specialBlocks.length > 0 && (
+              <div className="ml-[28px]">{renderSpecialBlocks(sc.specialBlocks, highlightedNodeId, passedAmendments)}</div>
+            )}
+          </div>
+        );
+      })}
 
       {/* Clause-level special blocks */}
       {clause.specialBlocks.length > 0 && (
-        <div className="ml-[24px]">{renderSpecialBlocks(clause.specialBlocks)}</div>
+        <div className="ml-[24px]">{renderSpecialBlocks(clause.specialBlocks, highlightedNodeId, passedAmendments)}</div>
       )}
     </div>
   );
@@ -475,7 +770,7 @@ function ActiveSpeakerCard({ speaker }: { speaker: LBSpeaker }) {
 
   return (
     <div className="bg-[var(--card)] flex flex-col gap-[12px] p-[16px] relative rounded-[var(--radius-card)] w-full">
-      <div aria-hidden="true" className="absolute border border-[var(--status-role-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)] opacity-[0.46]" />
+      <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
 
       {/* Speaker info */}
       <div className="flex items-center gap-[12px]">
@@ -522,22 +817,17 @@ function ActiveSpeakerCard({ speaker }: { speaker: LBSpeaker }) {
   );
 }
 
-// ── Upcoming Speaker Row ─────────────────────────────────────────────────────
+// ── Upcoming Speaker Row ────────────────────────���─��─────────────────────────
 
-function UpcomingSpeakerRow({ speaker, queueNumber }: { speaker: LBSpeaker; queueNumber: number }) {
+function UpcomingSpeakerRow({ speaker }: { speaker: LBSpeaker }) {
   return (
     <div className="flex items-center gap-[12px] py-[10px] px-[4px]">
-      <div className="flex items-center justify-center size-[20px] rounded-full bg-[var(--sidebar-primary)] shrink-0">
-        <p className="text-[10px] leading-[10px] text-[var(--sidebar-primary-foreground)]">{queueNumber}</p>
-      </div>
       <div className="relative shrink-0 size-[28px]">
         <img alt="" className="block max-w-none size-full rounded-full object-cover" src={speaker.avatar} />
       </div>
-      <div className="flex flex-col gap-[2px] flex-1 min-w-0">
+      <div className="flex items-center gap-[6px] flex-1 min-w-0">
         <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--foreground)] truncate">{speaker.name}</p>
-        <div className="flex items-center gap-[4px]">
-          <PartyBadge party={speaker.party} />
-        </div>
+        <PartyBadge party={speaker.party} />
       </div>
       <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] tabular-nums shrink-0">{formatTime(speaker.allocatedTime)}</p>
     </div>
@@ -549,20 +839,21 @@ function UpcomingSpeakerRow({ speaker, queueNumber }: { speaker: LBSpeaker; queu
 function CompletedSpeakerRow({ speaker }: { speaker: LBSpeaker }) {
   return (
     <div className="flex items-center gap-[10px] py-[6px] px-[12px]">
-      <svg className="size-[14px] shrink-0" fill="none" viewBox="0 0 24 24">
-        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="var(--status-approved-text)" />
-      </svg>
       <div className="relative shrink-0 size-[24px]">
-        <img alt="" className="block max-w-none size-full rounded-full object-cover" src={speaker.avatar} />
+        <img alt="" className="block max-w-none size-full rounded-full object-cover opacity-50" src={speaker.avatar} />
       </div>
-      <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] flex-1 truncate">{speaker.name}</p>
-      <PartyBadge party={speaker.party} />
+      <div className="flex items-center gap-[6px] flex-1 min-w-0">
+        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] truncate">{speaker.name}</p>
+        <div className="opacity-50">
+          <PartyBadge party={speaker.party} />
+        </div>
+      </div>
       <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] tabular-nums shrink-0">{formatTime(speaker.elapsedTime)}</p>
     </div>
   );
 }
 
-// ── Section Header ───────────────────────────────────────────────────────────
+// ── Section Header ���──────────────────────────────────────────────────────────
 
 function SectionHeader({ title, count, variant = 'default' }: { title: string; count?: number; variant?: 'default' | 'disposed' }) {
   return (
@@ -597,7 +888,7 @@ function GeneralConsiderationPanel({ speakers }: { speakers: LBSpeaker[] }) {
       {upcomingSpeakers.length > 0 && (
         <div className="flex flex-col w-full divide-y divide-[var(--card-border)]">
           {upcomingSpeakers.map((s, i) => (
-            <UpcomingSpeakerRow key={s.id} speaker={s} queueNumber={i + 1} />
+            <UpcomingSpeakerRow key={s.id} speaker={s} />
           ))}
         </div>
       )}
@@ -617,21 +908,48 @@ function GeneralConsiderationPanel({ speakers }: { speakers: LBSpeaker[] }) {
   );
 }
 
-// ── Clause-by-Clause Amendment Card ──────────────────────────────────────────
+// ── Clause-by-Clause Amendment Row (inner row, not standalone card) ──────────
 
-function ClauseAmendmentCard({ amendment }: { amendment: LBClauseAmendment }) {
+function ClauseAmendmentRow({ amendment, amendmentNumber, isHighlighted, onHoverStart, onHoverEnd }: { amendment: LBClauseAmendment; amendmentNumber: number; isHighlighted?: boolean; onHoverStart?: () => void; onHoverEnd?: () => void }) {
   const typeLabel = AMENDMENT_TYPE_LABELS[amendment.type];
   const typeVariant = AMENDMENT_TYPE_VARIANTS[amendment.type];
 
   return (
-    <div className="bg-[var(--card)] flex flex-col gap-[10px] p-[12px] relative rounded-[var(--radius-card)] w-full">
-      <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
-
+    <div
+      className="flex flex-col gap-[10px] p-[12px] relative rounded-[var(--radius)] w-full overflow-hidden bg-[var(--input-background)]"
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+    >
       {/* Header */}
       <div className="flex items-center gap-[6px] w-full">
-        <StatusChip label={typeLabel} variant={typeVariant as any} />
         <p className="font-semibold text-[length:var(--text-label)] leading-[14px] text-[var(--foreground)]">{amendment.clauseLabel}</p>
+        <StatusChip label={typeLabel} variant={typeVariant as any} />
+        {/* Amendment number index */}
+        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] tabular-nums shrink-0 ml-auto">#{amendmentNumber}</p>
       </div>
+
+      {/* Content */}
+      {amendment.type === 'substitute' && amendment.proposedText && (
+        <div className="flex flex-col gap-[4px]">
+          <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)]">
+            <DiffHighlight original={amendment.originalText} proposed={amendment.proposedText} />
+          </p>
+        </div>
+      )}
+      {amendment.type === 'omit' && (
+        <div className="flex flex-col gap-[4px]">
+          <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)]">
+            {amendment.originalText}
+          </p>
+        </div>
+      )}
+      {amendment.type === 'insert' && amendment.proposedText && (
+        <div className="flex flex-col gap-[4px]">
+          <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)]">
+            {amendment.proposedText}
+          </p>
+        </div>
+      )}
 
       {/* Submitter */}
       <div className="flex items-center gap-[8px]">
@@ -642,84 +960,206 @@ function ClauseAmendmentCard({ amendment }: { amendment: LBClauseAmendment }) {
         <PartyBadge party={amendment.submittedBy.party} />
       </div>
 
-      {/* Content */}
-      {amendment.type === 'substitute' && amendment.proposedText && (
-        <div className="flex flex-col gap-[4px]">
-          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">Proposed changes:</p>
-          <p className="text-[length:var(--text-base)] leading-[20px] text-[var(--sidebar-primary-foreground)]">
-            <DiffHighlight original={amendment.originalText} proposed={amendment.proposedText} />
-          </p>
-        </div>
-      )}
-      {amendment.type === 'omit' && (
-        <div className="flex flex-col gap-[4px]">
-          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">Proposed for removal:</p>
-          <p className="text-[length:var(--text-base)] leading-[20px]">
-            <span className="bg-[var(--diff-removed-bg)] text-[var(--diff-removed-text)] line-through rounded-[2px] px-[2px]">
-              {amendment.originalText}
-            </span>
-          </p>
-        </div>
-      )}
-      {amendment.type === 'insert' && amendment.proposedText && (
-        <div className="flex flex-col gap-[4px]">
-          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">New text to insert:</p>
-          <p className="text-[length:var(--text-base)] leading-[20px]">
-            <span className="bg-[var(--diff-added-bg)] text-[var(--diff-added-text)] rounded-[2px] px-[2px]">
-              {amendment.proposedText}
-            </span>
-          </p>
-        </div>
-      )}
-
-      {/* Reason */}
-      {amendment.reason && (
-        <div className="flex flex-col gap-[2px]">
-          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">Reason:</p>
-          <p className="text-[length:var(--text-label)] leading-[16px] text-[var(--sidebar-primary-foreground)]">{amendment.reason}</p>
-        </div>
-      )}
-
-      {/* Voting Result */}
-      {amendment.votingResult && (
-        <>
-          <Divider />
-          <div className="flex items-center gap-[12px]">
-            <div className="flex items-center gap-[4px]">
-              <div className={`size-[8px] rounded-full ${amendment.votingResult.passed ? 'bg-[var(--status-approved-text)]' : 'bg-[var(--status-rejected-text)]'}`} />
-              <p className={`font-semibold text-[length:var(--text-label)] leading-[14px] ${amendment.votingResult.passed ? 'text-[var(--status-approved-text)]' : 'text-[var(--status-rejected-text)]'}`}>
-                {amendment.votingResult.passed ? 'Passed' : 'Rejected'}
-              </p>
-            </div>
-            <div className="flex items-center gap-[8px]">
-              <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--status-approved-text)]">Ayes: {amendment.votingResult.ayes}</p>
-              <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--status-rejected-text)]">Nays: {amendment.votingResult.nays}</p>
-            </div>
-          </div>
-        </>
-      )}
-
       {/* Pending vote */}
-      {!amendment.votingResult && (
-        <>
-          <Divider />
-          <div className="flex items-center gap-[8px]">
-            <StatusChip label="Pending" variant="pending" />
-            <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">Awaiting vote</p>
-          </div>
-        </>
+      <Divider />
+      <div className="flex items-center gap-[8px]">
+        <StatusChip label="Pending" variant="pending" />
+        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">Awaiting vote</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Disposed Clauses Section ──────────────────────────────────────────��──────
+
+// ── Unified Disposed Section ─────────────────────────────────────────────────
+
+/** Merged disposed section — clauses as group headers with their amendments nested beneath */
+function UnifiedDisposedSection({
+  clauses,
+  amendments,
+  amendmentNumberMap,
+  clauseStatuses,
+  onClauseNavigate,
+}: {
+  clauses: Clause[];
+  amendments: LBClauseAmendment[];
+  amendmentNumberMap: Map<string, number>;
+  clauseStatuses: Map<string, ClauseVoteStatus>;
+  onClauseNavigate: (clauseId: string) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  // Group amendments by their parent clause
+  const allClausesForGrouping = SITTING_BILL.chapters.flatMap(ch => ch.clauses);
+  const amendmentsByClause = new Map<string, LBClauseAmendment[]>();
+
+  amendments.forEach(a => {
+    const parentClause = allClausesForGrouping.find(cl => {
+      const nodeIds = new Set<string>([cl.id]);
+      cl.subClauses.forEach(sc => {
+        nodeIds.add(sc.id);
+        sc.items.forEach(it => {
+          nodeIds.add(it.id);
+          it.specialBlocks.forEach(sb => nodeIds.add(sb.id));
+        });
+        sc.specialBlocks.forEach(sb => nodeIds.add(sb.id));
+      });
+      cl.specialBlocks.forEach(sb => nodeIds.add(sb.id));
+      return nodeIds.has(a.clauseId);
+    });
+    if (parentClause) {
+      const existing = amendmentsByClause.get(parentClause.id);
+      if (existing) {
+        existing.push(a);
+      } else {
+        amendmentsByClause.set(parentClause.id, [a]);
+      }
+    }
+  });
+
+  // Build merged list: every clause that is either passed OR has disposed amendments
+  const passedClauseIds = new Set(clauses.map(c => c.id));
+  const clausesWithAmendments = new Set(amendmentsByClause.keys());
+  const relevantClauseIds = new Set([...passedClauseIds, ...clausesWithAmendments]);
+  const mergedGroups = allClausesForGrouping
+    .filter(cl => relevantClauseIds.has(cl.id))
+    .sort((a, b) => a.number - b.number);
+
+  const totalItems = clauses.length + amendments.length;
+  if (totalItems === 0) return null;
+
+  return (
+    <div className="flex flex-col w-full">
+      {/* Section header — plain collapsible, no card */}
+      <div
+        className="flex items-center gap-[8px] px-[4px] py-[8px] cursor-pointer transition-colors"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <svg className={`size-[14px] text-[var(--muted-foreground)] transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+
+        <p className="font-semibold text-[length:var(--text-base)] leading-[16px] text-[var(--muted-foreground)]">
+          Disposed
+        </p>
+
+        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">
+          {clauses.length} clause{clauses.length !== 1 ? 's' : ''} · {amendments.length} amendment{amendments.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col pt-[4px]">
+              {mergedGroups.map((clause, index) => {
+                const isPassed = clauseStatuses.get(clause.id) === 'passed';
+                const groupAmendments = amendmentsByClause.get(clause.id) || [];
+
+                return (
+                  <div key={clause.id} className="flex flex-col">
+                    {/* Divider between clause groups */}
+                    {index > 0 && (
+                      <div className="h-[1px] bg-[var(--card-border)] mx-[4px]" />
+                    )}
+
+                    {/* Clause header row */}
+                    <div
+                      onClick={() => onClauseNavigate(clause.id)}
+                      className="flex items-center gap-[6px] px-[4px] py-[6px] cursor-pointer hover:bg-[var(--input-background)] rounded-[var(--radius)] transition-colors"
+                    >
+                      {isPassed ? (
+                        <svg className="size-[12px] shrink-0 text-[var(--status-approved-text)]" fill="none" viewBox="0 0 24 24">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
+                        </svg>
+                      ) : (
+                        <div className="size-[12px] shrink-0 flex items-center justify-center">
+                          <div className="size-[4px] rounded-full bg-[var(--muted-foreground)]" />
+                        </div>
+                      )}
+
+                      <p className="text-[length:var(--text-label)] leading-[14px] font-semibold text-[var(--muted-foreground)] flex-1 min-w-0">
+                        Clause {clause.number}
+                      </p>
+
+                      <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] shrink-0">
+                        {groupAmendments.length} amendment{groupAmendments.length !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+
+                    {/* Amendment list rows */}
+                    {groupAmendments.map((a) => (
+                      <DisposedAmendmentRow
+                        key={a.id}
+                        amendment={a}
+                        amendmentNumber={amendmentNumberMap.get(a.id) || 0}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/** Compact row for a disposed amendment in the history section */
+function DisposedAmendmentRow({ amendment, amendmentNumber }: { amendment: LBClauseAmendment; amendmentNumber: number }) {
+  const isPassed = amendment.votingResult?.passed;
+  const typeLabel = AMENDMENT_TYPE_LABELS[amendment.type];
+
+  return (
+    <div className="flex items-center gap-[6px] pl-[24px] pr-[4px] py-[3px]">
+      {/* Result icon — small, tinted */}
+      {isPassed ? (
+        <svg className="size-[10px] shrink-0 text-[var(--status-approved-text)] opacity-60" fill="none" viewBox="0 0 24 24">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
+        </svg>
+      ) : (
+        <svg className="size-[10px] shrink-0 text-[var(--status-rejected-text)] opacity-60" fill="none" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor" />
+        </svg>
       )}
+
+      {/* Clause target + amendment type */}
+      <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] truncate">
+        <span className="opacity-60">{amendment.clauseLabel}</span>
+        <span className="opacity-30 mx-[3px]">·</span>
+        <span>{typeLabel}</span>
+      </p>
+
+      {/* Submitter — tertiary */}
+      <span className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] opacity-50">·</span>
+      <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] opacity-50 truncate flex-1 min-w-0">
+        {amendment.submittedBy.name}
+      </p>
     </div>
   );
 }
 
 // ── Clause-by-Clause Panel ───────────────────────────────────────────────────
 
-function ClauseByClausePanel({ clauseStatuses, selectedClauseId }: { clauseStatuses: Map<string, ClauseVoteStatus>; selectedClauseId: string | undefined }) {
+function ClauseByClausePanel({ clauseStatuses, selectedClauseId, onClauseNavigate, highlightedNodeId, onAmendmentHover, hoveredAmendmentId }: { clauseStatuses: Map<string, ClauseVoteStatus>; selectedClauseId: string | undefined; onClauseNavigate: (clauseId: string) => void; highlightedNodeId: string | null; onAmendmentHover: (nodeId: string | null) => void; hoveredAmendmentId: string | null }) {
   // Find the active (live) clause
   const activeClauseId = Array.from(clauseStatuses.entries()).find(([, s]) => s === 'active')?.[0];
 
-  // Determine which clause to show amendments for — selected or active
+  // Build a global amendment number map (1-based, ordered by CLAUSE_AMENDMENTS array position)
+  const amendmentNumberMap = new Map<string, number>();
+  CLAUSE_AMENDMENTS.forEach((a, i) => {
+    amendmentNumberMap.set(a.id, i + 1);
+  });
+
+  // Determine which clause to show amendments for �� selected or active
   const displayClauseId = selectedClauseId || activeClauseId;
   const displayClause = displayClauseId
     ? SITTING_BILL.chapters.flatMap(ch => ch.clauses).find(cl => cl.id === displayClauseId)
@@ -746,27 +1186,68 @@ function ClauseByClausePanel({ clauseStatuses, selectedClauseId }: { clauseStatu
   }) : [];
 
   // Count completed clauses
-  const totalClauses = SITTING_BILL.chapters.flatMap(ch => ch.clauses).length;
   const passedCount = Array.from(clauseStatuses.values()).filter(s => s === 'passed').length;
 
-  return (
-    <div className="flex flex-col gap-[16px] w-full">
-      {/* Progress */}
-      <div className="flex items-center justify-between">
-        <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">{passedCount} / {totalClauses} clauses done</p>
-      </div>
+  // The active clause object (for the persistent "Currently Considering" card)
+  const activeClause = activeClauseId
+    ? SITTING_BILL.chapters.flatMap(ch => ch.clauses).find(cl => cl.id === activeClauseId)
+    : undefined;
 
-      {/* Selected/Active Clause Header */}
-      {displayClause && (
-        <div className="bg-[var(--card)] flex flex-col gap-[10px] p-[16px] relative rounded-[var(--radius-card)] w-full">
-          <div aria-hidden="true" className={`absolute border border-solid inset-0 pointer-events-none rounded-[var(--radius-card)] ${
+  // Whether the user is viewing a different clause than the live one
+  const isViewingOtherClause = displayClauseId !== activeClauseId && !!displayClauseId;
+
+  // Separate amendments into pending (active) and disposed (voted on) for display clause
+  const pendingAmendments = displayClauseAmendments.filter(a => !a.votingResult);
+  const displayDisposedCount = displayClauseAmendments.filter(a => !!a.votingResult).length;
+
+  // Global disposed items — all disposed clauses + all disposed amendments across ALL clauses
+  const allClauses = SITTING_BILL.chapters.flatMap(ch => ch.clauses);
+  const disposedClauses = allClauses.filter(cl => clauseStatuses.get(cl.id) === 'passed');
+  const allDisposedAmendments = CLAUSE_AMENDMENTS.filter(a => !!a.votingResult);
+
+  return (
+    <div className="flex flex-col gap-[12px] w-full">
+      {/* Persistent "Go to live clause" shortcut — only shown when viewing a different clause */}
+      {activeClause && activeClauseId && isViewingOtherClause && (
+        <div
+          onClick={() => onClauseNavigate(activeClauseId)}
+          className="bg-[var(--card)] flex items-center gap-[8px] px-[12px] py-[10px] relative rounded-[var(--radius-card)] w-full cursor-pointer transition-shadow hover:shadow-[var(--elevation-sm)]"
+        >
+          <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
+          <p className="font-semibold text-[length:var(--text-base)] leading-[16px] text-[var(--foreground)]">Clause {activeClause.number}</p>
+
+          <div className="flex gap-[4px] items-center bg-[var(--status-urgent-bg)] px-[6px] py-[2px] rounded-full shrink-0">
+            <div className="relative size-[6px]">
+              <div className="absolute inset-0 rounded-full bg-[var(--status-urgent-text)] animate-ping opacity-75" />
+              <div className="relative size-full rounded-full bg-[var(--status-urgent-text)]" />
+            </div>
+            <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--status-urgent-text)]">Live</p>
+          </div>
+
+          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)] ml-auto shrink-0">Go to live clause</p>
+
+          <svg className="size-[14px] text-[var(--muted-foreground)] shrink-0" fill="none" viewBox="0 0 24 24">
+            <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      )}
+
+      {/* ── Container card: clause header + amendment list ── */}
+      {displayClause && displayClauseId ? (
+        <div className="bg-[var(--card)] flex flex-col relative rounded-[var(--radius-card)] w-full overflow-hidden">
+          <div aria-hidden="true" className={`absolute border border-solid inset-0 pointer-events-none rounded-[var(--radius-card)] z-[2] ${
             isDisplayClauseLive
               ? 'border-[var(--status-role-border)] opacity-[0.46]'
               : 'border-[var(--card-border)]'
           }`} />
 
-          <div className="flex items-center gap-[8px]">
+          {/* Card header — clause info */}
+          <div
+            className="flex items-center gap-[8px] px-[16px] py-[12px] cursor-pointer shrink-0"
+            onClick={() => onClauseNavigate(displayClauseId)}
+          >
             <p className="font-semibold text-[length:var(--text-base)] leading-[16px] text-[var(--foreground)]">Clause {displayClause.number}</p>
+
             {isDisplayClauseLive && (
               <div className="flex gap-[4px] items-center bg-[var(--status-urgent-bg)] px-[6px] py-[2px] rounded-full shrink-0">
                 <div className="relative size-[6px]">
@@ -776,6 +1257,7 @@ function ClauseByClausePanel({ clauseStatuses, selectedClauseId }: { clauseStatu
                 <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--status-urgent-text)]">Live</p>
               </div>
             )}
+
             {displayClauseStatus === 'passed' && (
               <StatusChip label="Passed" variant="approved" />
             )}
@@ -784,24 +1266,27 @@ function ClauseByClausePanel({ clauseStatuses, selectedClauseId }: { clauseStatu
             )}
           </div>
 
-          <p className="text-[length:var(--text-label)] leading-[16px] text-[var(--sidebar-primary-foreground)]">
-            {displayClause.title.length > 120 ? displayClause.title.substring(0, 120) + '…' : displayClause.title}
-          </p>
-        </div>
-      )}
-
-      {/* Amendments for displayed clause */}
-      {displayClauseAmendments.length > 0 ? (
-        <div className="flex flex-col gap-[8px] w-full">
-          <SectionHeader title="Amendments" count={displayClauseAmendments.length} />
-          {displayClauseAmendments.map(a => (
-            <ClauseAmendmentCard key={a.id} amendment={a} />
-          ))}
-        </div>
-      ) : displayClause ? (
-        <div className="bg-[var(--card)] flex items-center justify-center p-[24px] rounded-[var(--radius-card)] relative">
-          <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
-          <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">No amendments for this clause</p>
+          {/* Pending amendment rows */}
+          {pendingAmendments.length > 0 ? (
+            <div className="flex flex-col gap-[8px] p-[12px]">
+              {pendingAmendments.map((a) => (
+                <ClauseAmendmentRow
+                  key={a.id}
+                  amendment={a}
+                  amendmentNumber={amendmentNumberMap.get(a.id) || 0}
+                  isHighlighted={hoveredAmendmentId === a.id}
+                  onHoverStart={() => onAmendmentHover(a.id)}
+                  onHoverEnd={() => onAmendmentHover(null)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center px-[16px] py-[24px]">
+              <p className="text-[length:var(--text-label)] leading-[14px] text-[var(--muted-foreground)]">
+                {displayDisposedCount > 0 ? 'All amendments have been disposed' : 'No amendments for this clause'}
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="bg-[var(--card)] flex items-center justify-center p-[24px] rounded-[var(--radius-card)] relative">
@@ -810,22 +1295,14 @@ function ClauseByClausePanel({ clauseStatuses, selectedClauseId }: { clauseStatu
         </div>
       )}
 
-      {/* Passed clauses summary */}
-      {passedCount > 0 && (
-        <div className="flex flex-col gap-[4px] w-full">
-          <SectionHeader title="Passed Clauses" count={passedCount} variant="disposed" />
-          <div className="flex flex-wrap gap-[6px] mt-[4px]">
-            {SITTING_BILL.chapters.flatMap(ch => ch.clauses).filter(cl => clauseStatuses.get(cl.id) === 'passed').map(cl => (
-              <div key={cl.id} className="flex items-center gap-[4px] px-[8px] py-[4px] bg-[var(--status-approved-bg)] rounded-[var(--radius-button-small)]">
-                <svg className="size-[10px]" fill="none" viewBox="0 0 24 24">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="var(--status-approved-text)" />
-                </svg>
-                <p className="text-[10px] leading-[12px] text-[var(--status-approved-text)]">Cl. {cl.number}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Unified Disposed section — all passed clauses + all voted amendments */}
+      <UnifiedDisposedSection
+        clauses={disposedClauses}
+        amendments={allDisposedAmendments}
+        amendmentNumberMap={amendmentNumberMap}
+        clauseStatuses={clauseStatuses}
+        onClauseNavigate={onClauseNavigate}
+      />
     </div>
   );
 }
@@ -879,7 +1356,7 @@ function PassingPanel() {
   );
 }
 
-// ── Main Component ───────────────────────────────────────────────────────────
+// ── Main Component ──────────────────────────────────────────────────────────
 
 export function LegislativeBusinessTab() {
   const [activeDay, setActiveDay] = useState<SittingDay>('sitting-1');
@@ -911,17 +1388,16 @@ export function LegislativeBusinessTab() {
   // Selected chapter data
   const selectedChapterData = SITTING_BILL.chapters.find(ch => ch.id === activeChapterId);
 
-  // Handle chapter selection
+  // Handle chapter selection — only navigates left panel, does NOT affect right panel
   const handleChapterSelect = useCallback((chapterId: string) => {
     setActiveChapterId(chapterId);
-    setSelectedClauseId(undefined);
     // Scroll to top of bill content when changing chapters
     if (billContentRef.current) {
       billContentRef.current.scrollTop = 0;
     }
   }, []);
 
-  // Handle clause click — sets selection for right panel and scrolls into view
+  // Handle clause click from bill text — sets selection for right panel and scrolls into view
   const handleClauseClick = useCallback((clauseId: string) => {
     if (phase === 'clause-by-clause') {
       setSelectedClauseId(clauseId);
@@ -931,6 +1407,62 @@ export function LegislativeBusinessTab() {
       clauseRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [phase]);
+
+  // Handle clause navigation from dropdown — only scrolls left panel, does NOT affect right panel
+  const handleDropdownClauseNav = useCallback((clauseId: string) => {
+    // Defer scroll to allow React to render the chapter's clauses after chapter switch
+    setTimeout(() => {
+      const clauseRef = document.querySelector<HTMLDivElement>(`[data-clause-id="${clauseId}"]`);
+      if (clauseRef) {
+        clauseRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 50);
+  }, []);
+
+  // Navigate to clause from right panel — switches chapter if needed, selects it, and scrolls into view
+  const navigateToClause = useCallback((clauseId: string) => {
+    // Find which chapter contains this clause
+    const targetChapter = SITTING_BILL.chapters.find(ch =>
+      ch.clauses.some(cl => cl.id === clauseId)
+    );
+    if (targetChapter && targetChapter.id !== activeChapterId) {
+      setActiveChapterId(targetChapter.id);
+    }
+    setSelectedClauseId(clauseId);
+    // Defer scroll to allow React to render the new chapter's clauses
+    setTimeout(() => {
+      const clauseRef = document.querySelector<HTMLDivElement>(`[data-clause-id="${clauseId}"]`);
+      if (clauseRef) {
+        clauseRef.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 50);
+  }, [activeChapterId]);
+
+  // Build passed amendments map for bill text rendering (clause-by-clause phase only)
+  const passedAmendmentsMap = phase === 'clause-by-clause' ? getPassedAmendmentsByNodeId() : new Map<string, LBClauseAmendment>();
+
+  const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null);
+  const [hoveredAmendmentId, setHoveredAmendmentId] = useState<string | null>(null);
+
+  // When an amendment is hovered, find its clauseId (the bill node it targets) and highlight it
+  const handleAmendmentHover = useCallback((amendmentId: string | null) => {
+    setHoveredAmendmentId(amendmentId);
+    if (amendmentId) {
+      const amendment = CLAUSE_AMENDMENTS.find(a => a.id === amendmentId);
+      if (amendment) {
+        setHighlightedNodeId(amendment.clauseId);
+        // Scroll the highlighted node into view in the left panel
+        setTimeout(() => {
+          const nodeEl = billContentRef.current?.querySelector<HTMLElement>(`[data-node-id="${amendment.clauseId}"]`);
+          if (nodeEl) {
+            nodeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }, 16);
+      }
+    } else {
+      setHighlightedNodeId(null);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col gap-[16px] w-full">
@@ -950,7 +1482,7 @@ export function LegislativeBusinessTab() {
             <ChapterSelector
               activeChapterId={activeChapterId}
               onChapterSelect={handleChapterSelect}
-              onClauseClick={handleClauseClick}
+              onClauseClick={handleDropdownClauseNav}
               phase={phase}
               clauseStatuses={clauseStatusMap}
             />
@@ -985,8 +1517,11 @@ export function LegislativeBusinessTab() {
                     isActiveClause={clause.id === activeClauseId}
                     isSelectedClause={phase === 'clause-by-clause' && clause.id === (selectedClauseId || activeClauseId)}
                     isClickable={phase === 'clause-by-clause'}
-                    amendmentCount={getAmendmentCountForClause(clause.id)}
+                    amendmentCount={phase === 'clause-by-clause' ? getPendingAmendmentCountForClause(clause.id) : getAmendmentCountForClause(clause.id)}
                     onClick={() => handleClauseClick(clause.id)}
+                    highlightedNodeId={highlightedNodeId}
+                    passedAmendments={passedAmendmentsMap}
+                    showAmendments={phase === 'general'}
                   />
                 ))}
               </div>
@@ -1010,7 +1545,7 @@ export function LegislativeBusinessTab() {
               />
             </div>
             {phase === 'general' && <GeneralConsiderationPanel speakers={speakers} />}
-            {phase === 'clause-by-clause' && <ClauseByClausePanel clauseStatuses={clauseStatusMap} selectedClauseId={selectedClauseId || activeClauseId} />}
+            {phase === 'clause-by-clause' && <ClauseByClausePanel clauseStatuses={clauseStatusMap} selectedClauseId={selectedClauseId || activeClauseId} onClauseNavigate={navigateToClause} highlightedNodeId={highlightedNodeId} onAmendmentHover={handleAmendmentHover} hoveredAmendmentId={hoveredAmendmentId} />}
             {phase === 'passing' && <PassingPanel />}
           </div>
         </div>

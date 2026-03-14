@@ -20,6 +20,7 @@ import { JoinPartyModal } from "./JoinPartyModal";
 import { CoalitionFormationModal } from "./CoalitionFormationModal";
 import { MinistryAllocationModal } from "./MinistryAllocationModal";
 import { ChooseMinistersModal } from "./ChooseMinistersModal";
+import { DiagonalStripeOverlay } from "./DiagonalStripeOverlay";
 import { useState } from "react";
 import { useUser } from '../context/UserContext';
 
@@ -108,20 +109,6 @@ function PhaseBadge({ phase }: { phase: PhaseType }) {
       <PhaseBadgeIcon icon={config.icon} color={config.textColor} />
       <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: config.textColor }}>{config.label}</p>
     </div>
-  );
-}
-
-// Diagonal stripe pattern for break times
-function DiagonalStripePattern() {
-  return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.4 }}>
-      <defs>
-        <pattern id="diagonal-stripes" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
-          <line x1="0" y1="0" x2="0" y2="8" stroke="#d1d5db" strokeWidth="1.5" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#diagonal-stripes)" />
-    </svg>
   );
 }
 
@@ -1074,7 +1061,7 @@ export function WelcomeTab() {
             <div className="flex flex-col gap-[12px] w-full">
               {/* Date 1 - Passed */}
               <div className="p-[16px] rounded-[8px] bg-[#f8f9fb] w-full relative overflow-hidden">
-                <DiagonalStripePattern />
+                <DiagonalStripeOverlay />
                 <div className="flex flex-col gap-[8px] relative z-10">
                   <p className="font-semibold leading-[16px] text-[#6e7ca8] text-[14px]">Submission of questions by Private Members</p>
                   <p className="leading-[16px] text-[#6e7ca8] text-[12px]">Only Private Members can submit questions, from both the Opposition and Treasury benches.</p>
@@ -1226,7 +1213,7 @@ export function WelcomeTab() {
 
                 {/* Schedule Item 3 - Snacks Break */}
                 <div className="flex gap-[12px] p-[12px] rounded-[8px] bg-[#f8f9fb] w-full relative overflow-hidden">
-                  <DiagonalStripePattern />
+                  <DiagonalStripeOverlay />
                   <div className="flex flex-col items-end gap-[2px] shrink-0 w-[60px] relative z-10">
                     <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[12px]">10:15</p>
                     <p className="leading-[14px] text-[#6e7ca8] text-[11px]">15 min</p>
@@ -1250,7 +1237,7 @@ export function WelcomeTab() {
 
                 {/* Schedule Item 5 - Lunch */}
                 <div className="flex gap-[12px] p-[12px] rounded-[8px] bg-[#f8f9fb] w-full relative overflow-hidden">
-                  <DiagonalStripePattern />
+                  <DiagonalStripeOverlay />
                   <div className="flex flex-col items-end gap-[2px] shrink-0 w-[60px] relative z-10">
                     <p className="font-semibold leading-[16px] text-[#3c4c7c] text-[12px]">11:30</p>
                     <p className="leading-[14px] text-[#6e7ca8] text-[11px]">30 min</p>

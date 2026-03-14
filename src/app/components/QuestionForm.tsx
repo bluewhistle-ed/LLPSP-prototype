@@ -3,22 +3,8 @@ import { SESSION_AVATAR_B as imgEllipse8 } from '../data/assets';
 import { useState, useRef, useEffect } from "react";
 import { CloseButton } from "./CloseButton";
 import { useGovernment } from '../context/GovernmentContext';
-
-function PartyBadge({ party }: { party: string }) {
-  const colors: Record<string, { bg: string; border: string; text: string }> = {
-    UPP: { bg: '#fef3e8', border: '#ed7d31', text: '#ed7d31' },
-    TRP: { bg: '#e8f4ff', border: '#2766da', text: '#2766da' }
-  };
-
-  const color = colors[party] || colors.UPP;
-
-  return (
-    <div className={`content-stretch flex gap-[4px] items-center px-[6px] py-[2px] relative rounded-[4px] shrink-0`} style={{ backgroundColor: color.bg }}>
-      <div aria-hidden="true" className="absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]" style={{ borderColor: color.border }} />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: color.text }}>{party}</p>
-    </div>
-  );
-}
+import { PartyBadge } from "./PartyBadge";
+import svgPathsForm from "../../imports/svg-bmen1r6wqa";
 
 function RoleBadge({ role }: { role: string }) {
   const getRoleConfig = (role: string) => {

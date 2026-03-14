@@ -13,6 +13,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from 'motion/react';
 import { useUser } from "../context/UserContext";
 import { StatusChip } from "../components/StatusChip";
+import { PartyBadge } from "../components/PartyBadge";
 import { FeedbackDisplay, FeedbackForm, MentorFeedbackSection, GiveFeedbackButton } from "../components/FeedbackModule";
 
 function IconsMoreVert() {
@@ -81,22 +82,6 @@ function MentorActionButton({ label, onClick }: { label: string; onClick?: () =>
       </div>
       <div aria-hidden="true" className="absolute border-[#2f3e6d] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[6px]" />
     </button>
-  );
-}
-
-function PartyBadge({ party }: { party: string }) {
-  const colors: Record<string, { bg: string; border: string; text: string }> = {
-    UPP: { bg: '#fef3e8', border: '#ed7d31', text: '#ed7d31' },
-    TRP: { bg: '#e8f4ff', border: '#2766da', text: '#2766da' }
-  };
-
-  const color = colors[party] || colors.UPP;
-
-  return (
-    <div className={`${color.bg} content-stretch flex gap-[4px] items-center px-[6px] py-[2px] relative rounded-[4px] shrink-0`}>
-      <div aria-hidden="true" className={`absolute border-[${color.border}] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[4px]`} style={{ borderColor: color.border }} />
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[12px] text-ellipsis" style={{ color: color.text }}>{party}</p>
-    </div>
   );
 }
 
