@@ -89,6 +89,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Nathan S. Wright', avatar: AVATAR_2, role: 'Private Member', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'Alice Thompson', avatar: AVATAR_4, role: 'Minister', party: 'CVP', partyFlag: FLAG_CVP },
     status: 'active',
+    answer: 'A comprehensive assessment of learning outcomes under NEP 2020 was conducted by NCERT covering 36 States and UTs. Foundational literacy rates improved by 18% in primary schools, with the greatest gains in States that adopted the NIPUN Bharat framework early. To address the digital divide, 14,500 PM eVIDYA centres have been established in rural blocks, and 3.2 lakh teachers have completed digital pedagogy training.',
   },
 
   // ── 8 pending ──────────────────────────────────────────────────────────────
@@ -104,6 +105,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Emily R. Thompson', avatar: AVATAR_4, role: 'Private Member', party: 'CVP', partyFlag: FLAG_CVP },
     answeredBy: { name: 'Marcus T. Reynolds', avatar: AVATAR_7, role: 'Minister', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'As of March 2026, there are 11,438 vacant specialist positions across district hospitals. The Government has introduced a Rural Service Incentive Package offering 40% salary enhancement, accelerated promotions, and housing for specialists serving in underserved areas. A new telemedicine bridge programme connects 850 district hospitals with AIIMS-tier institutions for specialist consultations.',
   },
   {
     id: 's1-q6',
@@ -117,6 +119,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Aleta H. Starcher', avatar: AVATAR_3, role: 'Private Member', party: 'UPP', partyFlag: FLAG_UPP },
     answeredBy: { name: 'Nathan S. Wright', avatar: AVATAR_2, role: 'MoS', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'The overall GST compliance rate for MSMEs stands at 82%. For enterprises with turnover below ₹5 crore, a simplified quarterly return (GSTR-3BQ) was introduced with a compliance rate of 76%. The Government is developing a single consolidated return framework expected to launch in Q4 2026.',
   },
   {
     id: 's1-q7',
@@ -129,6 +132,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Marcus T. Reynolds', avatar: AVATAR_7, role: 'Private Member', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'Isabella M. Chen', avatar: SESSION_AVATAR_A, role: 'Minister', party: 'CVP', partyFlag: FLAG_CVP },
     status: 'pending',
+    answer: 'Under the Aatmanirbhar Bharat initiative, 68% of the defence procurement budget is now allocated to indigenous vendors, up from 54% three years ago. 124 defence items have been placed on the positive indigenisation list, and domestic production has crossed ₹1.27 lakh crore in FY 2025-26.',
   },
   {
     id: 's1-q8',
@@ -142,6 +146,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Addie V. Biela', avatar: SESSION_AVATAR_B, role: 'Private Member', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'David R. Patterson', avatar: AVATAR_6, role: 'MoS', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'The PLI scheme has generated approximately 8.6 lakh direct jobs across 14 sectors. Electronics manufacturing leads with 3.2 lakh jobs, followed by pharmaceuticals at 1.4 lakh. Sectors underperforming on employment targets — notably textiles and specialty steel — are being reviewed for enhanced incentive structures.',
   },
   {
     id: 's1-q9',
@@ -155,6 +160,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Latricia W. Silletti', avatar: AVATAR_5, role: 'Private Member', party: 'UPP', partyFlag: FLAG_UPP },
     answeredBy: { name: 'Marcus T. Reynolds', avatar: AVATAR_7, role: 'Minister', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'The Universal Immunisation Programme has achieved 89% coverage nationally, but tribal areas average only 71%. The bottom 100 districts have a full-immunisation rate of 63%. The Government has deployed 2,400 mobile vaccination teams and expanded the cold-chain network by 35% in these regions.',
   },
   {
     id: 's1-q10',
@@ -167,6 +173,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Kavya Reddy', avatar: SESSION_AVATAR_C, role: 'Private Member', party: 'CVP', partyFlag: FLAG_CVP },
     answeredBy: { name: 'Alice Thompson', avatar: AVATAR_4, role: 'Minister', party: 'CVP', partyFlag: FLAG_CVP },
     status: 'pending',
+    answer: 'PM POSHAN has contributed to a 4.2 percentage point reduction in anaemia among school-going children aged 6-14 over three years. Stunting prevalence in participating schools has decreased from 31% to 26.8%. The programme now covers 11.8 crore children across 11.2 lakh schools.',
   },
   {
     id: 's1-q11',
@@ -180,6 +187,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Smayan S.', avatar: SESSION_AVATAR_D, role: 'President', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'David R. Patterson', avatar: AVATAR_6, role: 'Minister', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'Indian missions abroad received 42,600 distress calls from Gulf countries in the past 12 months. Repatriation assistance was provided to 8,400 nationals and legal aid to 3,200. The Government proposes to expand the PBSK network to 12 additional countries by end of 2026.',
   },
   {
     id: 's1-q12',
@@ -193,6 +201,7 @@ export const SITTING_1_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Roy X. Hinde', avatar: AVATAR_2, role: 'Private Member', party: 'UPP', partyFlag: FLAG_UPP },
     answeredBy: { name: 'Isabella M. Chen', avatar: SESSION_AVATAR_A, role: 'Minister', party: 'CVP', partyFlag: FLAG_CVP },
     status: 'pending',
+    answer: 'OROP has been implemented for 98.7% of eligible ex-servicemen. Approximately 18,400 veterans across 12 anomaly categories are still awaiting revised pensions. A dedicated OROP Anomaly Redressal Committee has been constituted with a mandate to resolve all outstanding claims by September 2026.',
   },
 ];
 
@@ -242,6 +251,7 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Marcus T. Reynolds', avatar: AVATAR_7, role: 'Private Member', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'Isabella M. Chen', avatar: SESSION_AVATAR_A, role: 'Minister', party: 'CVP', partyFlag: FLAG_CVP },
     status: 'active',
+    answer: 'The revised Defence Procurement Procedure (DPP 2025) was notified in January 2026. Key changes include a 30% reduction in approval timelines, a new fast-track category for critical operational requirements, and mandatory indigenous content thresholds of 60% for all Buy (Indian) acquisitions. Currently, 23 procurement proposals valued above ₹500 crore are pending at various stages.',
   },
 
   // ── 7 pending ──────────────────────────────────────────────────────────────
@@ -257,6 +267,7 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Addie V. Biela', avatar: SESSION_AVATAR_B, role: 'Private Member', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'Alice Thompson', avatar: AVATAR_4, role: 'Minister', party: 'CVP', partyFlag: FLAG_CVP },
     status: 'pending',
+    answer: 'Under the Digital India initiative, 1.24 crore tablets and laptops have been distributed to students in government schools. An impact assessment by NIEPA found that only 58% of devices are actively used for learning. The Government has launched a Device Lifecycle Management programme covering maintenance, connectivity via BharatNet, and quarterly content updates.',
   },
   {
     id: 's2-q5',
@@ -270,6 +281,7 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Alice Thompson', avatar: AVATAR_4, role: 'Private Member', party: 'CVP', partyFlag: FLAG_CVP },
     answeredBy: { name: 'Aleta H. Starcher', avatar: AVATAR_3, role: 'Minister', party: 'UPP', partyFlag: FLAG_UPP },
     status: 'pending',
+    answer: 'India\'s public debt-to-GDP ratio stands at 56.8% against the FRBM target of 40%. Interest payments constitute 24% of revenue receipts. The Government\'s medium-term strategy includes fiscal consolidation targeting 4.5% fiscal deficit by 2027-28, liability management through buyback of high-cost debt, and revenue augmentation through asset monetisation.',
   },
   {
     id: 's2-q6',
@@ -283,6 +295,7 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Kavya Reddy', avatar: SESSION_AVATAR_C, role: 'Private Member', party: 'CVP', partyFlag: FLAG_CVP },
     answeredBy: { name: 'David R. Patterson', avatar: AVATAR_6, role: 'MoS', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'The DEH initiative has been operational in 741 districts. Of these, 234 districts have shown measurable export growth above 15% attributable to the programme. Capacity-building includes establishment of 450 Trade Facilitation Centres, training of 28,000 MSMEs in export procedures, and dedicated e-commerce onboarding drives in 150 aspirational districts.',
   },
   {
     id: 's2-q7',
@@ -296,6 +309,7 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Smayan S.', avatar: SESSION_AVATAR_D, role: 'President', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'Marcus T. Reynolds', avatar: AVATAR_7, role: 'Minister', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'NIMHANS survey data indicates a 12.5% prevalence of mental-health disorders in the 15-29 age group. Under NMHP, 14 Centres of Excellence for youth mental health have been established. Currently, 692 out of 767 targeted District Mental Health Programmes are operational, but only 41% have full staffing complements including psychiatrists, psychologists, and social workers.',
   },
   {
     id: 's2-q8',
@@ -308,6 +322,7 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Latricia W. Silletti', avatar: AVATAR_5, role: 'Private Member', party: 'UPP', partyFlag: FLAG_UPP },
     answeredBy: { name: 'David R. Patterson', avatar: AVATAR_6, role: 'Minister', party: 'TRP', partyFlag: FLAG_TRP },
     status: 'pending',
+    answer: 'India maintains that developed nations must honour their historical responsibility for Loss and Damage financing. Three bilateral climate-finance partnerships were signed — with Germany (€1.5B green hydrogen), France (€800M solar manufacturing), and UAE ($2B mangrove restoration). India\'s cumulative climate-finance mobilisation stands at $42 billion.',
   },
   {
     id: 's2-q9',
@@ -321,6 +336,7 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Nathan S. Wright', avatar: AVATAR_2, role: 'Private Member', party: 'TRP', partyFlag: FLAG_TRP },
     answeredBy: { name: 'Aleta H. Starcher', avatar: AVATAR_3, role: 'MoS', party: 'UPP', partyFlag: FLAG_UPP },
     status: 'pending',
+    answer: 'India\'s share of global textile exports has declined from 5.4% to 4.8% over three years. The Government has introduced the PM MITRA Mega Textile Park scheme and enhanced the RoSCTL rebate. FTA negotiations with the UK, EU, and GCC include specific textile chapters addressing zero-duty access for handloom and handicraft products.',
   },
   {
     id: 's2-q10',
@@ -334,5 +350,6 @@ export const SITTING_2_QUESTIONS: SittingQuestion[] = [
     askedBy: { name: 'Roy X. Hinde', avatar: AVATAR_2, role: 'Private Member', party: 'UPP', partyFlag: FLAG_UPP },
     answeredBy: { name: 'Alice Thompson', avatar: AVATAR_4, role: 'Minister', party: 'CVP', partyFlag: FLAG_CVP },
     status: 'pending',
+    answer: 'GER in postgraduate programmes has declined from 4.8% to 4.1% over five years. A direct correlation has been identified with fellowship amounts that have not kept pace with inflation. The Government proposes a 40% enhancement in JRF/SRF fellowship amounts and introduction of a Performance-Linked Research Grant of up to ₹5 lakh per annum for PhD scholars.',
   },
 ];

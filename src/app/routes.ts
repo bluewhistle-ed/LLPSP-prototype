@@ -13,6 +13,10 @@ import { AmendmentsPage } from "./pages/AmendmentsPage";
 import SittingPage from "./pages/SittingPage";
 import { RedirectToStudentHome } from "./components/RedirectToStudentHome";
 import SpeakerHomePage from "./pages/SpeakerHomePage";
+import SpeakerPSPDashboardPage from "./pages/SpeakerPSPDashboardPage";
+import SpeakerQuestionHourPage from "./pages/SpeakerQuestionHourPage";
+import SpeakerZeroHourPage from "./pages/SpeakerZeroHourPage";
+import SpeakerLegislativeBusinessPage from "./pages/SpeakerLegislativeBusinessPage";
 import MentorHomePage from "./pages/MentorHomePage";
 
 export const router = createBrowserRouter([
@@ -81,6 +85,22 @@ export const router = createBrowserRouter([
       {
         path: "speaker/home",
         Component: SpeakerHomePage,
+      },
+      {
+        path: "speaker/psp/dashboard",
+        Component: SpeakerPSPDashboardPage,
+      },
+      {
+        path: "speaker/psp/question-hour",
+        Component: SpeakerQuestionHourPage,
+      },
+      {
+        path: "speaker/psp/zero-hour",
+        Component: SpeakerZeroHourPage,
+      },
+      {
+        path: "speaker/psp/legislative-business",
+        Component: SpeakerLegislativeBusinessPage,
       },
 
       // ── Mentor routes ──────────────────────────────────────────────────────────

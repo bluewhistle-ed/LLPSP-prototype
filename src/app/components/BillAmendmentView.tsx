@@ -3,6 +3,7 @@ import { AnimatePresence } from "motion/react";
 import { CloseButton } from "./CloseButton";
 import { StatusChip } from "./StatusChip";
 import type { AmendmentData, AmendmentType } from "./AmendmentModule";
+import { AmendmentActionMenu, AmendmentInput, AmendmentDisplay } from "./AmendmentModule";
 
 // ── Data Interfaces (shared with BillReviewView) ───────────────────────────────
 

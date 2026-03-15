@@ -128,23 +128,3 @@ export interface PSPEvent {
 }
 
 // ── Partners / Schools ──────────────────────────────────────────────────────
-
-export interface Partner {
-  id: number;
-  imgSrc: string;
-  name: string;
-  email: string;
-  phone: string;
-  status: 'Active' | 'Inactive';
-}
-
-// ── Parliamentary Business ──────────────────────────────────────────────────
-
-export interface MinistryWithThemes {
-  id: string;
-  name: string;
-  themes: string[];
-}
-
-// ── Admin Global Lists ──────────────────────────────────────────────────────
-// Ministry and Committee types are defined above; used in GlobalListsPage.

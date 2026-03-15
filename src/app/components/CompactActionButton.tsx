@@ -9,6 +9,12 @@ const VARIANT_CLASSES = {
     'bg-[var(--sidebar-primary)] text-[var(--sidebar-primary-foreground)] hover:bg-[var(--border)] transition-colors',
   outline:
     'bg-transparent border border-[var(--foreground)] text-[var(--foreground)] hover:bg-[var(--input-background)] transition-colors',
+  'outline-muted':
+    'bg-transparent border border-[var(--muted-foreground)] text-[var(--muted-foreground)]',
+  progress:
+    'bg-[var(--status-progress-bg)] border border-[var(--status-progress-text)] text-[var(--status-progress-text)]',
+  approved:
+    'bg-[var(--status-approved-bg)] border border-[var(--status-approved-text)] text-[var(--status-approved-text)]',
   destructive:
     'bg-transparent border border-[var(--status-rejected-text)] text-[var(--status-rejected-text)] hover:bg-[var(--status-rejected-bg)] transition-colors',
   danger:

@@ -1,4 +1,5 @@
 import { USER_AVATAR as imgEllipse1 } from '../data/assets';
+import svgPaths from "../../imports/svg-hkh4t53hh4";
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import {

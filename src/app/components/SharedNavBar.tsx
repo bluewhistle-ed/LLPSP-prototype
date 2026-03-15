@@ -3,6 +3,8 @@ import svgPaths from "../../imports/svg-hkh4t53hh4";
 import { USER_AVATAR as imgEllipse1 } from '../data/assets';
 import { useUser, HOME_ROUTES } from '../context/UserContext';
 
+export type ActivePage = 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'questions' | 'notices' | 'amendments' | 'sitting' | 'mentor-dashboard' | 'speaker-home' | 'speaker-psp-dashboard' | 'speaker-question-hour' | 'speaker-zero-hour' | 'speaker-legislative-business';
+
 function Group() {
   return (
     <div className="h-[24px] relative shrink-0 w-[14.314px]" data-name="Group">
@@ -32,21 +34,21 @@ function Logo() {
 
 function Nav({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="content-stretch flex gap-[4px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0 cursor-pointer" data-name=".nav">
-      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#6e7ca8] text-[12px] text-ellipsis">{label}</p>
+    <button onClick={onClick} className="content-stretch flex gap-[4px] items-center px-[8px] py-[4px] relative rounded-[var(--radius)] shrink-0 cursor-pointer" data-name=".nav">
+      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis">{label}</p>
     </button>
   );
 }
 
 function NavActive({ label }: { label: string }) {
   return (
-    <div className="bg-[#f1f2f8] content-stretch flex gap-[4px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0" data-name=".nav">
-      <p className="font-medium leading-[14px] not-italic overflow-hidden relative shrink-0 text-[#3c4c7c] text-[12px] text-ellipsis">{label}</p>
+    <div className="bg-[var(--sidebar-primary)] content-stretch flex gap-[4px] items-center px-[8px] py-[4px] relative rounded-[var(--radius)] shrink-0" data-name=".nav">
+      <p className="font-medium leading-[14px] not-italic overflow-hidden relative shrink-0 text-[var(--sidebar-primary-foreground)] text-[length:var(--text-label)] text-ellipsis">{label}</p>
     </div>
   );
 }
 
-function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'questions' | 'notices' | 'amendments' | 'sitting' | 'mentor-dashboard' }) {
+function Tabs({ activePage }: { activePage: ActivePage }) {
   const navigate = useNavigate();
   const { userType, adminRole } = useUser();
   
@@ -54,10 +56,43 @@ function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 
   const isStudentMode = activePage === 'home';
   const isPSPMode = ['psp-dashboard', 'questions', 'notices', 'amendments', 'sitting'].includes(activePage) && userType === 'student';
   const isMentorMode = userType === 'mentor';
+  const isSpeakerHome = activePage === 'speaker-home';
+  const isSpeakerPSPMode = ['speaker-psp-dashboard', 'speaker-question-hour', 'speaker-zero-hour', 'speaker-legislative-business'].includes(activePage) && userType === 'speaker';
 
-  if (isStudentMode) {
-    // Student navigation - no tabs, just the logo
+  if (isStudentMode || isSpeakerHome) {
+    // Student home / Speaker home — no tabs, just the logo
     return null;
+  }
+
+  if (isSpeakerPSPMode) {
+    // Speaker PSP navigation — Dashboard, Question Hour, Zero Hour, Legislative Business
+    return (
+      <div className="content-stretch flex gap-[16px] items-center relative shrink-0" data-name="Tabs">
+        {activePage === 'speaker-psp-dashboard' ? (
+          <NavActive label="Dashboard" />
+        ) : (
+          <Nav label="Dashboard" onClick={() => navigate('/speaker/psp/dashboard')} />
+        )}
+        
+        {activePage === 'speaker-question-hour' ? (
+          <NavActive label="Question Hour" />
+        ) : (
+          <Nav label="Question Hour" onClick={() => navigate('/speaker/psp/question-hour')} />
+        )}
+        
+        {activePage === 'speaker-zero-hour' ? (
+          <NavActive label="Zero Hour" />
+        ) : (
+          <Nav label="Zero Hour" onClick={() => navigate('/speaker/psp/zero-hour')} />
+        )}
+        
+        {activePage === 'speaker-legislative-business' ? (
+          <NavActive label="Legislative Business" />
+        ) : (
+          <Nav label="Legislative Business" onClick={() => navigate('/speaker/psp/legislative-business')} />
+        )}
+      </div>
+    );
   }
 
   if (isMentorMode) {
@@ -156,7 +191,7 @@ function Tabs({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 
   );
 }
 
-function NavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'questions' | 'notices' | 'amendments' | 'sitting' | 'mentor-dashboard' }) {
+function NavBar({ activePage }: { activePage: ActivePage }) {
   return (
     <div className="bg-white content-stretch flex gap-[16px] items-center p-[8px] relative rounded-[12px] shadow-[0px_8px_10px_0px_rgba(0,0,0,0.05)] shrink-0" data-name="Nav bar">
       <Logo />
@@ -202,7 +237,7 @@ function TopSideBar() {
   );
 }
 
-export function SharedNavBar({ activePage }: { activePage: 'dashboard' | 'psps' | 'partners' | 'global-lists' | 'home' | 'psp-dashboard' | 'questions' | 'notices' | 'amendments' | 'sitting' | 'mentor-dashboard' }) {
+export function SharedNavBar({ activePage }: { activePage: ActivePage }) {
   return (
     <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
       <NavBar activePage={activePage} />
