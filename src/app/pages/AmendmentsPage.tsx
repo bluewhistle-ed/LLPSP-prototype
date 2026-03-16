@@ -30,7 +30,7 @@ export function AmendmentsPage() {
   // Show drafting form if active
   if (showDraftingForm) {
     return (
-      <div className="bg-[#f8f9fb] relative size-full">
+      <div className="bg-[var(--input-background)] relative size-full">
         {/* Navbar - positioned absolutely at the top */}
         <div className="absolute page-inset-left top-[32px]">
           <SharedNavBar activePage="amendments" />
@@ -110,8 +110,8 @@ export function AmendmentsPage() {
       {/* Mentor: Show published bill card */}
       {isMentor ? (
         <div className="absolute page-inset-x top-[100px]">
-          <div className="bg-white flex flex-col gap-[16px] p-[16px] relative rounded-[12px]">
-            <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+          <div className="bg-[var(--card)] flex flex-col gap-[16px] p-[16px] relative rounded-[var(--radius-card)]">
+            <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
             
             {/* Bill status + title */}
             <div className="flex flex-col gap-[8px]">
@@ -123,13 +123,13 @@ export function AmendmentsPage() {
               <p className="font-semibold leading-[20px] text-[var(--foreground)] text-[length:var(--text-h4)]">
                 The Medicinal and Aromatic Plants (Promotion and Development) Bill, 2026
               </p>
-              <p className="leading-[16px] text-[var(--muted-foreground)] text-[12px]">
+              <p className="leading-[16px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
                 5 Chapters  &middot;  12 Clauses
               </p>
             </div>
 
             {/* Divider */}
-            <div className="bg-[#e3e6f0] h-px shrink-0 w-full" />
+            <div className="bg-[var(--card-border)] h-px shrink-0 w-full" />
 
             {/* Action */}
             <div className="flex items-center">
@@ -145,8 +145,8 @@ export function AmendmentsPage() {
       ) : isMember ? (
         /* Member: Show approved bill card with "Propose Amendments" */
         <div className="absolute page-inset-x top-[100px]">
-          <div className="bg-white flex flex-col gap-[16px] p-[16px] relative rounded-[12px]">
-            <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+          <div className="bg-[var(--card)] flex flex-col gap-[16px] p-[16px] relative rounded-[var(--radius-card)]">
+            <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
             
             {/* Bill status + title */}
             <div className="flex flex-col gap-[8px]">
@@ -164,7 +164,7 @@ export function AmendmentsPage() {
             </div>
 
             {/* Divider */}
-            <div className="bg-[#e3e6f0] h-px shrink-0 w-full" />
+            <div className="bg-[var(--card-border)] h-px shrink-0 w-full" />
 
             {/* Action */}
             <div className="flex items-center">
@@ -181,8 +181,8 @@ export function AmendmentsPage() {
         /* Non-mentor, non-member (SC members see draft button): Show waiting message */
         !canDraftBill && (
           <div className="absolute page-inset-x top-[150px]">
-            <div className="bg-white content-stretch flex flex-col items-center justify-center p-[32px] relative rounded-[12px]">
-              <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[12px]" />
+            <div className="bg-[var(--card)] content-stretch flex flex-col items-center justify-center p-[32px] relative rounded-[var(--radius-card)]">
+              <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
               <p className="leading-[24px] text-center text-[var(--sidebar-primary-foreground)] text-[16px]">
                 The Select Committee is working on drafting the Bill, it will appear here once their draft has been approved.
               </p>

@@ -253,7 +253,7 @@ export function AmendmentForm({ type, originalText, onSubmit, onCancel }: Amendm
 
   return (
     <div className="bg-[var(--input-background)] content-stretch flex flex-col gap-[12px] items-start p-[12px] relative rounded-[var(--radius)] w-full">
-      <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
+      <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
 
       {/* Heading with type badge */}
       <div className="content-stretch flex items-center gap-[8px] relative shrink-0">
@@ -314,7 +314,7 @@ export function AmendmentDisplay({ amendment, onEdit, onWithdraw, isEditing }: A
 
   return (
     <div className="bg-[var(--input-background)] content-stretch flex flex-col gap-[10px] items-start p-[12px] relative rounded-[var(--radius)] w-full">
-      <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
+      <div aria-hidden="true" className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
 
       {/* Header: type badge + label + action buttons */}
       <div className="content-stretch flex items-center gap-[8px] relative shrink-0 w-full">
@@ -350,7 +350,7 @@ export function AmendmentDisplay({ amendment, onEdit, onWithdraw, isEditing }: A
       </div>
 
       {/* Divider after header */}
-      <div className="bg-[#e3e6f0] h-px shrink-0 w-full" />
+      <div className="bg-[var(--card-border)] h-px shrink-0 w-full" />
 
       {/* Content based on type */}
       {amendment.type === 'substitute' && amendment.proposedText && (

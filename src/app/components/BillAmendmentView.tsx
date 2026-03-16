@@ -472,7 +472,7 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
     const hasAmendment = !!existingAmendment;
     const isFormActive = activeFormNodeId === nodeId && activeFormType !== null;
     const isMenuOpen = openActionMenuId === nodeId;
-    const isEditing = editingAmendmentId === existingAmendment?.id;
+    const isEditing = editingAmendmentId != null && editingAmendmentId === existingAmendment?.id;
     const isHovered = hoveredNodeId === nodeId;
 
     return (
@@ -496,9 +496,10 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
 
         {/* Amendment form — inline below the node */}
         <AnimatePresence>
-          {isFormActive && (
+          {isFormActive && activeFormType && (
             <AmendmentInput
-              type={activeFormType!}
+              key={`form-${nodeId}`}
+              type={activeFormType}
               originalText={originalText}
               onSubmit={(data) => handleSubmitAmendment(nodeId, nodeLabel, data)}
               onCancel={handleCancelForm}
@@ -507,7 +508,7 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
         </AnimatePresence>
 
         {/* Submitted amendment display */}
-        {hasAmendment && !isEditing && (
+        {existingAmendment && !isEditing && (
           <div className="mt-[8px]">
             <AmendmentDisplay
               amendment={existingAmendment}
@@ -527,10 +528,10 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
       <div className="flex flex-1 overflow-hidden">
 
         {/* ── Left Panel: Chapter Navigation ──────────────────────────── */}
-        <div className="w-[40%] border-r border-[#e3e6f0] flex flex-col bg-[#f8f9fb] overflow-hidden">
+        <div className="w-[40%] border-r border-[var(--card-border)] flex flex-col bg-[var(--input-background)] overflow-hidden">
 
           {/* Bill Header */}
-          <div className="bg-white flex flex-col gap-[12px] px-[16px] py-[16px] border-b border-[#e3e6f0]">
+          <div className="bg-white flex flex-col gap-[12px] px-[16px] py-[16px] border-b border-[var(--card-border)]">
             <div className="flex flex-row gap-[8px] items-center">
               <StatusChip label="Published" />
               <StatusChip label="Approved" />
@@ -545,7 +546,7 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
           </div>
 
           {/* Toolbar */}
-          <div className="bg-white flex flex-col gap-[8px] px-[16px] py-[12px] border-b border-[#e3e6f0]">
+          <div className="bg-white flex flex-col gap-[8px] px-[16px] py-[12px] border-b border-[var(--card-border)]">
             <div className="content-stretch flex gap-[8px] items-center justify-between">
               <div className="flex gap-[8px] items-center">
                 <p className="leading-[14px] text-[var(--foreground)] text-[length:var(--text-label)]">Chapters</p>
@@ -565,10 +566,11 @@ export function BillAmendmentView({ onClose }: BillAmendmentViewProps) {
                 <div
                   key={chapter.id}
                   onClick={() => setSelectedChapter(chapter.id)}
-                  className={`bg-white flex gap-[4px] items-start px-[8px] py-[8px] rounded-[4px] cursor-pointer hover:bg-[var(--sidebar-primary)] transition-colors ${
-                    isSelected ? 'ring-1 ring-[var(--primary)]' : ''
-                  }`}
+                  className={`bg-white flex gap-[4px] items-start px-[8px] py-[8px] rounded-[4px] cursor-pointer hover:bg-[var(--sidebar-primary)] transition-colors relative`}
                 >
+                  {isSelected && (
+                    <div aria-hidden="true" className="absolute inset-0 border border-[var(--primary)] pointer-events-none rounded-[4px]" />
+                  )}
                   <p className="flex-1 leading-[16px] text-[length:var(--text-base)] text-[var(--sidebar-primary-foreground)] break-words">
                     {chapter.name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
                   </p>
