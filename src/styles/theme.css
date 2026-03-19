@@ -171,3 +171,8 @@
   --stripe-spacing: 8;
   --stripe-width: 1.5;
 }
+
+/* Prevent scrollbar layout shift */
+html {
+  scrollbar-gutter: stable;
+}

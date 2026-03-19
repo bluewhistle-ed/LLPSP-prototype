@@ -1,86 +1,6 @@
 import { useNavigate } from 'react-router';
 import svgPaths from "../../imports/svg-3wwcoowb8e";
 
-function Ink() {
-  return (
-    <div className="absolute contents inset-[27.73%_54.21%_3.91%_11.71%]" data-name="Ink">
-      <div className="absolute inset-[28.17%_54.21%_3.91%_11.71%]" data-name="ink-shape">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 490.781 695.553">
-          <path clipRule="evenodd" d={svgPaths.p2edf3600} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape" />
-        </svg>
-      </div>
-      <div className="absolute inset-[28.77%_68.43%_69.63%_30.23%]" data-name="ink-shape_2">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 19.2603 16.3687">
-          <path clipRule="evenodd" d={svgPaths.p10d23080} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_2" />
-        </svg>
-      </div>
-      <div className="absolute inset-[34.79%_68.63%_63.33%_30.23%]" data-name="ink-shape_3">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.3723 19.2571">
-          <path clipRule="evenodd" d={svgPaths.p3e488e80} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_3" />
-        </svg>
-      </div>
-      <div className="absolute inset-[31.78%_69.63%_67.56%_29.16%]" data-name="ink-shape_4">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 17.3346 6.74005">
-          <path clipRule="evenodd" d={svgPaths.p2150f40} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_4" />
-        </svg>
-      </div>
-      <div className="absolute inset-[37.14%_67.43%_61.26%_31.97%]" data-name="ink-shape_5">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 8.66791 16.3683">
-          <path clipRule="evenodd" d={svgPaths.p1c867590} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_5" />
-        </svg>
-      </div>
-      <div className="absolute inset-[27.73%_66.02%_70.95%_33.58%]" data-name="ink-shape_6">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 5.77773 13.4801">
-          <path clipRule="evenodd" d={svgPaths.pa8d5f80} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_6" />
-        </svg>
-      </div>
-      <div className="absolute inset-[54.16%_73.11%_43.02%_25.49%]" data-name="ink-shape_7">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20.2232 28.8857">
-          <path clipRule="evenodd" d={svgPaths.pc498b00} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_7" />
-        </svg>
-      </div>
-      <div className="absolute inset-[54.91%_72.51%_43.4%_27.02%]" data-name="ink-shape_8">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 6.74038 17.331">
-          <path clipRule="evenodd" d={svgPaths.p29fc5f40} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_8" />
-        </svg>
-      </div>
-      <div className="absolute inset-[54.16%_72.78%_45.28%_26.89%]" data-name="ink-shape_9">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 4.81458 5.77699">
-          <path clipRule="evenodd" d={svgPaths.p1d9e0d00} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_9" />
-        </svg>
-      </div>
-      <div className="absolute inset-[44.38%_73.58%_54.59%_25.02%]" data-name="ink-shape_10">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20.2239 10.5918">
-          <path clipRule="evenodd" d={svgPaths.p3030d1c0} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_10" />
-        </svg>
-      </div>
-      <div className="absolute inset-[42.4%_75.32%_55.9%_23.55%]" data-name="ink-shape_11">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.3717 17.3319">
-          <path clipRule="evenodd" d={svgPaths.p5f46500} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_11" />
-        </svg>
-      </div>
-      <div className="absolute inset-[45.32%_77.19%_54.21%_22.34%]" data-name="ink-shape_12">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 6.74093 4.81532">
-          <path clipRule="evenodd" d={svgPaths.p93e2d00} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_12" />
-        </svg>
-      </div>
-      <div className="absolute inset-[32.34%_65.22%_66.15%_33.91%]" data-name="ink-shape_13">
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12.5198 15.4057">
-          <path clipRule="evenodd" d={svgPaths.p1ec47600} fill="var(--fill-0, #B9D8FC)" fillRule="evenodd" id="ink-shape_13" />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
-function CharacterSelfie() {
-  return (
-    <div className="absolute contents inset-[27.73%_54.21%_3.91%_11.71%]" data-name="character/selfie">
-      <Ink />
-    </div>
-  );
-}
-
 function Logo() {
   return (
     <div className="h-[64px] relative shrink-0 w-[158.713px]" data-name="Logo">
@@ -111,30 +31,11 @@ function Logo() {
   );
 }
 
-function Frame3() {
-  return (
-    <div className="-translate-y-1/2 absolute content-stretch flex flex-col gap-[24px] items-start left-[144px] top-[calc(50%-343px)] w-[540px]">
-      <Logo />
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[42px] not-italic relative shrink-0 text-[#072a85] text-[28px]">Join discussions, shape democracy.</p>
-    </div>
-  );
-}
-
-function Group() {
-  return (
-    <div className="absolute contents left-[80px] top-[40px]">
-      <div className="absolute bg-[#e7f2fe] h-[864px] left-[80px] opacity-60 rounded-[20px] top-[40px] w-[668px]" />
-      <CharacterSelfie />
-      <Frame3 />
-    </div>
-  );
-}
-
 function Frame4() {
   return (
     <div className="content-stretch flex flex-col gap-[2px] items-start not-italic relative shrink-0 w-full whitespace-pre-wrap">
-      <p className="font-['Inter:Bold',sans-serif] font-bold leading-[48px] relative shrink-0 text-[#041a5e] text-[32px] w-full">Welcome to Let's Legislate!</p>
-      <p className="font-['Inter:Regular',sans-serif] font-normal leading-[24px] relative shrink-0 text-[#4b5b8a] text-[16px] w-full">{`Let's make democracy accessible, intuitive, and engaging together. Your seat at the legislative table awaits`}</p>
+      <p className="font-semibold leading-[48px] relative shrink-0 text-[#041a5e] text-[length:var(--text-h1)] w-full">Welcome to Let's Legislate!</p>
+      <p className="leading-[24px] relative shrink-0 text-[#4b5b8a] text-[length:var(--text-h4)] w-full">{`Let's make democracy accessible, intuitive, and engaging together. Your seat at the legislative table awaits`}</p>
     </div>
   );
 }
@@ -147,18 +48,49 @@ function Frame7() {
   );
 }
 
+// Input field for Name
+function EnterName() {
+  return (
+    <div className="content-stretch flex flex-[1_0_0] h-[20px] items-center min-h-px min-w-px relative">
+      <p className="flex-[1_0_0] leading-[20px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">Enter Full Name</p>
+    </div>
+  );
+}
+
+function ContentName() {
+  return (
+    <div className="bg-[var(--input-background)] relative rounded-[var(--radius)] shrink-0 w-full">
+      <div aria-hidden="true" className="absolute border-[var(--border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
+      <div className="flex flex-row items-center size-full">
+        <div className="content-stretch flex gap-[4px] items-center p-[12px] relative w-full">
+          <EnterName />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InputFieldName() {
+  return (
+    <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+      <p className="leading-[16px] not-italic relative shrink-0 text-[var(--foreground)] text-[length:var(--text-base)] w-full whitespace-pre-wrap">Full Name</p>
+      <ContentName />
+    </div>
+  );
+}
+
 function Enter() {
   return (
     <div className="content-stretch flex flex-[1_0_0] h-[20px] items-center min-h-px min-w-px relative" data-name="Enter">
-      <p className="flex-[1_0_0] font-['Inter:Medium',sans-serif] font-medium leading-[20px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[14px] text-ellipsis whitespace-nowrap">Enter Email</p>
+      <p className="flex-[1_0_0] leading-[20px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">Enter Email</p>
     </div>
   );
 }
 
 function Content() {
   return (
-    <div className="bg-[#f8f9fb] relative rounded-[8px] shrink-0 w-full" data-name="Content">
-      <div aria-hidden="true" className="absolute border-[#c8cee2] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
+    <div className="bg-[var(--input-background)] relative rounded-[var(--radius)] shrink-0 w-full" data-name="Content">
+      <div aria-hidden="true" className="absolute border-[var(--border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[4px] items-center p-[12px] relative w-full">
           <Enter />
@@ -171,7 +103,7 @@ function Content() {
 function InputFieldTextField() {
   return (
     <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="Input field / Text field">
-      <p className="font-['Inter:Medium',sans-serif] font-medium leading-[16px] not-italic relative shrink-0 text-[#2f3e6d] text-[14px] w-full whitespace-pre-wrap">Email</p>
+      <p className="leading-[16px] not-italic relative shrink-0 text-[var(--foreground)] text-[length:var(--text-base)] w-full whitespace-pre-wrap">Email</p>
       <Content />
     </div>
   );
@@ -180,7 +112,7 @@ function InputFieldTextField() {
 function Enter1() {
   return (
     <div className="content-stretch flex flex-[1_0_0] h-[20px] items-center min-h-px min-w-px relative" data-name="Enter">
-      <p className="flex-[1_0_0] font-['Inter:Medium',sans-serif] font-medium leading-[20px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[14px] text-ellipsis whitespace-nowrap">Enter Password</p>
+      <p className="flex-[1_0_0] leading-[20px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">Enter Password</p>
     </div>
   );
 }
@@ -194,7 +126,7 @@ function IconsVisibilityOff() {
             <rect fill="var(--fill-0, #D9D9D9)" height="16" id="Bounding box" width="16" x="-0.00156403" />
           </mask>
           <g mask="url(#mask0_1_199)">
-            <path d={svgPaths.p2c76db70} fill="var(--fill-0, #6E7CA8)" id="visibility_off" />
+            <path d="M8.79844 10.6648L7.33177 9.19814C7.55399 8.53147 7.99844 8.0148 8.66511 7.64814C9.33177 7.28147 9.99844 7.17592 10.6651 7.33147L9.19844 5.86481C9.04288 5.82036 8.88177 5.79259 8.71511 5.78147C8.54844 5.77036 8.37621 5.76481 8.19844 5.76481C7.08733 5.76481 6.15399 6.14814 5.39844 6.91481C4.64288 7.68147 4.26511 8.62036 4.26511 9.73147C4.26511 9.90925 4.27066 10.0815 4.28177 10.2481C4.29288 10.4148 4.32066 10.5759 4.36511 10.7315L2.86511 9.23147C2.33177 8.78703 1.84288 8.30925 1.39844 7.79814C0.953995 7.28703 0.553995 6.74258 0.198439 6.16481C1.08733 4.65369 2.26511 3.45369 3.73177 2.56481C5.19844 1.67592 6.77621 1.23147 8.46511 1.23147C9.08733 1.23147 9.69844 1.29814 10.2984 1.43147C10.8984 1.56481 11.4762 1.76481 12.0318 2.03147L10.3318 3.73147C10.1762 3.68703 10.015 3.65925 9.84844 3.64814C9.68177 3.63703 9.50955 3.63147 9.33177 3.63147C8.22066 3.63147 7.28733 4.01481 6.53177 4.78147C5.77621 5.54814 5.39844 6.48703 5.39844 7.59814C5.39844 7.77592 5.40399 7.94814 5.41511 8.11481C5.42621 8.28147 5.45399 8.44258 5.49844 8.59814L3.99844 7.09814C3.77621 6.87592 3.57621 6.64814 3.39844 6.41481C3.22066 6.18147 3.05399 5.94258 2.89844 5.69814C3.40955 4.87592 4.04288 4.14814 4.79844 3.51481C5.55399 2.88147 6.37621 2.38703 7.26511 2.03147L7.26511 2.03147L7.26511 2.03147L7.26511 2.03147L7.26511 2.03147L8.79844 10.6648ZM15.1984 16.3981L11.7651 12.9648C11.2095 13.2093 10.6373 13.3982 10.0484 13.5315C9.45955 13.6648 8.85955 13.7315 8.24844 13.7315C6.50955 13.7315 4.90399 13.2815 3.43177 12.3815C1.95955 11.4815 0.809328 10.2648 -0.0017581 8.73147C0.353775 8.05369 0.770663 7.42036 1.24844 6.83147C1.72621 6.24258 2.24288 5.69814 2.79844 5.19814L1.06511 3.46481C0.931773 3.33147 0.865107 3.17036 0.865107 2.98147C0.865107 2.79258 0.931773 2.63147 1.06511 2.49814C1.19844 2.36481 1.35955 2.29814 1.54844 2.29814C1.73733 2.29814 1.89844 2.36481 2.03177 2.49814L15.5651 16.0315C15.6984 16.1648 15.7651 16.3204 15.7651 16.4981C15.7651 16.6759 15.6984 16.8315 15.5651 16.9648C15.4318 17.0981 15.2762 17.1648 15.0984 17.1648C14.9206 17.1648 14.7595 17.0981 14.6151 16.9648L15.1984 16.3981ZM8.79844 10.6648L5.49844 7.36481C5.45399 7.51481 5.42621 7.67036 5.41511 7.83147C5.40399 7.99258 5.39844 8.15925 5.39844 8.33147C5.39844 9.44258 5.77621 10.3815 6.53177 11.1481C7.28733 11.9148 8.22066 12.2981 9.33177 12.2981C9.50399 12.2981 9.67066 12.2926 9.83177 12.2815C9.99288 12.2704 10.1484 12.2426 10.2984 12.1981L8.79844 10.6648ZM11.5651 9.89814C11.6984 9.65369 11.8095 9.39814 11.8984 9.13147C11.9873 8.86481 12.0318 8.58703 12.0318 8.29814C12.0318 7.18703 11.6484 6.24814 10.8818 5.48147C10.1151 4.71481 9.17066 4.33147 8.04844 4.33147C7.75955 4.33147 7.48177 4.37592 7.21511 4.46481C6.94844 4.55369 6.69288 4.66481 6.44844 4.79814L5.29844 3.64814C5.73177 3.45925 6.17066 3.31481 6.61511 3.21481C7.05955 3.11481 7.51511 3.06481 7.98177 3.06481C9.50399 3.06481 10.8651 3.54814 12.0651 4.51481C13.2651 5.48147 14.1206 6.72036 14.6318 8.23147C14.3651 8.83147 14.0484 9.40369 13.6818 9.94814C13.3151 10.4926 12.9095 10.9981 12.4651 11.4648L11.5651 9.89814Z" fill="var(--fill-0, #6E7CA8)" id="visibility_off" />
           </g>
         </g>
       </svg>
@@ -204,8 +136,8 @@ function IconsVisibilityOff() {
 
 function Content1() {
   return (
-    <div className="bg-[#f8f9fb] relative rounded-[8px] shrink-0 w-full" data-name="Content">
-      <div aria-hidden="true" className="absolute border-[#c8cee2] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
+    <div className="bg-[var(--input-background)] relative rounded-[var(--radius)] shrink-0 w-full" data-name="Content">
+      <div aria-hidden="true" className="absolute border-[var(--border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius)]" />
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[4px] items-center p-[12px] relative w-full">
           <Enter1 />
@@ -219,7 +151,7 @@ function Content1() {
 function InputFieldTextField1() {
   return (
     <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-name="Input field / Text field">
-      <p className="font-['Inter:Medium',sans-serif] font-medium leading-[16px] not-italic relative shrink-0 text-[#2f3e6d] text-[14px] w-full whitespace-pre-wrap">Password</p>
+      <p className="leading-[16px] not-italic relative shrink-0 text-[var(--foreground)] text-[length:var(--text-base)] w-full whitespace-pre-wrap">Password</p>
       <Content1 />
     </div>
   );
@@ -234,7 +166,7 @@ function CheckBoxOutlineBlank() {
             <rect fill="var(--fill-0, #D9D9D9)" height="20" id="Bounding box" width="20" />
           </mask>
           <g mask="url(#mask0_1_195)">
-            <path d={svgPaths.p2f7bc240} fill="var(--fill-0, #1850C5)" id="check_box_outline_blank_2" />
+            <path d="M4.58329 17.5C4.13885 17.5 3.75913 17.3437 3.44413 17.0312C3.12913 16.7187 2.97163 16.3403 2.97163 15.8958V4.10417C2.97163 3.65972 3.12913 3.28125 3.44413 2.96875C3.75913 2.65625 4.13885 2.5 4.58329 2.5H15.375C15.8194 2.5 16.1989 2.65625 16.5135 2.96875C16.8281 3.28125 16.9854 3.65972 16.9854 4.10417V15.8958C16.9854 16.3403 16.8281 16.7187 16.5135 17.0312C16.1989 17.3437 15.8194 17.5 15.375 17.5H4.58329ZM4.58329 16.0417H15.375C15.4444 16.0417 15.5069 16.0139 15.5625 15.9583C15.6181 15.9028 15.6458 15.8403 15.6458 15.7708V4.1875C15.6458 4.11806 15.6181 4.05556 15.5625 4C15.5069 3.94444 15.4444 3.91667 15.375 3.91667H4.58329C4.51385 3.91667 4.45135 3.94444 4.39579 4C4.34024 4.05556 4.31246 4.11806 4.31246 4.1875V15.7708C4.31246 15.8403 4.34024 15.9028 4.39579 15.9583C4.45135 16.0139 4.51385 16.0417 4.58329 16.0417Z" fill="var(--fill-0, #1850C5)" id="check_box_outline_blank_2" />
           </g>
         </g>
       </svg>
@@ -244,9 +176,9 @@ function CheckBoxOutlineBlank() {
 
 function Frame2() {
   return (
-    <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-[236.5px]">
+    <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
       <CheckBoxOutlineBlank />
-      <div className="flex flex-col font-['Inter:Medium',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#0a1433] text-[14px] whitespace-nowrap">
+      <div className="flex flex-col justify-center leading-[0] not-italic relative shrink-0 text-[#0a1433] text-[length:var(--text-base)] whitespace-nowrap">
         <p className="leading-[16px]">Remember me</p>
       </div>
     </div>
@@ -257,7 +189,7 @@ function Frame1() {
   return (
     <div className="content-stretch flex items-center justify-between relative shrink-0 w-full">
       <Frame2 />
-      <div className="flex flex-col font-['Inter:Medium',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#1850c5] text-[14px] whitespace-nowrap">
+      <div className="flex flex-col justify-center leading-[0] not-italic relative shrink-0 text-[var(--accent)] text-[length:var(--text-base)] whitespace-nowrap">
         <p className="leading-[16px]">Forget Password?</p>
       </div>
     </div>
@@ -273,7 +205,7 @@ function Frame6() {
   );
 }
 
-function Frame5() {
+function Frame5Login() {
   return (
     <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full">
       <InputFieldTextField />
@@ -286,11 +218,11 @@ function LoginButton({ onClick }: { onClick: () => void }) {
   return (
     <button 
       onClick={onClick}
-      className="bg-[#2766da] relative rounded-[8px] shrink-0 w-full cursor-pointer"
+      className="bg-[var(--primary)] relative rounded-[var(--radius-button)] shrink-0 w-full cursor-pointer"
     >
       <div className="flex flex-row items-center justify-center size-full">
         <div className="content-stretch flex items-center justify-center px-[24px] py-[12px] relative w-full">
-          <div className="flex flex-col font-['Inter:Semi_Bold',sans-serif] font-semibold justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-white whitespace-nowrap">
+          <div className="flex flex-col font-semibold justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-white whitespace-nowrap">
             <p className="leading-[24px]">Login</p>
           </div>
         </div>
@@ -299,10 +231,10 @@ function LoginButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function Form({ onLogin }: { onLogin: () => void }) {
+function LoginForm({ onLogin }: { onLogin: () => void }) {
   return (
     <div className="content-stretch flex flex-col gap-[40px] items-start relative rounded-[12px] shrink-0 w-full" data-name="form">
-      <Frame5 />
+      <Frame5Login />
       <LoginButton onClick={onLogin} />
     </div>
   );
@@ -310,18 +242,33 @@ function Form({ onLogin }: { onLogin: () => void }) {
 
 function LoginPanel({ onLogin }: { onLogin: () => void }) {
   return (
-    <div className="absolute content-stretch flex flex-col gap-[40px] items-start left-[828px] rounded-[12px] top-[297px] w-[532px]" data-name="login panel">
+    <div className="content-stretch flex flex-col gap-[40px] items-start w-full max-w-[532px]" data-name="login panel">
       <Frame7 />
-      <Form onLogin={onLogin} />
+      <LoginForm onLogin={onLogin} />
+      
+      {/* Don't have an account section */}
+      <div className="content-stretch flex gap-[8px] items-center justify-center leading-[0] not-italic relative shrink-0 text-[length:var(--text-base)] w-full whitespace-nowrap">
+        <div className="flex flex-col justify-center relative shrink-0 text-[#3c4c7c]">
+          <p className="leading-[16px]">Don't have an account?</p>
+        </div>
+        <button 
+          onClick={onLogin}
+          className="flex flex-col justify-center relative shrink-0 text-[var(--accent)] cursor-pointer hover:opacity-80 transition-opacity"
+        >
+          <p className="leading-[16px]">Register</p>
+        </button>
+      </div>
     </div>
   );
 }
 
 function LoginPage({ onLogin }: { onLogin: () => void }) {
   return (
-    <div className="bg-white h-[1024px] overflow-clip relative shrink-0 w-full" data-name="Login page">
-      <Group />
-      <LoginPanel onLogin={onLogin} />
+    <div className="bg-[var(--background)] flex items-center justify-center min-h-screen page-inset-x py-[64px]" data-name="Login page">
+      <div className="flex flex-col gap-[40px] items-center w-full max-w-[532px]">
+        <Logo />
+        <LoginPanel onLogin={onLogin} />
+      </div>
     </div>
   );
 }
@@ -334,8 +281,6 @@ export default function LoginWithNavigation() {
   };
 
   return (
-    <div className="content-stretch flex flex-col items-start p-[10px] relative size-full" data-name="Login">
-      <LoginPage onLogin={handleLogin} />
-    </div>
+    <LoginPage onLogin={handleLogin} />
   );
 }

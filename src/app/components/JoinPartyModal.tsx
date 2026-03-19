@@ -3,6 +3,7 @@ import svgPathsFlag from "../../imports/svg-txfaz6sn9l";
 import { StatusChip } from './StatusChip';
 import { useState } from "react";
 import { useParties } from '../context/PartyContext';
+import { User } from "lucide-react";
 
 function IconsCheckCircle() {
   return (
@@ -37,11 +38,13 @@ function PartyItem({ party, isSelected, onClick }: PartyItemProps) {
   return (
     <button
       onClick={onClick}
-      className="bg-white h-[80px] relative rounded-[12px] shrink-0 w-full cursor-pointer hover:bg-[#f8f9fb] transition-colors"
+      className="bg-[var(--card)] h-[80px] relative rounded-[var(--radius-card)] shrink-0 w-full cursor-pointer hover:bg-[var(--input-background)] transition-colors"
     >
       <div
         aria-hidden="true"
-        className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[12px]"
+        className={`absolute border border-solid inset-0 pointer-events-none rounded-[var(--radius-card)] ${
+          isSelected ? 'border-[var(--primary)]' : 'border-[var(--card-border)]'
+        }`}
       />
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[12px] items-center p-[12px] relative size-full">
@@ -60,8 +63,8 @@ function PartyItem({ party, isSelected, onClick }: PartyItemProps) {
           {/* Party Name and President Info */}
           <div className="flex-1 flex flex-col gap-[6px] min-h-px min-w-px text-left">
             <p
-              className={`font-semibold leading-[20px] not-italic text-[16px] whitespace-pre-wrap ${
-                isSelected ? "text-[#1850c5]" : "text-[#3c4c7c]"
+              className={`font-semibold leading-[20px] text-[length:var(--text-h4)] whitespace-pre-wrap ${
+                isSelected ? "text-[var(--accent)]" : "text-[var(--sidebar-primary-foreground)]"
               }`}
             >
               {party.name}
@@ -69,7 +72,7 @@ function PartyItem({ party, isSelected, onClick }: PartyItemProps) {
             
             {/* President Name and Chip */}
             <div className="flex items-center gap-[6px]">
-              <p className="leading-[16px] text-[#6e7ca8] text-[12px]">
+              <p className="leading-[16px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
                 {party.president}
               </p>
               <StatusChip label="President">
@@ -79,7 +82,7 @@ function PartyItem({ party, isSelected, onClick }: PartyItemProps) {
                       <rect fill="#D9D9D9" height="12" width="12" />
                     </mask>
                     <g mask={`url(#mask_president_${party.name})`}>
-                      <path d={svgPathsFlag.p34b4d070} fill="#1850C5" />
+                      <path d={svgPathsFlag.p34b4d070} fill="var(--accent)" />
                     </g>
                   </svg>
                 </div>
@@ -93,6 +96,48 @@ function PartyItem({ party, isSelected, onClick }: PartyItemProps) {
     </button>
   );
 }
+
+// ── "Stay Independent" option ────────────────────────────────────────────────
+
+const INDEPENDENT_KEY = "__independent__";
+
+function IndependentOption({ isSelected, onClick }: { isSelected: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="bg-[var(--card)] relative rounded-[var(--radius-card)] shrink-0 w-full cursor-pointer hover:bg-[var(--input-background)] transition-colors"
+    >
+      <div
+        aria-hidden="true"
+        className={`absolute border border-solid inset-0 pointer-events-none rounded-[var(--radius-card)] ${
+          isSelected ? 'border-[var(--primary)]' : 'border-[var(--card-border)] border-dashed'
+        }`}
+      />
+      <div className="content-stretch flex gap-[12px] items-center p-[12px] relative size-full">
+        {/* Icon placeholder */}
+        <div className="flex items-center justify-center shrink-0 size-[40px] rounded-[8px] bg-[var(--input-background)]">
+          <User className="size-[20px] text-[var(--muted-foreground)]" />
+        </div>
+
+        {/* Text */}
+        <div className="flex-1 flex flex-col gap-[4px] min-h-px min-w-px text-left">
+          <p className={`font-semibold leading-[20px] text-[length:var(--text-h4)] ${
+            isSelected ? 'text-[var(--accent)]' : 'text-[var(--sidebar-primary-foreground)]'
+          }`}>
+            Independent
+          </p>
+          <p className="leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
+            Independently elected Member of Parliament
+          </p>
+        </div>
+
+        {isSelected && <IconsCheckCircle />}
+      </div>
+    </button>
+  );
+}
+
+// ── Modal ────────────────────────────────────────────────────────────────────
 
 interface JoinPartyModalProps {
   isOpen: boolean;
@@ -109,10 +154,15 @@ export function JoinPartyModal({ isOpen, onClose }: JoinPartyModalProps) {
     president: p.president,
   }));
 
+  const isIndependent = selectedParty === INDEPENDENT_KEY;
+
   const handleJoin = () => {
     if (selectedParty) {
-      // Handle join logic here
-      console.log("Joining party:", selectedParty);
+      if (isIndependent) {
+        console.log("Staying independent");
+      } else {
+        console.log("Joining party:", selectedParty);
+      }
       onClose();
     }
   };
@@ -128,24 +178,24 @@ export function JoinPartyModal({ isOpen, onClose }: JoinPartyModalProps) {
       />
 
       {/* Modal */}
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white content-stretch flex flex-col gap-[24px] items-start p-[24px] rounded-[12px] w-[520px] z-50">
+      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--card)] content-stretch flex flex-col gap-[24px] items-start p-[24px] rounded-[var(--radius-card)] w-[520px] z-50 max-h-[85vh] overflow-hidden">
         <div
           aria-hidden="true"
-          className="absolute border border-[#f1f2f8] border-solid inset-0 pointer-events-none rounded-[12px] shadow-[0px_2px_2px_0px_rgba(47,62,109,0.2)]"
+          className="absolute border border-[var(--sidebar-primary)] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)] shadow-[0px_2px_2px_0px_rgba(47,62,109,0.2)]"
         />
 
         {/* Header */}
-        <div className="content-stretch flex flex-col gap-[4px] items-start not-italic relative shrink-0 w-full whitespace-pre-wrap">
-          <p className="font-bold leading-[32px] relative shrink-0 text-[#041a5e] text-[24px] w-full">
+        <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
+          <p className="font-bold leading-[32px] relative shrink-0 text-[var(--foreground)] text-[length:var(--text-h2)] w-full">
             Join a Party
           </p>
-          <p className="leading-[20px] relative shrink-0 text-[var(--muted-foreground)] text-[14px] w-full">
-            Select and register with your preferred political party
+          <p className="leading-[20px] relative shrink-0 text-[var(--muted-foreground)] text-[length:var(--text-base)] w-full">
+            Select and register with your preferred political party, or choose to stay independent
           </p>
         </div>
 
-        {/* Party List */}
-        <div className="content-stretch flex flex-col gap-[12px] items-start relative shrink-0 w-full">
+        {/* Party List — scrollable */}
+        <div className="content-stretch flex flex-col gap-[12px] items-start relative w-full overflow-y-auto scrollbar-hide flex-1 min-h-0">
           {parties.map((party) => (
             <PartyItem
               key={party.name}
@@ -154,18 +204,31 @@ export function JoinPartyModal({ isOpen, onClose }: JoinPartyModalProps) {
               onClick={() => setSelectedParty(party.name)}
             />
           ))}
+
+          {/* Separator */}
+          <div className="flex items-center gap-[12px] w-full shrink-0">
+            <div className="flex-1 h-px bg-[var(--card-border)]" />
+            <p className="text-[var(--muted-foreground)] text-[length:var(--text-label)] leading-[14px] shrink-0">or</p>
+            <div className="flex-1 h-px bg-[var(--card-border)]" />
+          </div>
+
+          {/* Independent option */}
+          <IndependentOption
+            isSelected={isIndependent}
+            onClick={() => setSelectedParty(INDEPENDENT_KEY)}
+          />
         </div>
 
-        {/* Join Button */}
+        {/* Action Button */}
         <button
           onClick={handleJoin}
           disabled={!selectedParty}
-          className="bg-[#2766da] relative rounded-[8px] shrink-0 w-full hover:bg-[#1e52b0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-[var(--primary)] relative rounded-[var(--radius-button)] shrink-0 w-full hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <div className="flex flex-row items-center justify-center size-full">
             <div className="content-stretch flex items-center justify-center px-[24px] py-[12px] relative w-full">
-              <div className="flex flex-col font-semibold justify-center leading-[0] not-italic relative shrink-0 text-[20px] text-white whitespace-nowrap">
-                <p className="leading-[24px]">Join</p>
+              <div className="flex flex-col font-semibold justify-center leading-[0] relative shrink-0 text-[length:var(--text-h3)] text-[var(--primary-foreground)] whitespace-nowrap">
+                <p className="leading-[24px]">{isIndependent ? 'Confirm' : 'Join'}</p>
               </div>
             </div>
           </div>

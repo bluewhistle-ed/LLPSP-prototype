@@ -13,16 +13,16 @@ import type {
 // ── Admin Global Lists: Ministries & Committees ─────────────────────────────
 
 export const INITIAL_MINISTRIES: Ministry[] = [
-  { id: 1, name: 'Ministry of Justice and Legal Affairs', status: 'active' },
-  { id: 2, name: 'Ministry of Finance and Economic Planning', status: 'active' },
-  { id: 3, name: 'Ministry of Education and Research', status: 'active' },
-  { id: 4, name: 'Ministry of Health and Public Welfare', status: 'inactive' },
-  { id: 5, name: 'Ministry of Foreign Affairs and Diplomacy', status: 'active' },
-  { id: 6, name: 'Ministry of Environmental Conservation', status: 'active' },
-  { id: 7, name: 'Ministry of Science and Technology Innovation', status: 'inactive' },
-  { id: 8, name: 'Ministry of Social Justice and Equality', status: 'active' },
-  { id: 9, name: 'Ministry of Cultural Heritage and the Arts', status: 'inactive' },
-  { id: 10, name: 'Ministry of Infrastructure and Transportation', status: 'active' },
+  { id: 1, name: 'Ministry of Justice and Legal Affairs', status: 'active', description: 'Responsible for legal policy, judicial administration, and constitutional matters. Oversees law reform and ensures the rule of law across the nation.', themes: ['Criminal Justice Reform', 'Constitutional Law', 'Judicial Appointments', 'Legal Aid'] },
+  { id: 2, name: 'Ministry of Finance and Economic Planning', status: 'active', description: 'Manages government revenue, public expenditure, fiscal policy, and economic development strategy. Oversees the national budget and coordinates macroeconomic planning.', themes: ['Budget Planning', 'Tax Policy', 'Economic Growth', 'Public Debt Management'] },
+  { id: 3, name: 'Ministry of Education and Research', status: 'active', description: 'Oversees national education policy, curriculum standards, higher education institutions, and research funding across all academic disciplines.', themes: ['Curriculum Development', 'Teacher Training', 'Higher Education', 'Research Funding'] },
+  { id: 4, name: 'Ministry of Health and Public Welfare', status: 'inactive', description: 'Manages public healthcare infrastructure, disease prevention programmes, pharmaceutical regulation, and welfare initiatives for vulnerable populations.', themes: ['Public Health', 'Healthcare Access', 'Disease Prevention', 'Mental Health'] },
+  { id: 5, name: 'Ministry of Foreign Affairs and Diplomacy', status: 'active', description: 'Conducts foreign policy, manages diplomatic missions, negotiates international treaties, and protects the interests of citizens abroad.', themes: ['Bilateral Relations', 'International Treaties', 'Consular Services'] },
+  { id: 6, name: 'Ministry of Environmental Conservation', status: 'active', description: 'Leads climate action, biodiversity conservation, pollution control, and sustainable development initiatives across all sectors.', themes: ['Climate Change', 'Conservation', 'Pollution Control', 'Renewable Energy'] },
+  { id: 7, name: 'Ministry of Science and Technology Innovation', status: 'inactive', description: 'Drives scientific research, technological advancement, digital infrastructure, and innovation policy to foster economic competitiveness.', themes: ['Digital Innovation', 'Cybersecurity', 'AI & ML', 'Data Privacy'] },
+  { id: 8, name: 'Ministry of Social Justice and Equality', status: 'active', description: 'Promotes social equity, protects the rights of marginalised communities, and implements affirmative action and anti-discrimination policies.', themes: ['Affirmative Action', 'Anti-Discrimination', 'Disability Rights', 'Gender Equality'] },
+  { id: 9, name: 'Ministry of Cultural Heritage and the Arts', status: 'inactive', description: 'Preserves national cultural heritage, supports artistic expression, manages museums and archives, and promotes cultural diplomacy.', themes: ['Heritage Preservation', 'Arts Funding', 'Cultural Diplomacy'] },
+  { id: 10, name: 'Ministry of Infrastructure and Transportation', status: 'active', description: 'Plans and develops national infrastructure including roads, railways, ports, and urban transit systems to drive economic connectivity.', themes: ['Infrastructure Development', 'Public Transit', 'Road Safety', 'Urban Planning'] },
 ];
 
 export const INITIAL_COMMITTEES: Committee[] = [

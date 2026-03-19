@@ -27,6 +27,7 @@ interface GovernmentContextValue {
   committees: Committee[];
   addMinistry: (name: string) => void;
   addCommittee: (name: string) => void;
+  updateMinistryThemes: (ministryId: number, themes: string[]) => void;
 
   // Tier 1: Ministries available for PM allocation
   allocationMinistries: Ministry[];
@@ -81,6 +82,12 @@ export function GovernmentProvider({ children }: { children: ReactNode }) {
     ]);
   }, []);
 
+  const updateMinistryThemes = useCallback((ministryId: number, themes: string[]) => {
+    setMinistries(prev => prev.map(ministry => (
+      ministry.id === ministryId ? { ...ministry, themes } : ministry
+    )));
+  }, []);
+
   return (
     <GovernmentContext.Provider
       value={{
@@ -88,6 +95,7 @@ export function GovernmentProvider({ children }: { children: ReactNode }) {
         committees,
         addMinistry,
         addCommittee,
+        updateMinistryThemes,
         allocationMinistries: ALLOCATION_MINISTRIES,
         pmAllocation: PM_ALLOCATION,
         councilOfMinisters: COUNCIL_OF_MINISTERS,

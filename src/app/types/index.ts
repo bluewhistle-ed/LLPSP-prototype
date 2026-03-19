@@ -53,6 +53,8 @@ export interface CoalitionResult {
 export interface Ministry {
   id: number;
   name: string;
+  description?: string;  // used in admin GlobalListsPage detail panel
+  themes?: string[];     // attached themes — admin GlobalListsPage
   status?: string;   // 'active' | 'inactive' — used in admin GlobalListsPage
 }
 
@@ -128,3 +130,25 @@ export interface PSPEvent {
 }
 
 // ── Partners / Schools ──────────────────────────────────────────────────────
+
+export interface Partner {
+  id: number;
+  name: string;
+  logo: string;
+  description: string;
+}
+
+export interface School {
+  id: number;
+  name: string;
+  logo: string;
+  description: string;
+}
+
+// ── Ministry with themes (NewEventForm, admin panels) ───────────────────────
+
+export interface MinistryWithThemes {
+  id: string;
+  name: string;
+  themes: string[];
+}

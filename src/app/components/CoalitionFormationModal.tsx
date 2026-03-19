@@ -25,7 +25,7 @@ interface CoalitionFormationModalProps {
 
 // ... remove this code ...
 
-// ── Coalition Seat Tracker ─────────────────────────────��─────────────────────
+// ── Coalition Seat Tracker ──────────────────────────────────────────────────
 
 function CoalitionSeatTracker({
   currentSeats,
@@ -467,7 +467,7 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
   };
 
   const handleLockCoalition = () => {
-    if (!hasMajority) return;
+    if (coalitionPartnerIds.length === 0) return;
     const initial: Record<number, 'waiting' | 'confirmed' | 'declined'> = {};
     coalitionPartnerIds.forEach(pid => { initial[pid] = 'waiting'; });
     setPartnerConfirmations(initial);
@@ -559,7 +559,7 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
                 })}
 
                 {/* Lock Coalition button — inline with partners for context */}
-                {hasMajority && !coalitionLocked && !showLockConfirm && (
+                {coalitionPartnerIds.length > 0 && !coalitionLocked && !showLockConfirm && (
                   <div className="flex items-center gap-[8px] w-full">
                     <CompactActionButton
                       label="Lock Coalition"
@@ -568,28 +568,37 @@ export function CoalitionFormationModal({ isOpen, onClose, onLockComplete }: Coa
                       onClick={() => setShowLockConfirm(true)}
                     />
                     <p className="leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
-                      Once locked, coalition composition cannot be changed.
+                      {hasMajority
+                        ? 'Once locked, coalition composition cannot be changed.'
+                        : 'Majority not yet reached — you can still lock, but the coalition may not form government.'}
                     </p>
                   </div>
                 )}
 
                 {/* Lock confirmation prompt */}
-                {hasMajority && !coalitionLocked && showLockConfirm && (
-                  <div className="flex items-center gap-[8px] w-full">
-                    <CompactActionButton
-                      label="Yes, Lock Coalition"
-                      variant="danger"
-                      icon={<Lock className="size-[12px]" />}
-                      onClick={handleLockCoalition}
-                    />
-                    <CompactActionButton
-                      label="Cancel"
-                      variant="outline"
-                      onClick={() => setShowLockConfirm(false)}
-                    />
-                    <p className="leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
-                      Are you sure? This action cannot be undone.
-                    </p>
+                {coalitionPartnerIds.length > 0 && !coalitionLocked && showLockConfirm && (
+                  <div className="flex flex-col gap-[8px] w-full">
+                    {!hasMajority && (
+                      <p className="leading-[14px] text-[var(--status-warning-text)] text-[length:var(--text-label)]">
+                        ⚠ Your coalition has {coalitionSeats} of {majorityThreshold} seats needed for a majority.
+                      </p>
+                    )}
+                    <div className="flex items-center gap-[8px]">
+                      <CompactActionButton
+                        label="Yes, Lock Coalition"
+                        variant="danger"
+                        icon={<Lock className="size-[12px]" />}
+                        onClick={handleLockCoalition}
+                      />
+                      <CompactActionButton
+                        label="Cancel"
+                        variant="outline"
+                        onClick={() => setShowLockConfirm(false)}
+                      />
+                      <p className="leading-[14px] text-[var(--muted-foreground)] text-[length:var(--text-label)]">
+                        Are you sure? This action cannot be undone.
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
