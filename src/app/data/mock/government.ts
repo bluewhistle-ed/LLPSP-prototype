@@ -45,6 +45,7 @@ export const INITIAL_PARENT_INSTITUTIONS: ParentInstitution[] = [
   { id: 3, name: 'Judicial System' },
   { id: 4, name: 'Law Enforcement Agencies' },
   { id: 5, name: 'Regulatory Authorities' },
+  { id: 6, name: 'Educational Institutions' },
 ];
 
 export const INITIAL_INSTITUTIONS: Institution[] = [
@@ -53,6 +54,14 @@ export const INITIAL_INSTITUTIONS: Institution[] = [
   { id: 3, name: 'National Human Rights Commission', type: 'Constitutional', parentInstitutionId: 1 },
   { id: 4, name: 'Central Bureau of Investigation', type: 'Law Enforcement', parentInstitutionId: 4 },
   { id: 5, name: 'Supreme Court', type: 'Judicial', parentInstitutionId: 3 },
+  { id: 6, name: 'Delhi Public School', type: 'School', parentInstitutionId: 6 },
+  { id: 7, name: 'St. Xavier\'s High School', type: 'School', parentInstitutionId: 6 },
+  { id: 8, name: 'Bishop Cotton School', type: 'School', parentInstitutionId: 6 },
+  { id: 9, name: 'The Doon School', type: 'School', parentInstitutionId: 6 },
+  { id: 10, name: 'Modern School', type: 'School', parentInstitutionId: 6 },
+  { id: 11, name: 'Sardar Patel Vidyalaya', type: 'School', parentInstitutionId: 6 },
+  { id: 12, name: 'Lawrence School Sanawar', type: 'School', parentInstitutionId: 6 },
+  { id: 13, name: 'The Shri Ram School', type: 'School', parentInstitutionId: 6 },
 ];
 
 // ── Tier 1: Ministries for PM allocation (MinistryAllocationModal) ──────────

@@ -2,6 +2,15 @@ import { useState } from 'react';
 import svgPaths from "../../imports/svg-gq87p0ikdv";
 import { CloseButton } from './CloseButton';
 import { StatusChip } from './StatusChip';
+import { Divider } from './Divider';
+
+interface AdminContact {
+  id: number;
+  name: string;
+  designation: string;
+  email: string;
+  phone: string;
+}
 
 interface PartnerDetailsViewProps {
   partner: {
@@ -10,12 +19,24 @@ interface PartnerDetailsViewProps {
     status: 'active' | 'inactive';
     email: string;
     phone: string;
+    address?: string;
+    partnershipTier?: string;
+    boards?: string[];
+    activeSince?: string;
+    adminContacts?: AdminContact[];
   };
   onClose: () => void;
 }
 
 export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps) {
   const [activeTab, setActiveTab] = useState<'students' | 'moreDetails'>('moreDetails');
+
+  // Default admin contacts if not provided
+  const adminContacts = partner.adminContacts || [
+    { id: 1, name: 'Aleta H. Starcher', designation: 'Principal', email: 'aleta.starcher@school.edu', phone: '(636) 296-7838' },
+    { id: 2, name: 'Robert Thompson', designation: 'Vice Principal', email: 'robert.thompson@school.edu', phone: '(636) 296-7839' },
+    { id: 3, name: 'Mai Sollom', designation: 'Program Coordinator', email: 'mai.sollom@school.edu', phone: '(636) 296-7840' },
+  ];
 
   // Student data (mock)
   const students = [
@@ -47,8 +68,8 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
   ];
 
   return (
-    <div className="bg-white content-stretch flex flex-col gap-[16px] items-start p-[24px] relative rounded-[16px] w-full max-h-[calc(100vh-230px)] overflow-hidden">
-      <div aria-hidden="true" className="absolute border border-[#e3e6f0] border-solid inset-0 pointer-events-none rounded-[16px]" />
+    <div className="bg-[var(--card)] content-stretch flex flex-col gap-[16px] items-start p-[24px] relative rounded-[var(--radius-card)] w-full max-h-[calc(100vh-230px)] overflow-hidden">
+      <div aria-hidden="true" className="absolute border-[var(--card-border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
       
       {/* Scrollable Content Area */}
       <div className="content-stretch flex flex-col gap-[16px] items-start w-full overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pr-[2px]">
@@ -56,7 +77,7 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
         <div className="content-stretch flex gap-[8px] items-start relative rounded-[12px] shrink-0 w-full">
           <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
             <div className="content-stretch flex flex-col items-start relative shrink-0 w-full">
-              <div className="flex flex-col font-semibold leading-[0] min-h-[32px] not-italic relative shrink-0 text-[#041a5e] text-[20px] w-full">
+              <div className="flex flex-col font-semibold leading-[0] min-h-[32px] not-italic relative shrink-0 text-[var(--foreground)] text-[length:var(--text-h3)] w-full">
                 <p className="leading-[1.3]">{partner.name}</p>
               </div>
             </div>
@@ -64,54 +85,52 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
           <CloseButton onClick={onClose} />
         </div>
 
-        {/* Partner Info Card */}
-        <div className="bg-[#f8f9fb] content-stretch flex flex-col gap-[16px] items-start p-[16px] relative rounded-[16px] shrink-0 w-full">
-          <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[16px]" />
+        {/* Partner Info Card - Avatar + Status + General Contact */}
+        <div className="bg-[var(--input-background)] content-stretch flex flex-col gap-[16px] items-start p-[16px] relative rounded-[var(--radius-card)] shrink-0 w-full">
+          <div aria-hidden="true" className="absolute border-[var(--card-border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[var(--radius-card)]" />
           
-          {/* Avatar + Name */}
+          {/* Avatar + Contact Info + Status */}
           <div className="content-stretch flex gap-[12px] items-start relative shrink-0 w-full">
+            {/* Avatar */}
             <div className="relative shrink-0 size-[52px]">
-              <div className="absolute border border-[#e3e6f0] border-solid left-0 overflow-clip rounded-[12px] size-[52px] top-0">
+              <div className="absolute border-[var(--card-border)] border-[0.5px] border-solid left-0 overflow-clip rounded-[12px] size-[52px] top-0">
                 <img alt={partner.name} className="block size-full object-cover" src={partner.imgSrc} />
               </div>
             </div>
-            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
-              <div className="content-stretch flex gap-[8px] items-center relative shrink-0 w-full">
-                <div className="flex flex-[1_0_0] flex-col font-semibold justify-center leading-[0] min-h-px min-w-px not-italic relative text-[#2f3e6d] text-[14px]">
-                  <p className="leading-[16px]">{partner.name}</p>
+            
+            {/* Email + Phone */}
+            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start relative min-w-0">
+              <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">
+                <div className="relative shrink-0 size-[16px]">
+                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+                    <g><mask height="16" id="mask0_1_4577" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
+                      <rect fill="var(--fill-0, #D9D9D9)" height="16" id="Bounding box" width="16" /></mask>
+                      <g mask="url(#mask0_1_4577)">
+                        <path d={svgPaths.p1a898b00} fill="var(--fill-0, #6E7CA8)" id="mail_2" />
+                      </g>
+                    </g>
+                  </svg>
                 </div>
-                <StatusChip label={partner.status === 'active' ? 'Active' : 'Inactive'} />
+                <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">{partner.email}</p>
+              </div>
+              <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">
+                <div className="relative shrink-0 size-[16px]">
+                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+                    <g><mask height="16" id="mask0_1_4555" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
+                      <rect fill="var(--fill-0, #D9D9D9)" height="16" id="Bounding box" width="16" /></mask>
+                      <g mask="url(#mask0_1_4555)">
+                        <path d={svgPaths.p1e3ca700} fill="var(--fill-0, #6E7CA8)" id="call_2" />
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">{partner.phone}</p>
               </div>
             </div>
-          </div>
 
-          {/* Contact Info */}
-          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-            <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">
-              <div className="relative shrink-0 size-[16px]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
-                  <g><mask height="16" id="mask0_1_4577" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
-                    <rect fill="var(--fill-0, #D9D9D9)" height="16" id="Bounding box" width="16" /></mask>
-                    <g mask="url(#mask0_1_4577)">
-                      <path d={svgPaths.p1a898b00} fill="var(--fill-0, #6E7CA8)" id="mail_2" />
-                    </g>
-                  </g>
-                </svg>
-              </div>
-              <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">{partner.email}</p>
-            </div>
-            <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">
-              <div className="relative shrink-0 size-[16px]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
-                  <g><mask height="16" id="mask0_1_4555" maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
-                    <rect fill="var(--fill-0, #D9D9D9)" height="16" id="Bounding box" width="16" /></mask>
-                    <g mask="url(#mask0_1_4555)">
-                      <path d={svgPaths.p1e3ca700} fill="var(--fill-0, #6E7CA8)" id="call_2" />
-                    </g>
-                  </g>
-                </svg>
-              </div>
-              <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">{partner.phone}</p>
+            {/* Status Chip */}
+            <div className="shrink-0">
+              <StatusChip label={partner.status === 'active' ? 'Active' : 'Inactive'} />
             </div>
           </div>
         </div>
@@ -121,14 +140,14 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
           <button
             onClick={() => setActiveTab('moreDetails')}
             className={`content-stretch flex flex-[1_0_0] items-center justify-center min-h-px min-w-px p-[8px] relative rounded-[8px] cursor-pointer ${
-              activeTab === 'moreDetails' ? 'bg-[#2766da]' : 'bg-white'
+              activeTab === 'moreDetails' ? 'bg-[var(--primary)]' : 'bg-[var(--card)]'
             }`}
           >
             <div aria-hidden="true" className={`absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px] ${
-              activeTab === 'moreDetails' ? 'border-[#2766da]' : 'border-[#c8cee2]'
+              activeTab === 'moreDetails' ? 'border-[var(--primary)]' : 'border-[var(--border)]'
             }`} />
-            <div className="flex flex-col justify-center leading-[0] not-italic relative shrink-0 text-[14px] whitespace-nowrap">
-              <p className={`leading-[16px] ${activeTab === 'moreDetails' ? 'text-white' : 'text-[#2f3e6d]'}`}>
+            <div className="flex flex-col justify-center leading-[0] not-italic relative shrink-0 text-[length:var(--text-base)] whitespace-nowrap">
+              <p className={`leading-[16px] ${activeTab === 'moreDetails' ? 'text-[var(--primary-foreground)]' : 'text-[var(--foreground)]'}`}>
                 About
               </p>
             </div>
@@ -136,14 +155,14 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
           <button
             onClick={() => setActiveTab('students')}
             className={`content-stretch flex flex-[1_0_0] items-center justify-center min-h-px min-w-px p-[8px] relative rounded-[8px] cursor-pointer ${
-              activeTab === 'students' ? 'bg-[#2766da]' : 'bg-white'
+              activeTab === 'students' ? 'bg-[var(--primary)]' : 'bg-[var(--card)]'
             }`}
           >
             <div aria-hidden="true" className={`absolute border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px] ${
-              activeTab === 'students' ? 'border-[#2766da]' : 'border-[#c8cee2]'
+              activeTab === 'students' ? 'border-[var(--primary)]' : 'border-[var(--border)]'
             }`} />
-            <div className="flex flex-col justify-center leading-[0] not-italic relative shrink-0 text-[14px] whitespace-nowrap">
-              <p className={`leading-[16px] ${activeTab === 'students' ? 'text-white' : 'text-[#2f3e6d]'}`}>
+            <div className="flex flex-col justify-center leading-[0] not-italic relative shrink-0 text-[length:var(--text-base)] whitespace-nowrap">
+              <p className={`leading-[16px] ${activeTab === 'students' ? 'text-[var(--primary-foreground)]' : 'text-[var(--foreground)]'}`}>
                 Students
               </p>
             </div>
@@ -151,7 +170,7 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
         </div>
 
         {/* Divider below tabs */}
-        <div className="bg-[#e3e6f0] h-px shrink-0 w-full" />
+        <Divider />
 
         {/* Tab Content */}
         {activeTab === 'moreDetails' && (
@@ -159,11 +178,11 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
             {/* Partner Address */}
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Partner Address</p>
+                <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">Partner Address</p>
               </div>
               <div className="content-stretch flex items-center relative shrink-0 w-full">
-                <div className="flex-[1_0_0] leading-[20px] min-h-px min-w-px not-italic relative text-[#2f3e6d] text-[14px] whitespace-pre-wrap">
-                  <p className="mb-0">123 Main Street</p>
+                <div className="flex-[1_0_0] leading-[20px] min-h-px min-w-px not-italic relative text-[var(--foreground)] text-[length:var(--text-base)] whitespace-pre-wrap">
+                  <p className="mb-0">{partner.address || '123 Main Street'}</p>
                   <p className="mb-0">Cityville, State 56789</p>
                   <p>Country</p>
                 </div>
@@ -171,92 +190,109 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
             </div>
 
             {/* Divider */}
-            <div className="bg-[#e3e6f0] h-px shrink-0 w-full" />
+            <Divider />
 
-            {/* Principal Details */}
+            {/* Partnership Details */}
             <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-              <p className="font-semibold leading-[16px] not-italic overflow-hidden relative shrink-0 text-[#3c4c7c] text-[14px] text-ellipsis w-full whitespace-nowrap">Principal Details</p>
+              <p className="font-semibold leading-[16px] not-italic overflow-hidden relative shrink-0 text-[var(--sidebar-foreground)] text-[length:var(--text-base)] text-ellipsis w-full whitespace-nowrap">Partnership Details</p>
               
-              {/* Name */}
+              {/* Tier */}
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
                 <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Name</p>
+                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">Partnership Tier</p>
                 </div>
                 <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">Aleta H. Starcher</p>
+                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--foreground)] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">{partner.partnershipTier || 'Foundation'}</p>
                 </div>
               </div>
 
-              {/* Email address */}
-              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Email address</p>
+              {/* Boards */}
+              {partner.boards && partner.boards.length > 0 && (
+                <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+                  <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
+                    <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">Boards</p>
+                  </div>
+                  <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
+                    <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--foreground)] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">{partner.boards.join(', ')}</p>
+                  </div>
                 </div>
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">aletaH.Starcher12@gmail.com</p>
-                </div>
-              </div>
+              )}
 
-              {/* Contact */}
+              {/* Active Since */}
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
                 <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Contact</p>
+                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">Active Since</p>
                 </div>
                 <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">(636) 296-7838</p>
+                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--foreground)] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">{partner.activeSince || 'January 2024'}</p>
                 </div>
               </div>
             </div>
 
             {/* Divider */}
-            <div className="bg-[#e3e6f0] h-px shrink-0 w-full" />
+            <Divider />
 
-            {/* Vice Principal Details */}
+            {/* Administrative Contacts */}
             <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
-              <p className="font-semibold leading-[16px] not-italic overflow-hidden relative shrink-0 text-[#3c4c7c] text-[14px] text-ellipsis w-full whitespace-nowrap">Vice Principal Details</p>
+              <p className="font-semibold leading-[16px] not-italic overflow-hidden relative shrink-0 text-[var(--sidebar-foreground)] text-[length:var(--text-base)] text-ellipsis w-full whitespace-nowrap">Administrative Contacts</p>
               
-              {/* Name */}
-              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Name</p>
-                </div>
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">Aleta H. Starcher</p>
-                </div>
-              </div>
+              {/* Contact Cards */}
+              <div className="content-stretch flex flex-col gap-[12px] items-start relative shrink-0 w-full">
+                {adminContacts.map((contact) => (
+                  <div key={contact.id} className="bg-[var(--input-background)] content-stretch flex flex-col gap-[12px] items-start p-[12px] relative rounded-[8px] shrink-0 w-full">
+                    <div aria-hidden="true" className="absolute border-[var(--card-border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
+                    
+                    {/* Name + Designation */}
+                    <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0 w-full">
+                      <p className="font-semibold leading-[16px] not-italic overflow-hidden relative shrink-0 text-[var(--foreground)] text-[length:var(--text-base)] text-ellipsis w-full whitespace-nowrap">{contact.name}</p>
+                      <p className="leading-[14px] not-italic overflow-hidden relative shrink-0 text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis w-full whitespace-nowrap">{contact.designation}</p>
+                    </div>
 
-              {/* Email address */}
-              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Email address</p>
-                </div>
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">aletaH.Starcher12@gmail.com</p>
-                </div>
-              </div>
+                    {/* Email */}
+                    <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">
+                      <div className="relative shrink-0 size-[16px]">
+                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+                          <g><mask height="16" id={`mask_mail_${contact.id}`} maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
+                            <rect fill="var(--fill-0, #D9D9D9)" height="16" width="16" /></mask>
+                            <g mask={`url(#mask_mail_${contact.id})`}>
+                              <path d={svgPaths.p1a898b00} fill="var(--fill-0, #6E7CA8)" />
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                      <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">{contact.email}</p>
+                    </div>
 
-              {/* Contact */}
-              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">Contact</p>
-                </div>
-                <div className="content-stretch flex h-[12px] items-center relative shrink-0 w-full">
-                  <p className="flex-[1_0_0] leading-[16px] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">(636) 296-7838</p>
-                </div>
+                    {/* Phone */}
+                    <div className="content-stretch flex gap-[4px] items-center relative shrink-0 w-full">
+                      <div className="relative shrink-0 size-[16px]">
+                        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+                          <g><mask height="16" id={`mask_phone_${contact.id}`} maskUnits="userSpaceOnUse" style={{ maskType: "alpha" }} width="16" x="0" y="0">
+                            <rect fill="var(--fill-0, #D9D9D9)" height="16" width="16" /></mask>
+                            <g mask={`url(#mask_phone_${contact.id})`}>
+                              <path d={svgPaths.p1e3ca700} fill="var(--fill-0, #6E7CA8)" />
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                      <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--muted-foreground)] text-[length:var(--text-label)] text-ellipsis whitespace-nowrap">{contact.phone}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
             {/* Spacer at bottom for scroll comfort */}
-            <div className="bg-white h-[40px] shrink-0 w-full" />
+            <div className="bg-[var(--card)] h-[40px] shrink-0 w-full" />
           </div>
         )}
 
         {activeTab === 'students' && (
           <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
             {/* Student Count Badge */}
-            <div className="bg-[#f8f9fb] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
-              <div aria-hidden="true" className="absolute border-[#e3e6f0] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
-              <div className="flex flex-col justify-center leading-[0] not-italic overflow-hidden relative shrink-0 text-[#3c4c7c] text-[14px] text-ellipsis whitespace-nowrap">
+            <div className="bg-[var(--input-background)] content-stretch flex gap-[8px] h-[26px] items-center px-[8px] py-[4px] relative rounded-[8px] shrink-0">
+              <div aria-hidden="true" className="absolute border-[var(--card-border)] border-[0.5px] border-solid inset-0 pointer-events-none rounded-[8px]" />
+              <div className="flex flex-col justify-center leading-[0] not-italic overflow-hidden relative shrink-0 text-[var(--sidebar-foreground)] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">
                 <p className="leading-[16px]">{students.length} Students</p>
               </div>
             </div>
@@ -266,16 +302,16 @@ export function PartnerDetailsView({ partner, onClose }: PartnerDetailsViewProps
               {students.map((student) => (
                 <div
                   key={student.id}
-                  className="bg-white content-stretch flex items-start relative shrink-0 w-full"
+                  className="bg-[var(--card)] content-stretch flex items-start relative shrink-0 w-full"
                 >
                   {/* Avatar + Name */}
                   <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative">
                     <div className="relative shrink-0 size-[32px]">
-                      <div className="absolute border border-[#e3e6f0] border-solid left-0 overflow-clip rounded-[53.333px] size-[32px] top-0">
+                      <div className="absolute border-[var(--card-border)] border-[0.5px] border-solid left-0 overflow-clip rounded-[53.333px] size-[32px] top-0">
                         <img alt={student.name} className="block size-full object-cover" src={student.avatar} />
                       </div>
                     </div>
-                    <div className="flex flex-[1_0_0] flex-col justify-center leading-[0] min-h-px min-w-px not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap">
+                    <div className="flex flex-[1_0_0] flex-col justify-center leading-[0] min-h-px min-w-px not-italic overflow-hidden relative text-[var(--foreground)] text-[length:var(--text-base)] text-ellipsis whitespace-nowrap">
                       <p className="leading-[16px] overflow-hidden">{student.name}</p>
                     </div>
                   </div>
