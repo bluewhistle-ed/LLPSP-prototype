@@ -67,10 +67,10 @@ function Action() {
 
 function Avatar({ imgSrc }: { imgSrc: string }) {
   return (
-    <div className="relative rounded-[12px] shrink-0 size-[52px]" data-name="Avatar">
+    <div className="relative rounded-[12px] shrink-0 size-[72px]" data-name="Avatar">
       <div className="overflow-clip relative rounded-[inherit] size-full">
-        <div className="absolute inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[0px_0px] mask-size-[52px_52px]" data-name="unsplash:0HJWobhGhJs" style={{ maskImage: `url('${imgUnsplash0HjWobhGhJs}')` }}>
-          <img alt="" className="block max-w-none size-full" height="52" src={imgSrc} width="52" />
+        <div className="absolute inset-0 mask-alpha mask-intersect mask-no-clip mask-no-repeat mask-position-[0px_0px] mask-size-[72px_72px]" data-name="unsplash:0HJWobhGhJs" style={{ maskImage: `url('${imgUnsplash0HjWobhGhJs}')` }}>
+          <img alt="" className="block max-w-none size-full object-cover" src={imgSrc} />
         </div>
       </div>
       <div aria-hidden="true" className="absolute border-[#f1f2f8] border-[0.65px] border-solid inset-0 pointer-events-none rounded-[12px]" />
@@ -114,6 +114,22 @@ function NameTag({ name, status }: { name: string; status: 'active' | 'inactive'
   );
 }
 
+function PartnerTypeBadge({ type }: { type: string }) {
+  return (
+    <div className="bg-[#e7f2fe] px-[8px] py-[4px] rounded-[var(--radius)] shrink-0">
+      <p className="leading-[14px] text-[#1850c5] text-[12px]">{type}</p>
+    </div>
+  );
+}
+
+function PartnershipTypeBadge({ type }: { type: string }) {
+  return (
+    <div className="bg-[#fef3e7] px-[8px] py-[4px] rounded-[var(--radius)] shrink-0">
+      <p className="leading-[14px] text-[#c57f18] text-[12px]">{type}</p>
+    </div>
+  );
+}
+
 function Name({ name, status }: { name: string; status: 'active' | 'inactive' }) {
   return (
     <div className="content-stretch flex gap-[8px] items-center relative shrink-0 w-full" data-name="Name">
@@ -142,9 +158,9 @@ function Mail() {
 
 function IconTextEmail({ email }: { email: string }) {
   return (
-    <div className="content-stretch flex flex-[1_0_0] gap-[4px] items-center max-w-[180px] min-h-px min-w-px relative" data-name="icon + Text">
+    <div className="content-stretch flex gap-[4px] items-center shrink-0 relative" data-name="icon + Text">
       <Mail />
-      <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">{email}</p>
+      <p className="leading-[14px] not-italic text-[#6e7ca8] text-[12px] whitespace-nowrap">{email}</p>
     </div>
   );
 }
@@ -168,55 +184,105 @@ function Call() {
 
 function IconTextPhone({ phone }: { phone: string }) {
   return (
-    <div className="content-stretch flex flex-[1_0_0] gap-[4px] items-center max-w-[130px] min-h-px min-w-px relative" data-name="icon + Text">
+    <div className="content-stretch flex gap-[4px] items-center shrink-0 relative" data-name="icon + Text">
       <Call />
-      <p className="flex-[1_0_0] leading-[14px] min-h-px min-w-px not-italic overflow-hidden relative text-[#6e7ca8] text-[12px] text-ellipsis whitespace-nowrap">{phone}</p>
+      <p className="leading-[14px] not-italic text-[#6e7ca8] text-[12px] whitespace-nowrap">{phone}</p>
     </div>
   );
 }
 
 function SubText({ email, phone }: { email: string; phone: string }) {
   return (
-    <div className="content-stretch flex gap-[12px] items-center relative shrink-0 w-full" data-name="Sub Text">
+    <div className="content-stretch flex gap-[6px] items-center relative shrink-0 w-full" data-name="Sub Text">
       <IconTextEmail email={email} />
       <IconTextPhone phone={phone} />
     </div>
   );
 }
 
-function TitleLocation({ name, status, email, phone }: { name: string; status: 'active' | 'inactive'; email: string; phone: string }) {
+function TitleLocation({ name, status, email, phone, partnerType, clubName, partnershipType }: { 
+  name: string; 
+  status: 'active' | 'inactive'; 
+  email: string; 
+  phone: string;
+  partnerType: string;
+  clubName: string;
+  partnershipType: string;
+}) {
   return (
-    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[2px] items-start min-h-px min-w-px relative" data-name="Title + Location">
-      <Name name={name} status={status} />
+    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[6px] items-start min-h-px min-w-px relative" data-name="Title + Location">
+      {/* Partner name + Type badges + Status - all on same line */}
+      <div className="content-stretch flex gap-[6px] items-center relative w-full">
+        <div className="flex flex-col font-semibold justify-center leading-[0] not-italic overflow-hidden relative text-[#2f3e6d] text-[14px] text-ellipsis whitespace-nowrap shrink-0">
+          <p className="leading-[16px] overflow-hidden">{name}</p>
+        </div>
+        <PartnerTypeBadge type={partnerType} />
+        <PartnershipTypeBadge type={partnershipType} />
+        <div className="flex-1" />
+        <StatusChip label={status === 'active' ? 'Active' : 'Inactive'} />
+      </div>
+      
+      {/* Club name (subtitle) */}
+      <div className="flex flex-col justify-center leading-[0] not-italic text-[#6e7ca8] text-[12px] w-full">
+        <p className="leading-[14px]">{clubName}</p>
+      </div>
+      
+      {/* Contact info */}
       <SubText email={email} phone={phone} />
     </div>
   );
 }
 
-function EventDetails({ name, status, email, phone }: { name: string; status: 'active' | 'inactive'; email: string; phone: string }) {
+function EventDetails({ name, status, email, phone, partnerType, clubName, partnershipType }: { 
+  name: string; 
+  status: 'active' | 'inactive'; 
+  email: string; 
+  phone: string;
+  partnerType: string;
+  clubName: string;
+  partnershipType: string;
+}) {
   return (
     <div className="content-stretch flex flex-[1_0_0] items-start min-h-px min-w-px relative" data-name="Event Details">
-      <TitleLocation name={name} status={status} email={email} phone={phone} />
+      <TitleLocation name={name} status={status} email={email} phone={phone} partnerType={partnerType} clubName={clubName} partnershipType={partnershipType} />
     </div>
   );
 }
 
-function Content2({ imgSrc, name, status, email, phone }: { imgSrc: string; name: string; status: 'active' | 'inactive'; email: string; phone: string }) {
+function Content2({ imgSrc, name, status, email, phone, partnerType, clubName, partnershipType }: { 
+  imgSrc: string; 
+  name: string; 
+  status: 'active' | 'inactive'; 
+  email: string; 
+  phone: string;
+  partnerType: string;
+  clubName: string;
+  partnershipType: string;
+}) {
   return (
     <div className="content-stretch flex flex-[1_0_0] gap-[12px] items-center min-h-px min-w-px relative" data-name="Content">
       <Avatar imgSrc={imgSrc} />
-      <EventDetails name={name} status={status} email={email} phone={phone} />
+      <EventDetails name={name} status={status} email={email} phone={phone} partnerType={partnerType} clubName={clubName} partnershipType={partnershipType} />
     </div>
   );
 }
 
-function PartnerCard({ imgSrc, name, status, email, phone }: { imgSrc: string; name: string; status: 'active' | 'inactive'; email: string; phone: string }) {
+function PartnerCard({ imgSrc, name, status, email, phone, partnerType, clubName, partnershipType }: { 
+  imgSrc: string; 
+  name: string; 
+  status: 'active' | 'inactive'; 
+  email: string; 
+  phone: string;
+  partnerType: string;
+  clubName: string;
+  partnershipType: string;
+}) {
   return (
     <div className="bg-white relative rounded-[16px] shrink-0 w-full" data-name="Event list">
       <div aria-hidden="true" className="absolute border border-[#f1f2f8] border-solid inset-0 pointer-events-none rounded-[16px]" />
       <div className="flex flex-row items-center size-full">
         <div className="content-stretch flex gap-[16px] items-center p-[24px] relative w-full">
-          <Content2 imgSrc={imgSrc} name={name} status={status} email={email} phone={phone} />
+          <Content2 imgSrc={imgSrc} name={name} status={status} email={email} phone={phone} partnerType={partnerType} clubName={clubName} partnershipType={partnershipType} />
         </div>
       </div>
     </div>
@@ -230,56 +296,80 @@ function PartnersList() {
       name: "Oliver High School",
       status: 'active' as const,
       email: "lorri73@gmail.com",
-      phone: "(904) 335-2403"
+      phone: "(904) 335-2403",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Oliver HS",
+      partnershipType: "Expert Partner"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs2,
       name: "Peabody High School",
       status: 'active' as const,
       email: "k_pacheco@gmail.com",
-      phone: "(908) 813-8989"
+      phone: "(908) 813-8989",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Peabody",
+      partnershipType: "Sponsorship"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs3,
-      name: "Oliver High School",
+      name: "DPS International",
       status: 'active' as const,
       email: "c_j_mccoy@gmail.com",
-      phone: "(907) 248-8330"
+      phone: "(907) 248-8330",
+      partnerType: "School",
+      clubName: "Let's Legislate @ DPS",
+      partnershipType: "Expert Partner"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs4,
-      name: "Pittsburgh Central Catholic High School",
+      name: "Pittsburgh Central Catholic",
       status: 'inactive' as const,
       email: "judith403@gmail.com",
-      phone: "(636) 296-7838"
+      phone: "(636) 296-7838",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Central",
+      partnershipType: "Basic Partnership"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs5,
-      name: "Winchester Thurston School",
+      name: "Winchester Thurston",
       status: 'active' as const,
       email: "paul681@gmail.com",
-      phone: "(214) 390-8650"
+      phone: "(214) 390-8650",
+      partnerType: "School",
+      clubName: "Let's Legislate @ WT",
+      partnershipType: "Expert Partner"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs6,
       name: "Perry Traditional Academy",
       status: 'active' as const,
       email: "s.t.sharkey@outlook.com",
-      phone: "(816) 313-7673"
+      phone: "(816) 313-7673",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Perry",
+      partnershipType: "Sponsorship"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs7,
       name: "North Catholic High School",
       status: 'inactive' as const,
       email: "k.t.mastrangelo@outlook.com",
-      phone: "(503) 338-2573"
+      phone: "(503) 338-2573",
+      partnerType: "School",
+      clubName: "Let's Legislate @ North Catholic",
+      partnershipType: "Basic Partnership"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs8,
-      name: "Pittsburgh Central Catholic High School",
+      name: "City Charter High",
       status: 'active' as const,
       email: "susan718@gmail.com",
-      phone: "(219) 380-3890"
+      phone: "(219) 380-3890",
+      partnerType: "School",
+      clubName: "Let's Legislate @ City Charter",
+      partnershipType: "Expert Partner"
     }
   ];
 
@@ -316,6 +406,9 @@ interface Partner {
   status: 'active' | 'inactive';
   email: string;
   phone: string;
+  partnerType: string;
+  clubName: string;
+  partnershipType: string;
 }
 
 export default function PartnersPage() {
@@ -335,56 +428,80 @@ export default function PartnersPage() {
       name: "Oliver High School",
       status: 'active' as const,
       email: "lorri73@gmail.com",
-      phone: "(904) 335-2403"
+      phone: "(904) 335-2403",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Oliver HS",
+      partnershipType: "Expert Partner"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs2,
       name: "Peabody High School",
       status: 'active' as const,
       email: "k_pacheco@gmail.com",
-      phone: "(908) 813-8989"
+      phone: "(908) 813-8989",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Peabody",
+      partnershipType: "Sponsorship"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs3,
-      name: "Oliver High School",
+      name: "DPS International",
       status: 'active' as const,
       email: "c_j_mccoy@gmail.com",
-      phone: "(907) 248-8330"
+      phone: "(907) 248-8330",
+      partnerType: "School",
+      clubName: "Let's Legislate @ DPS",
+      partnershipType: "Expert Partner"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs4,
-      name: "Pittsburgh Central Catholic High School",
+      name: "Pittsburgh Central Catholic",
       status: 'inactive' as const,
       email: "judith403@gmail.com",
-      phone: "(636) 296-7838"
+      phone: "(636) 296-7838",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Central",
+      partnershipType: "Basic Partnership"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs5,
-      name: "Winchester Thurston School",
+      name: "Winchester Thurston",
       status: 'active' as const,
       email: "paul681@gmail.com",
-      phone: "(214) 390-8650"
+      phone: "(214) 390-8650",
+      partnerType: "School",
+      clubName: "Let's Legislate @ WT",
+      partnershipType: "Expert Partner"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs6,
       name: "Perry Traditional Academy",
       status: 'active' as const,
       email: "s.t.sharkey@outlook.com",
-      phone: "(816) 313-7673"
+      phone: "(816) 313-7673",
+      partnerType: "School",
+      clubName: "Let's Legislate @ Perry",
+      partnershipType: "Sponsorship"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs7,
       name: "North Catholic High School",
       status: 'inactive' as const,
       email: "k.t.mastrangelo@outlook.com",
-      phone: "(503) 338-2573"
+      phone: "(503) 338-2573",
+      partnerType: "School",
+      clubName: "Let's Legislate @ North Catholic",
+      partnershipType: "Basic Partnership"
     },
     {
       imgSrc: imgUnsplash0HjWobhGhJs8,
-      name: "Pittsburgh Central Catholic High School",
+      name: "City Charter High",
       status: 'active' as const,
       email: "susan718@gmail.com",
-      phone: "(219) 380-3890"
+      phone: "(219) 380-3890",
+      partnerType: "School",
+      clubName: "Let's Legislate @ City Charter",
+      partnershipType: "Expert Partner"
     }
   ];
 
