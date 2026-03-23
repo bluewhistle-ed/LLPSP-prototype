@@ -8,6 +8,7 @@ import {
 } from '../assets';
 import type {
   Ministry, Committee, MinistryWithMinisters, SpeakerEntry, AllocatedBerth,
+  Institution, ParentInstitution,
 } from '../../types';
 
 // ── Admin Global Lists: Ministries & Committees ─────────────────────────────
@@ -36,6 +37,22 @@ export const INITIAL_COMMITTEES: Committee[] = [
   { id: 8, name: 'Committee on Democracy and Electoral Reforms' },
   { id: 9, name: 'Committee on Financial Stability and Fiscal Policy' },
   { id: 10, name: 'Committee on Digital Innovation and Technology' },
+];
+
+export const INITIAL_PARENT_INSTITUTIONS: ParentInstitution[] = [
+  { id: 1, name: 'Constitutional Bodies' },
+  { id: 2, name: 'Financial Institutions' },
+  { id: 3, name: 'Judicial System' },
+  { id: 4, name: 'Law Enforcement Agencies' },
+  { id: 5, name: 'Regulatory Authorities' },
+];
+
+export const INITIAL_INSTITUTIONS: Institution[] = [
+  { id: 1, name: 'Reserve Bank', type: 'Financial', parentInstitutionId: 2 },
+  { id: 2, name: 'Election Commission', type: 'Constitutional', parentInstitutionId: 1 },
+  { id: 3, name: 'National Human Rights Commission', type: 'Constitutional', parentInstitutionId: 1 },
+  { id: 4, name: 'Central Bureau of Investigation', type: 'Law Enforcement', parentInstitutionId: 4 },
+  { id: 5, name: 'Supreme Court', type: 'Judicial', parentInstitutionId: 3 },
 ];
 
 // ── Tier 1: Ministries for PM allocation (MinistryAllocationModal) ──────────

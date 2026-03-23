@@ -63,6 +63,18 @@ export interface Committee {
   name: string;
 }
 
+export interface ParentInstitution {
+  id: number;
+  name: string;
+}
+
+export interface Institution {
+  id: number;
+  name: string;
+  type: string;
+  parentInstitutionId?: number;
+}
+
 /** A single berth in a ministry (used in Tier 1 allocation) */
 export interface BerthAllocation {
   cabinetMinisterPartyId: number;
